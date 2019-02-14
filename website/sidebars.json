@@ -1,0 +1,19 @@
+{
+    "docs": {
+        "Getting started": [
+            "getting-started/installation",
+            "getting-started/configuration"
+        ],
+        "Guides": [
+            "guides/starting-from-scratch"
+        ],
+        "API reference": [
+            "api-reference/lighthouse",
+            "api-reference/query",
+            "api-reference/mutate"
+        ]
+    },
+    "docs-other": {
+        "First Category asd": ["doc4", "doc5"]
+    }
+}

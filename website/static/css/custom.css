@@ -1,0 +1,36 @@
+/* your custom css */
+h2.headerTitleWithLogo {
+    display: none !important;
+}
+
+.fixedHeaderContainer {
+    height: 90px;
+}
+
+.fixedHeaderContainer .logo {
+    height: 56px;
+    margin-top: 40px;
+}
+
+.navPusher {
+    padding-top: 90px;
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+    .fixedHeaderContainer .logo {
+        height: 20px !important;
+        margin-top: 40px;
+    }
+}
+
+@media only screen and (min-width: 1024px) {
+}
+
+@media only screen and (max-width: 1023px) {
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}
