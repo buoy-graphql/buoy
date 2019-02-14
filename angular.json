@@ -5,7 +5,7 @@
   "projects": {
     "example": {
       "root": "",
-      "sourceRoot": "src",
+      "sourceRoot": "example",
       "projectType": "application",
       "prefix": "app",
       "schematics": {
@@ -18,16 +18,16 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/example",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.app.json",
+            "index": "example/index.html",
+            "main": "example/main.ts",
+            "polyfills": "example/polyfills.ts",
+            "tsConfig": "example/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "example/favicon.ico",
+              "example/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "example/styles.scss"
             ],
             "scripts": []
           },
@@ -35,8 +35,8 @@
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "example/environments/environment.ts",
+                  "with": "example/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -78,17 +78,17 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
+            "main": "example/test.ts",
+            "polyfills": "example/polyfills.ts",
+            "tsConfig": "example/tsconfig.spec.json",
+            "karmaConfig": "example/karma.conf.js",
             "styles": [
-              "src/styles.scss"
+              "example/styles.scss"
             ],
             "scripts": [],
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "example/favicon.ico",
+              "example/assets"
             ]
           }
         },
@@ -96,8 +96,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "example/tsconfig.app.json",
+              "example/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -134,33 +134,33 @@
         }
       }
     },
-    "ngx-lighthouse": {
-      "root": "projects/ngx-lighthouse",
-      "sourceRoot": "projects/ngx-lighthouse/src",
+    "ngx-buoy": {
+      "root": "ngx-buoy",
+      "sourceRoot": "ngx-buoy/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/ngx-lighthouse/tsconfig.lib.json",
-            "project": "projects/ngx-lighthouse/ng-package.json"
+            "tsConfig": "ngx-buoy/tsconfig.lib.json",
+            "project": "ngx-buoy/ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/ngx-lighthouse/src/test.ts",
-            "tsConfig": "projects/ngx-lighthouse/tsconfig.spec.json",
-            "karmaConfig": "projects/ngx-lighthouse/karma.conf.js"
+            "main": "ngx-buoy/src/test.ts",
+            "tsConfig": "ngx-buoy/buoy.spec.json",
+            "karmaConfig": "ngx-buoy/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/ngx-lighthouse/tsconfig.lib.json",
-              "projects/ngx-lighthouse/tsconfig.spec.json"
+              "ngx-buoy/tsconfig.lib.json",
+              "ngx-buoy/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -170,5 +170,5 @@
       }
     }
   },
-  "defaultProject": "example"
+  "defaultProject": "ngx-buoy"
 }

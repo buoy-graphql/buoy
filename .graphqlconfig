@@ -1,0 +1,17 @@
+{
+    "projects": {
+        "examples": {
+            "schemaPath": "schema.graphql",
+            "extensions": {
+                "endpoints": {
+                    "demo": {
+                        "url": "https://demo.ngx-buoy.com/graph",
+                        "headers": {
+                            "user-agent": "Angular Buoy"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
