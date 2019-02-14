@@ -45,3 +45,4 @@ testem.log
 Thumbs.db
 
 website/node_modules
+website/build
