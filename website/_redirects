@@ -1,2 +1,0 @@
-# Force visitors to the custom domain
-http://ngx-buoy.netlify.com/* https://ngx-buoy.com/:splat 301!
