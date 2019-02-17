@@ -1,10 +1,3 @@
-/**
- * Copyright (c) 2017-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 const React = require('react');
 
 class Footer extends React.Component {
@@ -50,7 +43,7 @@ class Footer extends React.Component {
         User Showcase
         </a>
         <a
-        href="http://stackoverflow.com/questions/tagged/ngx-ligthouse"
+        href="http://stackoverflow.com/questions/tagged/ngx-buoy"
         target="_blank"
         rel="noreferrer noopener">
             Stack Overflow
@@ -58,12 +51,12 @@ class Footer extends React.Component {
         </div>
         <div>
         <h5>More</h5>
-        <a target="new" href="https://github.com/alberthaff/ngx-lighthouse">GitHub</a>
-        <a target="new" href="https://www.npmjs.com/package/ngx-lighthouse">NPM</a>
+        <a target="new" href={this.props.config.repoUrl}>GitHub</a>
+        <a target="new" href={'https://www.npmjs.com/package/' + this.props.config.npmPackage}>NPM</a>
         <a href={this.props.config.repoUrl}
         className="github-button"
         data-icon="octicon-star"
-        data-count-href="/alberthaff/lighthouse/stargazers"
+        data-count-href="/alberthaff/ngx-buoy/stargazers"
         data-show-count="true"
         data-count-aria-label="# stargazers on GitHub"
         aria-label="Star this project on GitHub">

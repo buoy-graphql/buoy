@@ -91,6 +91,8 @@ const siteConfig = {
     // template. For example, if you need your repo's URL...
     repoUrl: 'https://github.com/alberthaff/ngx-buoy',
 
+    npmPackage: 'ngx-buoy',
+
     gaTrackingId: 'UA-119869002-2'
 };
 
