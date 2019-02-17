@@ -6,8 +6,8 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {Apollo, ApolloModule} from 'apollo-angular';
 import {InMemoryCache} from 'apollo-cache-inmemory';
-import {LighthouseLink} from '../../projects/ngx-lighthouse/src/lib/http-link/lighthouse-link';
-import {LighthouseLinkOptions} from '../../projects/ngx-lighthouse/src/lib/http-link/lighthouse-link-options';
+import {LighthouseLink} from '../../ngx-buoy/src/lib/http-link/lighthouse-link';
+import {LighthouseLinkOptions} from '../../ngx-buoy/src/lib/http-link/lighthouse-link-options';
 import {environment} from '../environments/environment';
 
 @NgModule({
@@ -28,7 +28,7 @@ export class AppModule {
         private apollo: Apollo,
         private http: HttpClient
     ) {
-        const lighthouse = new LighthouseLink(
+        const buoy = new LighthouseLink(
             this.http,
             <LighthouseLinkOptions>{
                 uri: environment.graphUri,
@@ -45,7 +45,7 @@ export class AppModule {
         );
 
         this.apollo.create({
-            link: lighthouse,
+            link: buoy,
             cache: new InMemoryCache()
         });
     }

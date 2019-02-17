@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    graphUri: 'http://localhost/graph'
+    graphUri: 'https://graph.utecca.dev/v1'
 };
 
 /*

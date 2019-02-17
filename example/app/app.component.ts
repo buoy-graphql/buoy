@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import {Apollo} from 'apollo-angular';
 import gql from 'graphql-tag';
-import {map} from "rxjs/internal/operators";
+import {Buoy} from '../../ngx-buoy/src/lib/buoy';
+import {Query} from '../../ngx-buoy/src/lib/wrappers/query';
+import {QueryOptions} from '../../ngx-buoy/src/lib/wrappers/options';
 
 @Component({
   selector: 'app-root',
@@ -9,13 +10,13 @@ import {map} from "rxjs/internal/operators";
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public _query;
+  public me: Query;
 
-  public data;
-
-  constructor(private apollo: Apollo) {
-      this._query = this.apollo.watchQuery({
-          query: gql`
+  constructor(
+      private buoy: Buoy
+  ) {
+      this.me = this.buoy.query(
+          gql`
               query Me {
                   me {
                       firstName
@@ -34,11 +35,12 @@ export class AppComponent {
                   }
               }
           `,
-          variables: {}
-      })
-      .valueChanges.subscribe(result => {
-          console.log('FETCHED DATA FROM GRAPH', result);
-          this.data = result.data;
-      });
+          {
+
+          },
+          <QueryOptions>{
+              subscribe: true
+          }
+      );
   }
 }
