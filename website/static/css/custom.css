@@ -8,12 +8,16 @@ h2.headerTitleWithLogo {
 }
 
 .fixedHeaderContainer .logo {
-    height: 56px;
+    height: 75px;
     margin-top: 40px;
 }
 
 .navPusher {
     padding-top: 90px;
+}
+
+.nav-footer {
+    background-color: #1976d2;
 }
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
