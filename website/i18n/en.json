@@ -5,10 +5,6 @@
     "previous": "Previous",
     "tagline": "A Lighthouse-client for Angular",
     "docs": {
-      "api-reference/buoy": {
-        "title": "Buoy",
-        "sidebar_label": "Buoy"
-      },
       "api-reference/mutate": {
         "title": "Mutate",
         "sidebar_label": "Mutate"
@@ -16,6 +12,10 @@
       "api-reference/query": {
         "title": "Query",
         "sidebar_label": "Query"
+      },
+      "api-reference/subscriptions": {
+        "title": "Subscriptions",
+        "sidebar_label": "Subscriptions"
       },
       "doc4": {
         "title": "Other Document"

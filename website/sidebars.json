@@ -8,9 +8,9 @@
             "guides/starting-from-scratch"
         ],
         "API reference": [
-            "api-reference/buoy",
+            "api-reference/mutate",
             "api-reference/query",
-            "api-reference/mutate"
+            "api-reference/subscriptions"
         ]
     },
     "docs-other": {

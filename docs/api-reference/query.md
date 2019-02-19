@@ -59,7 +59,7 @@ The scoped response from the GraphQL-server is available in the `data`-variable.
 ````
 
 ## Variables
-The `myMovie`-variable will contain a Query-object. This object has following variables available:
+The Query-object has following variables available:
 
 | Parameter  | Type   | Explanation   |
 | ---------- | ------ | ------------- |
@@ -89,4 +89,31 @@ Set a variable after the query has been initialized. You must use [`refetch()`](
 | value     | any    | The value of the variable. |
 
 
-## Configuration
+## Options
+Options are added as the third parameter on the `bouy.query()`-method.
+
+### debug
+This will print all relevant debug-information to the console. Should not be used in production.
+
+### pagination
+TODO
+
+### scope
+The scope will change the root of the data returned by the GraphQL-server.
+
+The server will often return something like this:
+
+````JSON
+{
+    "movies": {
+        "data": []
+    }
+}
+````
+
+With the scope `movies.data`, you can skip the two first levels. This allows you to refer to the returned data as `movies.data...` instead of so `movies.data.movies.data...`. 
+
+The scope should generally be the name of the first node in your query followed by `.data`, if your node is a paginator.
+
+### subscribe
+TODO
