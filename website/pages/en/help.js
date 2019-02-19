@@ -22,12 +22,12 @@ function Help(props) {
   const supportLinks = [
     {
       content: `Learn more using the [documentation on this site.](${docUrl(
-        'doc1.html',
+        'getting-started/installation',
       )})`,
       title: 'Browse Docs',
     },
     {
-      content: 'Ask questions about the documentation and project. Create an [issue](https://github.com/alberthaff/ngx-lighthouse/issues/new) or [ask a question](http://stackoverflow.com/questions/tagged/ngx-ligthouse).',
+      content: 'Ask questions about the documentation and project. Create an [issue](https://github.com/alberthaff/ngx-buoy/issues/new) or [ask a question](http://stackoverflow.com/questions/tagged/ngx-buoy).',
       title: 'Join the community',
     },
     {
