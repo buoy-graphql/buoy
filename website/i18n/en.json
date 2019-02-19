@@ -5,9 +5,9 @@
     "previous": "Previous",
     "tagline": "A Lighthouse-client for Angular",
     "docs": {
-      "api-reference/lighthouse": {
-        "title": "Lighthouse",
-        "sidebar_label": "Lighthouse"
+      "api-reference/buoy": {
+        "title": "Buoy",
+        "sidebar_label": "Buoy"
       },
       "api-reference/mutate": {
         "title": "Mutate",

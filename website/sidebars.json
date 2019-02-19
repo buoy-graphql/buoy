@@ -8,7 +8,7 @@
             "guides/starting-from-scratch"
         ],
         "API reference": [
-            "api-reference/lighthouse",
+            "api-reference/buoy",
             "api-reference/query",
             "api-reference/mutate"
         ]
