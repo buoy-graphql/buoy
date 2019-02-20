@@ -1,14 +1,15 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {Input, NgModule} from '@angular/core';
-import {HttpClientModule, HttpClient, HttpHeaders} from '@angular/common/http';
+import {NgModule} from '@angular/core';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {Apollo, ApolloModule} from 'apollo-angular';
-import {InMemoryCache} from 'apollo-cache-inmemory';
-import {LighthouseLink} from '../../ngx-buoy/src/lib/http-link/lighthouse-link';
-import {LighthouseLinkOptions} from '../../ngx-buoy/src/lib/http-link/lighthouse-link-options';
 import {environment} from '../environments/environment';
+import {BuoyConfig} from '../../ngx-buoy/src/lib/buoy-config';
+import {BuoyModule} from '../../ngx-buoy/src/lib/buoy.module';
+
+const BuoyConfigValue = <BuoyConfig>{
+    endpoint: environment.graphUri,
+};
 
 @NgModule({
     declarations: [
@@ -17,31 +18,13 @@ import {environment} from '../environments/environment';
     imports: [
         BrowserModule,
         AppRoutingModule,
-        ApolloModule,
-        HttpClientModule
+        BuoyModule
     ],
-    providers: [],
+    providers: [
+        { provide: BuoyConfig, useValue: BuoyConfigValue }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {
-    constructor(
-        private apollo: Apollo,
-        private http: HttpClient
-    ) {
-        const buoy = new LighthouseLink(
-            this.http,
-            <LighthouseLinkOptions>{
-                uri: environment.graphUri,
-                httpMode: 'json',
-                subscriptions: {
-                    driver: 'pusher'
-                }
-            }
-        );
-
-        this.apollo.create({
-            link: buoy,
-            cache: new InMemoryCache()
-        });
-    }
+    constructor() { }
 }

@@ -3,8 +3,10 @@ import {map} from 'rxjs/internal/operators';
 import {QueryOptions} from './options';
 import {Subscription} from 'rxjs';
 import {scope} from 'ngx-plumber';
+import {Buoy} from '../buoy';
+import {Wrapper} from './wrapper';
 
-export class Query {
+export class Query extends Wrapper {
     private _query;
     private _querySubscription: Subscription;
 
@@ -15,11 +17,15 @@ export class Query {
     public data;
     public loading = true;
 
-    constructor(private apollo: Apollo, query, private _options: QueryOptions) {
-        this._query = this.apollo.watchQuery({
+    constructor(buoy: Buoy, id: number, query, private _options: QueryOptions) {
+        super(buoy, id, 'query');
+        this.debug('debug', 'Initializing Query...');
+        this._query = this.buoy.apollo.watchQuery({
             query: query,
             variables: this.variables
         });
+
+
 
         // Subscribe to changes
         this._querySubscription = this._query.valueChanges.subscribe((data) => this.mapResponse(data, 'http'));
@@ -40,15 +46,17 @@ export class Query {
 
         this._initialized = true;
 
+        this.debug('debug', 'Query initialized successfully.');
         return this;
     }
 
     public destroy(): void {
         alert('Destroyed query object.'); // TODO can Angular's built-in lifecycle hooks be used?
+        this.debug('debug', 'Query has been destroyed.');
     }
 
     private get variables() {
-        let variables = this._variables;
+        const variables = this._variables;
 
         /*if (this._configuration.injectAgreementId === true) {
             variables = Object.assign({
@@ -79,10 +87,16 @@ export class Query {
 
         // Set data
         this.data = scope(data.data, this._options.scope);
-        console.log('RESP', 'data.' + data);
+
+        this.debug(
+            'debug',
+            'Mapped response.',
+            { input: data, output: this.data}
+        );
     }
 
     public refetch(): this {
+        this.debug('debug', 'Refecthing data...');
         if (this._initialized) {
             this._query.refetch(this.variables);
         }
@@ -92,6 +106,7 @@ export class Query {
 
     public setVariable(variable: string, value: any): this {
         this._variables[variable] = value;
+        this.debug('debug', 'Variable ' + variable + ' has been set to:', value);
         return this;
     }
 }

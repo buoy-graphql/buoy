@@ -1,12 +1,12 @@
+import {Buoy} from '../buoy';
 import {ApolloLink, Operation, RequestHandler, Observable as LinkObservable, FetchResult} from 'apollo-link';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {mergeHeaders, prioritize} from 'apollo-angular-link-http-common';
 import {print} from 'graphql/language/printer';
 import {extractFiles} from 'extract-files';
-import {LighthouseLinkOptions} from './lighthouse-link-options';
-import {Options, Context} from './lighthouse-link-options';
+import {Context} from './lighthouse-link-options';
 import {SubscriptionDriver} from '../subscription-drivers/subscription-driver';
 import Pusher from '../subscription-drivers/pusher';
+import {BuoyConfig} from '../buoy-config';
 
 export class LighthouseLink extends ApolloLink {
     public requester: RequestHandler;
@@ -17,30 +17,20 @@ export class LighthouseLink extends ApolloLink {
         pusher: Pusher
     };
 
-    constructor(
-        private httpClient: HttpClient,
-        private options: LighthouseLinkOptions
-    ) {
+    constructor(private buoy: Buoy) {
         super();
 
-        this.initSubscriptions(options.subscriptions);
+        // this.initSubscriptions(options.subscriptions);
 
         this.requester = (operation: Operation) =>
             new LinkObservable((observer: any) => {
                 const context: Context = operation.getContext();
 
-                // decides which value to pick, Context, Options or to just use the default
-                const pick = <K extends keyof Options>(key: K, init?: Options[K]): Options[K] => {
-                    return prioritize(context[key], this.options[key], init);
-                };
+                const includeExtensions = true; // TODO
+                // const includeExtensions = pick('includeExtensions', false);
+                const withCredentials = null; // pick('withCredentials');
 
-                // Extract the options
-                const includeQuery = pick('includeQuery', true);
-                const includeExtensions = pick('includeExtensions', false);
-                const url = pick('uri', 'graph');
-                const withCredentials = pick('withCredentials');
-                const subscriptions = pick('subscriptions');
-                let httpMode = pick('httpMode', 'opportunistic');
+                let httpMode = this.buoy.config.httpMode;
                 let payload;
 
                 // Count the number of files in this request
@@ -67,13 +57,12 @@ export class LighthouseLink extends ApolloLink {
                 }
 
                 // Add Query
-                if (includeQuery) {
-                    if (httpMode === 'json') {
-                        payload['query'] = print(operation.query);
-                    } else {
-                        payload.append('query', print(operation.query));
-                    }
+                if (httpMode === 'json') {
+                    payload['query'] = print(operation.query);
+                } else {
+                    payload.append('query', print(operation.query));
                 }
+
 
                 // Add variables
                 if (httpMode === 'json') {
@@ -91,13 +80,10 @@ export class LighthouseLink extends ApolloLink {
                     }
                 }
 
-
-                console.log('REQUESTING DATA....', context);
-
                 // Add headers
                 let headers;
-                if (typeof options.headers !== 'undefined') {
-                    headers = options.headers();
+                if (typeof this.buoy.config.headers !== 'undefined') {
+                    headers = this.buoy.config.headers();
                 }
 
                 const httpOptions = {
@@ -106,14 +92,15 @@ export class LighthouseLink extends ApolloLink {
                 };
 
                 // Send the POST request
-                this.httpClient.post(url, payload, httpOptions)
+                this.debug('debug', 'Fetching data', {context: context, httpOptions: httpOptions});
+                this.buoy.http.post(this.buoy.config.endpoint, payload, httpOptions)
                     .toPromise()
                     .then(
                         (result) => {
                             operation.setContext({result});
                             observer.next(result);
 
-                            console.log('res', result);
+                            this.debug('debug', 'Response from GraphQL', result);
                         },
                         (error) => {
                             observer.error(error);
@@ -149,5 +136,9 @@ export class LighthouseLink extends ApolloLink {
             );
         }
 
+    }
+
+    private debug(severity: 'debug', message: string, data: any): void {
+        this.buoy.debug('lighthouse-link', 'buoy', false, severity, message, data);
     }
 }
