@@ -1,7 +1,8 @@
 ---
-id: query
+id: version-next-query
 title: Query
 sidebar_label: Query
+original_id: query
 ---
 
 The Query-object is a wrapper around the Apollo-client. The wrapper keeps track of pagination and makes it easier to change variables after the query has been executed.

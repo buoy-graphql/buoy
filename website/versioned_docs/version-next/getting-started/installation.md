@@ -1,7 +1,8 @@
 ---
-id: installation
+id: version-next-installation
 title: Installation
 sidebar_label: Installation
+original_id: installation
 ---
 
 ## Install via NPM

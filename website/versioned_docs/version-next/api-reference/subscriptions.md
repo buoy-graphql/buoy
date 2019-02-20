@@ -1,7 +1,8 @@
 ---
-id: subscriptions
+id: version-next-subscriptions
 title: Subscriptions
 sidebar_label: Subscriptions
+original_id: subscriptions
 ---
 
 The Buoy-client is compatible with the [Lighthouse-subscriptions](https://lighthouse-php.com/master/extensions/subscriptions.html) extension.

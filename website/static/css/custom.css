@@ -20,6 +20,11 @@ h2.headerTitleWithLogo {
     background-color: #1976d2;
 }
 
+/* Hide version selector */
+header a[href="/versions"] {
+    display: none;
+}
+
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
     .fixedHeaderContainer .logo {
         height: 20px !important;

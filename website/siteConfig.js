@@ -26,7 +26,7 @@ const siteConfig = {
 
     // For no header links in the top nav bar -> headerLinks: [],
     headerLinks: [
-        {doc: 'getting-started/installation', label: 'Docs'},
+        {href: '/docs/next/getting-started/installation', label: 'Documentation'},
         {page: 'help', label: 'Help'},
         {page: 'demo', label: 'Demo'},
         {page: 'users', label: 'Users'},
@@ -93,7 +93,9 @@ const siteConfig = {
 
     npmPackage: 'ngx-buoy',
 
-    gaTrackingId: 'UA-119869002-2'
+    gaTrackingId: 'UA-119869002-2',
+
+    editUrl: 'https://github.com/alberthaff/ngx-buoy/website/versioned_docs/'
 };
 
 module.exports = siteConfig;

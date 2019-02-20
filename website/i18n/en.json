@@ -5,39 +5,39 @@
     "previous": "Previous",
     "tagline": "A Lighthouse-client for Angular",
     "docs": {
-      "api-reference/mutate": {
+      "version-next-mutate": {
         "title": "Mutate",
         "sidebar_label": "Mutate"
       },
-      "api-reference/query": {
+      "version-next-query": {
         "title": "Query",
         "sidebar_label": "Query"
       },
-      "api-reference/subscriptions": {
+      "version-next-subscriptions": {
         "title": "Subscriptions",
         "sidebar_label": "Subscriptions"
       },
-      "doc4": {
+      "version-next-doc4": {
         "title": "Other Document"
       },
-      "doc5": {
+      "version-next-doc5": {
         "title": "Fifth Document"
       },
-      "getting-started/configuration": {
+      "version-next-configuration": {
         "title": "Configuration",
         "sidebar_label": "Configuration"
       },
-      "getting-started/installation": {
+      "version-next-installation": {
         "title": "Installation",
         "sidebar_label": "Installation"
       },
-      "guides/starting-from-scratch": {
+      "version-next-starting-from-scratch": {
         "title": "Starting from scratch",
         "sidebar_label": "Starting from scratch"
       }
     },
     "links": {
-      "Docs": "Docs",
+      "Documentation": "Documentation",
       "Help": "Help",
       "Demo": "Demo",
       "Users": "Users",
