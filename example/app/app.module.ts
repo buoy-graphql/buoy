@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {Input, NgModule} from '@angular/core';
 import {HttpClientModule, HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -33,11 +33,6 @@ export class AppModule {
             <LighthouseLinkOptions>{
                 uri: environment.graphUri,
                 httpMode: 'json',
-                headers: () => {
-                    console.log('GENERATING HEADERS FOR REQUEST');
-                    return new HttpHeaders()
-                        .set('Authorization', 'Bearer ' + localStorage.getItem('token') || null);
-                },
                 subscriptions: {
                     driver: 'pusher'
                 }

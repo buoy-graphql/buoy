@@ -10,27 +10,33 @@ import {QueryOptions} from '../../ngx-buoy/src/lib/wrappers/options';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public me: Query;
+  public movies: Query;
 
   constructor(
       private buoy: Buoy
   ) {
-      this.me = this.buoy.query(
+      this.movies = this.buoy.query(
           gql`
-              query Me {
-                  me {
-                      firstName
-                      lastName
-                      email
+              query Movies {
+                  movies(count: 5, page: 1) {
+                      data {
+                          id
+                          title
+                          status
+                          release_date
 
-                      profilePicture {
-                          small
-                          medium
-                          large
-
-                          createdAt
-                          updatedAt
-                          deletedAt
+                          roles(count: 3) {
+                              data {
+                                  character
+                                  actor {
+                                      name
+                                      profile
+                                  }
+                              }
+                              paginatorInfo {
+                                  total
+                              }
+                          }
                       }
                   }
               }
@@ -39,7 +45,8 @@ export class AppComponent {
 
           },
           <QueryOptions>{
-              subscribe: true
+              subscribe: true,
+              scope: 'movies'
           }
       );
   }

@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    graphUri: 'https://graph.utecca.dev/v1'
+    graphUri: 'https://demo.ngx-buoy.com/graph'
 };
 
 /*
