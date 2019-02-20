@@ -1,22 +1,16 @@
 {
-  "version-next-docs": {
-    "Getting started": [
-      "version-next-getting-started/installation",
-      "version-next-getting-started/configuration"
-    ],
-    "Guides": [
-      "version-next-guides/starting-from-scratch"
-    ],
-    "API reference": [
-      "version-next-api-reference/mutate",
-      "version-next-api-reference/query",
-      "version-next-api-reference/subscriptions"
-    ]
-  },
-  "version-next-docs-other": {
-    "First Category asd": [
-      "version-next-doc4",
-      "version-next-doc5"
-    ]
-  }
+    "version-next-docs": {
+        "Getting started": [
+            "version-next-getting-started/installation",
+            "version-next-getting-started/configuration"
+        ],
+        "Guides": [
+            "version-next-guides/starting-from-scratch"
+        ],
+        "API reference": [
+            "version-next-api-reference/query",
+            "version-next-api-reference/mutate",
+            "version-next-api-reference/subscriptions"
+        ]
+    }
 }

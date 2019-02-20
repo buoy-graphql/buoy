@@ -95,7 +95,7 @@ const siteConfig = {
 
     gaTrackingId: 'UA-119869002-2',
 
-    editUrl: 'https://github.com/alberthaff/ngx-buoy/website/versioned_docs/'
+    editUrl: 'https://github.com/alberthaff/ngx-buoy/tree/master/website/versioned_docs/'
 };
 
 module.exports = siteConfig;
