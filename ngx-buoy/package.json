@@ -1,0 +1,17 @@
+{
+    "name": "ngx-buoy",
+    "version": "0.0.0-alpha.2",
+    "description": "A Lighthouse client for Angular. Build your SPAs in front a Laravel backend!",
+    "author": "Albert Haff <ahn@haffdata.com>",
+    "repository": {
+        "url": "https://github.com/alberthaff/ngx-buoy"
+    },
+    "homepage": "https://ngx-buoy.com",
+    "dependencies": {
+        "ngx-plumber": "^0.0.0-alpha.1"
+    },
+    "peerDependencies": {
+        "@angular/common": "^7.1.0",
+        "@angular/core": "^7.1.0"
+    }
+}

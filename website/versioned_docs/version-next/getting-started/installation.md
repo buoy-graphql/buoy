@@ -8,7 +8,7 @@ original_id: installation
 ## Install via NPM
 
 ```bash
-$ ng add ngx-lighthouse
+$ ng add ngx-buoy
 ```
 
 

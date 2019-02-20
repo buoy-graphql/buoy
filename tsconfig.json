@@ -19,11 +19,11 @@
       "dom"
     ],
     "paths": {
-      "ngx-lighthouse": [
-        "dist/ngx-lighthouse"
+      "ngx-buoy": [
+        "dist/ngx-buoy"
       ],
-      "ngx-lighthouse/*": [
-        "dist/ngx-lighthouse/*"
+      "ngx-buoy/*": [
+        "dist/ngx-buoy/*"
       ]
     }
   }
