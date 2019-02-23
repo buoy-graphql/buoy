@@ -44,6 +44,11 @@ testem.log
 .DS_Store
 Thumbs.db
 
+docs/.vuepress/dist
+docs/node_modules
+*.tgz
+
+
+
 website/node_modules
 website/build
-*.tgz
