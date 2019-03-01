@@ -13,7 +13,7 @@
     "client"
   ],
   "repository": {
-    "url": "https://github.com/alberthaff/ngx-buoy"
+    "url": "https://github.com/haffdata/ngx-buoy"
   },
   "homepage": "https://ngx-buoy.com",
   "module": "src/public_api.ts",
