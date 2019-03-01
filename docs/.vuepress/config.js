@@ -14,6 +14,15 @@ module.exports = {
             href: 'https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,800,800i,900,900i'
         }]
     ],
+    plugins: [
+        [
+            '@vuepress/clean-urls',
+            {
+                normalSuffix: '',
+                indexSuffix: '/',
+            }
+        ]
+    ],
     themeConfig: {
         logo: '/img/logo_white.svg',
         editLinks: true,

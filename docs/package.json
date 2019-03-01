@@ -1,14 +1,16 @@
 {
   "name": "docs",
   "scripts": {
-    "docs:dev": "vuepress dev",
-    "docs:build": "vuepress build"
+    "start": "vuepress dev",
+    "build": "vuepress build",
+    "urls:pretty": "clear; find ./.vuepress/dist ! -path './img*' ! -path './assets*' ! -name '_redirects' ! -name '*.*' -type f -exec bash -c 'mv $1 $1.temp; mkdir $1; mv $1.temp $1/index.html' - {} \\;"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free-brands": "^5.0.13",
     "@fortawesome/fontawesome-svg-core": "^1.2.15",
     "@fortawesome/free-solid-svg-icons": "^5.7.2",
     "@fortawesome/vue-fontawesome": "^0.1.5",
+    "@vuepress/plugin-clean-urls": "^1.0.0-alpha.40",
     "vuepress": "^1.0.0-alpha.39"
   }
 }
