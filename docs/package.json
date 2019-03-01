@@ -2,7 +2,7 @@
   "name": "docs",
   "scripts": {
     "start": "vuepress dev",
-    "build": "vuepress build",
+    "build": "vuepress build; npm run urls:pretty",
     "urls:pretty": "clear; find ./.vuepress/dist ! -path './img*' ! -path './assets*' ! -name '_redirects' ! -name '*.*' -type f -exec bash -c 'mv $1 $1.temp; mkdir $1; mv $1.temp $1/index.html' - {} \\;"
   },
   "dependencies": {
