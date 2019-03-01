@@ -6,6 +6,7 @@
 $ npm i ngx-buoy
 ```
 
+[CONFIG](configuration.md)
 
 ## Include in your Project
 After ngx-buoy is installed, you must include it in your application.

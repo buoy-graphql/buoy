@@ -1,7 +1,9 @@
+const users = require('./users.js');
+
 let versioning = require('./lib/versioning.js'); // TODO: License??
 
 module.exports = {
-    title: 'Angular Buoy',
+    title: 'Buoy',
     description: 'A Lighthouse-client for Angular. Build your SPAs on top of Laravel!',
     head: [
         ['link', {
@@ -66,6 +68,7 @@ module.exports = {
                 items: versioning.linksFor('getting-started/installation.md') // TODO create custom component
             }
         ],
-        sidebar: versioning.sidebars
+        sidebar: versioning.sidebars,
+        users: users
     }
 };

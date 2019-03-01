@@ -1,5 +1,5 @@
 /********************************************************************
- * ADDING YOUR COMPANY TO THE LIST OF USERS
+ * ADDING YOUR COMPANY OR PROJECT TO THE LIST OF USERS
  *
  * First of all, thank you for taking your time to do this! :-)
  *
@@ -10,22 +10,19 @@
  * If possible, please add your logo as an SVG-file, so it looks
  * spiffy on all resolutions. Otherwise, please use a PNG with
  * transparent background. Sized at 256 x 256 pixels.
- *
- * ** Disclaimer **
- * All users without a valid website may be removed at any time.
  *******************************************************************/
 
 module.exports = [
     {
         caption: 'HAFF DATA',
         image: '/img/users/haff.svg',
-        infoLink: 'https://www.haffdata.com',
+        infoLink: 'https://haffdata.com',
         pinned: true,
     },
     {
         caption: 'Utecca',
         image: '/img/users/utecca.svg',
-        infoLink: 'https://www.utecca.com',
+        infoLink: 'https://utecca.com',
         pinned: true,
     }
 ];

@@ -1,5 +1,5 @@
 <template>
-    <header class="navbar">
+    <header class="navbar" v-bind:class="{isHome: isHome}">
         <SidebarButton @toggle-sidebar="$emit('toggle-sidebar')"/>
 
         <router-link
@@ -76,6 +76,10 @@
         },
 
         computed: {
+            isHome() {
+                console.log('FRONT', this.$page.frontmatter.home); // TODO change class of navbar
+                return this.$page.frontmatter.home;
+            },
             algolia () {
                 return this.$themeLocaleConfig.algolia || this.$site.themeConfig.algolia || {}
             },
@@ -122,7 +126,7 @@
             white-space nowrap
             font-size 0.9rem
             position absolute
-            left 280px
+            left 200px
             top $navbar-vertical-padding
             display flex
             .nav-links

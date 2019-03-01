@@ -5,4 +5,4 @@ footer: Copyright © 2019 Albert Haff
 ---
 
 
-HOME PAGE
+This library is still in early development. Please refer to the [documentation](/master/getting-started/installation) for now.
