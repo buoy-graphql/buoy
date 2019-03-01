@@ -27,7 +27,7 @@ module.exports = {
         logo: '/img/logo_white.svg',
         editLinks: true,
         lastUpdated: 'Last Updated',
-        repo: 'alberthaff/ngx-buoy', // GitHub repository
+        repo: 'haffdata/ngx-buoy', // GitHub repository
         docsDir: 'docs/', // docs folder inside repository
         /*versions: {
             latest: versioning.versions.latest,
