@@ -158,7 +158,7 @@ export default {
 .search-box
   display inline-block
   position relative
-  margin-right 1rem
+  margin-right 0.3rem
   input
     cursor text
     width 10rem

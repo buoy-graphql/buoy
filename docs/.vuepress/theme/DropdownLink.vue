@@ -93,6 +93,8 @@
             .dropdown-item
                 color inherit
                 line-height 1.7rem
+
+                text-transform uppercase
                 h4
                     margin 0.45rem 0 0
                     border-top 1px solid #eee
@@ -111,7 +113,9 @@
                     margin-bottom 0
                     padding 0 1.5rem 0 1.25rem
                     color: $textColor
-                    text-transform capitalize
+                    text-transform none
+                    &::first-letter
+                        text-transform uppercase
                     &:hover
                         color $accentColor !important
                     &.router-link-active
@@ -146,6 +150,8 @@
                     h4, & > a
                         font-size 15px
                         line-height 2rem
+                        text-transform lowercase
+
                     .dropdown-subitem
                         font-size 14px
                         padding-left 1rem

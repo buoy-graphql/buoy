@@ -42,19 +42,28 @@ module.exports = {
             },
             {
                 text: 'Demo',       // TODO
-                link: '/demo.md'
+                items: [
+                    {
+                        text: 'Buoy demo',
+                        link: '/demo.md'
+                    },
+                    {
+                        text: 'Demo GraphQL-endpoint',
+                        link: 'https://demo.ngx-buoy.com'
+                    }
+                ]
             },
             {
-                text: `Docs`,
-                items: versioning.linksFor('getting-started/installation.md') // TODO create custom component
+                text: 'Users',
+                link: '/users.md'
             },
             {
                 text: 'Resources',  // TODO
                 link: '/resources.md'
             },
             {
-                text: 'Users',
-                link: '/users.md'
+                text: `Docs`,
+                items: versioning.linksFor('getting-started/installation.md') // TODO create custom component
             }
         ],
         sidebar: versioning.sidebars
