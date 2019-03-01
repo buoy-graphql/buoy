@@ -14,7 +14,7 @@ Add the `BuoyModule` to your `imports`-section and add the `BuoyConfig` provider
 
 ````typescript
 const BuoyConfigValue = <BuoyConfig>{
-    // Remember to add the GraphUri to your environment-file.
+    // Remember to add graphUri to your environment-file.
     endpoint: environment.graphUri
 };
 

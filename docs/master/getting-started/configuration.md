@@ -1,5 +1,9 @@
 # Configuration
 
+You must define the Buoy-configuration and add it as a provider.
+
+// TODO Example
+
 ## General
 General configuration of the Buoy-client.
 Please note that some of these values can be overwritten by the options on a specific `Query` or `Mutation`.
@@ -14,7 +18,7 @@ The URL of the GraphQL-server. Currently, only HTTP POST-request are supported.
 ### fileUploads
 
 ::: tip
-You must enable file uploads on your Lighthouse-server. See [this guide](../guides/file-uploads.md) for more information.
+You must enable file uploads on your Lighthouse-server. See [this guide](../features/file-uploads.md) for more information.
 :::
 
 // TODO (WIP)

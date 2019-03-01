@@ -7,21 +7,21 @@ module.exports = [
         ]
     },
     {
-        title: 'Guides',
-        children: [
-            'guides/file-uploads'
-        ]
+        title: 'Guides'
     },
     {
-        title: 'Middleware'
+        title: 'Features',
+        children: [
+            'features/file-uploads',
+            'features/middleware',
+            'features/subscriptions',
+        ]
     },
     {
         title: 'API Reference',
         children: [
             'api-reference/query',
-            'api-reference/mutation',
-            'api-reference/subscriptions',
-            'api-reference/middleware'
+            'api-reference/mutation'
         ]
     }
 ];
