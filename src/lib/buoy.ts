@@ -3,12 +3,11 @@ import {Query} from './wrappers/query';
 import {Mutation} from './wrappers/mutation';
 import {Apollo} from 'apollo-angular';
 import {MutationOptions, QueryOptions} from './wrappers/options';
-import {BuoyConfig} from "./buoy-config";
-import {LighthouseLink} from "./http-link/lighthouse-link";
-import {LighthouseLinkOptions} from "./http-link/lighthouse-link-options";
-import {InMemoryCache} from "apollo-cache-inmemory";
-import {environment} from "../../../example/environments/environment";
-import {HttpClient} from "@angular/common/http";
+import {BuoyConfig} from './buoy-config';
+import {LighthouseLink} from './http-link/lighthouse-link';
+import {LighthouseLinkOptions} from './http-link/lighthouse-link-options';
+import {InMemoryCache} from 'apollo-cache-inmemory';
+import {HttpClient} from '@angular/common/http';
 
 let uniqueId = 1;
 
@@ -38,8 +37,8 @@ export class Buoy {
     /**
      * Run a query.
      */
-    public query(query, parameters?: any, options?: QueryOptions): Query {
-        return new Query(this, uniqueId++, query, options);
+    public query(query, variables?: any, options?: QueryOptions): Query {
+        return new Query(this, uniqueId++, query, variables, options);
     }
 
     /**

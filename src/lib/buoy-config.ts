@@ -1,4 +1,5 @@
 import {HttpHeaders} from '@angular/common/http';
+import {Middleware} from './middleware/middleware';
 
 export class BuoyConfig {
     /**
@@ -14,7 +15,7 @@ export class BuoyConfig {
      * multipart = use a multipart/form POST-request.
      * opportunistic = use a 'json'-mode when possible. If there are files in the parameters, a multipart-request will be used.
      */
-    httpMode: 'get' | 'json'| 'multipart' | 'opportunistic' = 'json';
+    httpMode?: 'get' | 'json'| 'multipart' | 'opportunistic' = 'json';
 
     /**
      * Should file-uploads be allowed?
@@ -30,7 +31,7 @@ export class BuoyConfig {
      * Would you like to add any custom headers to the requests? Define a callback,
      * that will be used to add custom headers on all requests.
      */
-    headers: () => HttpHeaders; // TODO: Add parameters
+    headers?: () => HttpHeaders; // TODO: Add parameters
 
     /**
      * Would you like to add any custom extensions to the requests? Define a callback,
@@ -38,8 +39,15 @@ export class BuoyConfig {
      */
     extensions?: () => any; // TODO: Add parameters
 
+    middleware?: any;
+
     /**
      * Would you like to subscribe to changes server-side?
      */
-    subscriptions = {}; // TODO: Add type / parameters
+    subscriptions?: Array<Middleware>;
+
+    /**
+     * Which type of paginators does the GraphQL server use as a default?
+     */
+    paginatorType: 'paginator' = 'paginator'; // TODO Add support for 'connection'
 }

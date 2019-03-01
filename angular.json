@@ -131,31 +131,31 @@
     },
     "ngx-buoy": {
       "root": "ngx-buoy",
-      "sourceRoot": "ngx-buoy/src",
+      "sourceRoot": "src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "ngx-buoy/tsconfig.lib.json",
-            "project": "ngx-buoy/ng-package.json"
+            "tsConfig": "src/tsconfig.lib.json",
+            "project": "ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "ngx-buoy/src/test.ts",
-            "tsConfig": "ngx-buoy/buoy.spec.json",
-            "karmaConfig": "ngx-buoy/karma.conf.js"
+            "main": "src/test.ts",
+            "tsConfig": "buoy.spec.json",
+            "karmaConfig": "karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "ngx-buoy/tsconfig.lib.json",
-              "ngx-buoy/tsconfig.spec.json"
+              "src/tsconfig.lib.json",
+              "src/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

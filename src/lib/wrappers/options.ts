@@ -3,8 +3,8 @@ interface Options {
 }
 
 export interface QueryOptions extends Options {
-    subscribe: boolean;     // TODO: gql
-    pagination: boolean;    // TODO
+    subscribe?: boolean;     // TODO: gql
+    pagination?: false | string | any;    // TODO
 
 }
 
