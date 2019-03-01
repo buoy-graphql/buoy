@@ -18,27 +18,22 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/example",
-            "index": "example/index.html",
-            "main": "example/main.ts",
-            "polyfills": "example/polyfills.ts",
-            "tsConfig": "example/tsconfig.app.json",
+            "index": "example/src/index.html",
+            "main": "example/src/main.ts",
+            "polyfills": "example/src/polyfills.ts",
+            "tsConfig": "example/src/tsconfig.app.json",
             "assets": [
-              "example/favicon.ico",
-              "example/assets"
+              "example/src/favicon.ico",
+              "example/src/assets"
             ],
             "styles": [
-              "example/styles.scss"
+              "example/src/style/style.scss"
             ],
             "scripts": []
           },
           "configurations": {
             "production": {
-              "fileReplacements": [
-                {
-                  "replace": "example/environments/environment.ts",
-                  "with": "example/environments/environment.prod.ts"
-                }
-              ],
+              "fileReplacements": [],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -107,7 +102,7 @@
       }
     },
     "example-e2e": {
-      "root": "e2e/",
+      "root": "example/e2e/",
       "projectType": "application",
       "prefix": "",
       "architect": {

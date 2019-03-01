@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import gql from 'graphql-tag';
-import {Buoy} from '../../ngx-buoy/src/lib/buoy';
-import {Query} from '../../ngx-buoy/src/lib/wrappers/query';
-import {QueryOptions} from '../../ngx-buoy/src/lib/wrappers/options';
+import {Buoy} from '../../../ngx-buoy/src/lib/buoy';
+import {Query} from '../../../ngx-buoy/src/lib/wrappers/query';
+import {QueryOptions} from '../../../ngx-buoy/src/lib/wrappers/options';
 
 @Component({
   selector: 'app-root',
@@ -17,8 +17,8 @@ export class AppComponent {
   ) {
       this.movies = this.buoy.query(
           gql`
-              query Movies {
-                  movies(count: 5, page: 1) {
+              query Movies($moviesPage: Int!) {
+                  movies(count: $moviesLimit, page: $moviesPage) {
                       data {
                           id
                           title
@@ -38,15 +38,32 @@ export class AppComponent {
                               }
                           }
                       }
+                      paginatorInfo {
+                          lastPage
+                          total
+                      }
+                  }
+
+                  actor(id: 1) {
+                      roles(count: $actorRolesLimit, page: $actorRolesPage) {
+                          data {
+                              character
+                          }
+                      }
                   }
               }
           `,
           {
-
+              moviesPage: 1,
+              test: 'qweqwe'
           },
           <QueryOptions>{
               subscribe: true,
-              scope: 'movies'
+              scope: 'movies',
+              pagination: [
+                  'movies',
+                  'actor.roles'
+              ]
           }
       );
   }
