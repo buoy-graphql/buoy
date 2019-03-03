@@ -1,12 +1,10 @@
 # Configuration
+You must define the Buoy-configuration and add it as a provider. See [installation](installation.md#include-in-your-project) for an example.
 
-You must define the Buoy-configuration and add it as a provider.
-
-// TODO Example
-
-## General
-General configuration of the Buoy-client.
-Please note that some of these values can be overwritten by the options on a specific `Query` or `Mutation`.
+## General configuration
+Please note that some of these values can be overwritten by the options on a
+specific [`Query`](../api-reference/query.md) or [`Mutation`](../api-reference/mutation.md).
+If an option with the same name is available in QueryOptions or MutationOptions, they can be overwritten locally.
 
 ### debug
 Enable debug-mode? This will output large amounts of debugging-information to the browser console.
