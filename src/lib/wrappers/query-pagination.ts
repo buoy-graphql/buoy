@@ -1,6 +1,8 @@
 import {dotsToCamelCase, scope} from 'ngx-plumber';
 import {Buoy} from '../buoy';
 import {QueryOptions} from './options';
+import {scopeChild} from "ngx-plumber/lib/methods/scope-child";
+import {scopeCount} from "ngx-plumber/lib/methods/scope-count";
 
 export class QueryPagination {
     private _paginators = {};
@@ -228,7 +230,7 @@ export class QueryPagination {
      */
     private findPaginatorsInQuery(): void {
         // Loop through all paginators
-        for (const paginator in this._paginators) {
+        for (const paginator of Object.keys(this._paginators)) {
             // Loop through all definitions in query
             scope(this.query, 'definitions').forEach((definition, definitionI) => {
                 // Loop through all definitions
@@ -248,9 +250,9 @@ export class QueryPagination {
         const queryScoped = this.queryScoped(queryPath);
 
         // Check if this selection is in the scope
-        if (this.scopeLevel(paginator, level, true) === queryScoped.name.value) {
+        if (scopeChild(paginator, level, true) === queryScoped.name.value) {
             // Check if this is the last level in the scope
-            if (this.scopeLevels(paginator) === level + 1) {
+            if (scopeCount(paginator) === level + 1) {
                 this.injectPaginationInSelection(paginator, queryPath); // TODO: Add parameters
             } else {
                 // The final level is a child of this level - run findPaginatorInSelection on all children.
@@ -438,19 +440,5 @@ export class QueryPagination {
 
     private queryScoped(scopeStr): any {
         return scope(this._query, scopeStr);
-    }
-
-    private scopeLevel(scopeStr: string, i: number, includeParents = false): string { // TODO ngx-plumber
-        if (includeParents) {
-            let result = '';
-            scopeStr.split('.').forEach((level) => {
-                result = `${result}.${level}`;
-            });
-        }
-        return scopeStr.split('.')[i];
-    }
-
-    private scopeLevels(scopeStr: string): number { // TODO ngx-plumber
-        return scopeStr.split('.').length;
     }
 }
