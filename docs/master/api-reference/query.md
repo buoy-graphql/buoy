@@ -2,16 +2,16 @@
 
 The Query-object is a wrapper around the Apollo-client. The wrapper keeps track of pagination and makes it easier to change variables after the query has been executed.
 
-## Initialising a new Query
+## Initializing a new Query
 
-All new queries and mutations are created through the [`Buoy`](buoy)-service. 
+All new queries and mutations are created through the `Buoy`-service. 
 
 [Click here](/demo) to see a live example.
 
 ```typescript
 export class AppComponent {
 
-    public myMovie;
+    public myMovie: Query;
 
     constructor(
         private buoy: Buoy
