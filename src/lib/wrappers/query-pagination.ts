@@ -1,8 +1,7 @@
 import {dotsToCamelCase, scope} from 'ngx-plumber';
 import {Buoy} from '../buoy';
 import {QueryOptions} from './options';
-import {scopeChild} from "ngx-plumber/lib/methods/scope-child";
-import {scopeCount} from "ngx-plumber/lib/methods/scope-count";
+import {scopeChild, scopeCount} from 'ngx-plumber';
 
 export class QueryPagination {
     private _paginators = {};
