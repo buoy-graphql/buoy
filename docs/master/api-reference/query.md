@@ -21,7 +21,6 @@ export class AppComponent {
             gql `
                 query Movie($id: Int!) {
                     movie(id: $id) {
-                        id
                         title
                         poster
                     }
@@ -56,6 +55,32 @@ The scoped response from the GraphQL-server is available in the `data`-variable.
     Loading...
 </div>
 ````
+
+### Waiting for response in your code
+::: warning
+This feature is experimental. It is subject to change.
+:::
+
+The data parameter will not contain anything before the query has been executed.
+In order to make an async functional, that waits for a response, you must use a listener.
+
+```typescript
+export class AppComponent {
+
+    public myMovie: Query;
+    provate myMovieSubscription: Subscription;
+    
+    constructor(
+            private buoy: Buoy
+        ) {
+            this.myMovie = this.buoy.query();
+            this.myMovieSubscription = this.myMovie.onChanges.subscribe((query: Query) => {
+                console.log('Query response:', query.data);
+            });
+        }
+    
+}
+```
 
 ## Variables
 The Query-object has following variables available:
