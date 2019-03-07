@@ -21,7 +21,6 @@ export class AppComponent {
             gql `
                 query Movie($id: Int!) {
                     movie(id: $id) {
-                        id
                         title
                         poster
                     }
@@ -56,6 +55,32 @@ The scoped response from the GraphQL-server is available in the `data`-variable.
     Loading...
 </div>
 ````
+
+### Waiting for response in your code
+::: warning
+This feature is experimental. It is subject to change.
+:::
+
+The data parameter will not contain anything before the query has been executed.
+In order to make an async functional, that waits for a response, you must use a listener.
+
+```typescript
+export class AppComponent {
+
+    public myMovie: Query;
+    provate myMovieSubscription: Subscription;
+    
+    constructor(
+            private buoy: Buoy
+        ) {
+            this.myMovie = this.buoy.query();
+            this.myMovieSubscription = this.myMovie.onChanges.subscribe((query: Query) => {
+                console.log('Query response:', query.data);
+            });
+        }
+    
+}
+```
 
 ## Variables
 The Query-object has following variables available:
@@ -98,6 +123,16 @@ Go to a specific page. Will only change page if the page is available.
 | refetch   | boolean | (Optional / default: true) Refetch the query after page changed? |
 | paginator | string  | Optional: The paginator. Only required if using multiple paginators. |
 
+### setLimit
+Go to a specific page. Will only change page if the page is available.
+
+**Parameters**
+| Parameter | Type    | Explanation       |
+| --------- | ------- | ----------------- |
+| limit     | number  | The desired limit. |
+| refetch   | boolean | (Optional / default: true) Refetch the query after limit changed? |
+| paginator | string  | Optional: The paginator. Only required if using multiple paginators. |
+
 ### refetch
 Runs the query with the current options and variables. 
 
@@ -133,10 +168,14 @@ This will print all relevant debug-information to the console. Should not be use
 ### pagination
 The pagination-option can be used in a few different ways.
 
-::: tip
 Buoy automatically adds the necessary variables, variable values and attributes for pagination to the query.
 However, you may still want to add the variables and attributes to your query in order for your code completion to work properly (depending on your IDE). 
+
+::: tip
+If you need to set the initial pagination values for page and limit, simply add them as parameters to the query.
+However, once initialized, you must use the pagination methods to change page and limit. 
 :::
+
 **Simple pagination**
 
 With simple pagination, you simply enter a scope of the paginator.
@@ -160,7 +199,7 @@ query Movies ($limit: Int!, $page: Int!) { # Optional to add variables
 }
 ```
 
-In this example the variables will be: `limit`, `page`. 
+In this example the variables will be: `limit`, `page`.
 
 **Multiple paginators**
 
@@ -209,7 +248,6 @@ query MyQuery (
 ```
 
 In this example the variables will be: `moviesLimit`, `moviesPage`, `actorRolesLimit` and `actorRolesPage`.
-
 
 **Multiple paginators with custom paginator-type**
 

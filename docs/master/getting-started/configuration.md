@@ -36,6 +36,9 @@ Does your backend use `paginator` or `connection` as default paginators?
 
 Default: `paginator`
 
+### defaultLimit
+Set the default limit per page for paginators. Can be overwritten locally.
+
 ## Middleware
 
 // TODO
