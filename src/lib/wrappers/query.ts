@@ -81,7 +81,18 @@ export class Query extends Wrapper {
      * Set the page.
      */
     public setPage(page: number | string, refetch = true, paginator?: string): this {
-        this._queryPagination.setPage(page, paginator);
+        if (refetch === true && this._queryPagination.setPage(page, paginator)) {
+            this.refetch();
+        }
+
+        return this;
+    }
+
+    /**
+     * Set the limit.
+     */
+    public setLimit(limit: number, refetch = true, paginator?: string): this {
+        this._queryPagination.setLimit(limit, paginator);
 
         if (refetch === true) {
             this.refetch();

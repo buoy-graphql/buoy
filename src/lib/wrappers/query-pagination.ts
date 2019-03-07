@@ -71,7 +71,7 @@ export class QueryPagination {
      * Go to the previous page.
      */
     public prevPage(paginator?: string): boolean {
-        paginator = this.prePageChange(paginator);
+        paginator = this.checkPaginator(paginator, 'page');
 
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, '-')) {
@@ -88,7 +88,7 @@ export class QueryPagination {
      * Go the the next page.
      */
     public nextPage(paginator?: string): boolean {
-        paginator = this.prePageChange(paginator);
+        paginator = this.checkPaginator(paginator, 'page');
 
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, '+')) {
@@ -105,7 +105,7 @@ export class QueryPagination {
      * Set the page.
      */
     public setPage(page: number | string, paginator?: string): boolean {
-        paginator = this.prePageChange(paginator);
+        paginator = this.checkPaginator(paginator, 'page');
 
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, page)) {
@@ -117,9 +117,23 @@ export class QueryPagination {
     }
 
     /**
-     * Validate everything before a page change.
+     * Set the limit for a paginator
      */
-    private prePageChange(paginator: string): string {
+    public setLimit(limit: number, paginator: string): void {
+        paginator = this.checkPaginator(paginator, 'limit');
+
+        if (this._paginators[paginator].desiredLimit !== limit) {
+            // Jump back to page 1 if the limit was changed.
+            this._paginators[paginator].desiredPage = 1;
+        }
+
+        this._paginators[paginator].desiredLimit = limit;
+    }
+
+    /**
+     * Check if the paginator exists.
+     */
+    private checkPaginator(paginator: string, variable: 'page'|'limit'): string {
         // Check if there are any paginators
         if (Object.keys(this._paginators).length === 0) {
             throw new Error('There are no paginators in this query.');
@@ -130,7 +144,7 @@ export class QueryPagination {
             if (Object.keys(this._paginators).length > 1) {
                 // If there are more than one paginator, and no one is selected, we can't continue
                 throw new Error('You must define in which paginator you ' +
-                    'want to change the page, when there are multiple paginators in a query!');
+                    `want to change the ${variable}, when there are multiple paginators in a query!`);
             } else {
                 // If there is only one paginator, change the value of paginator to that
                 paginator = Object.keys(this._paginators)[0];
@@ -159,7 +173,11 @@ export class QueryPagination {
                         }
                     }
                 } else if (!isNaN(<number>page)) {
-                    // The page is already the desired page
+                    if (page === this._paginators[paginator].desiredPage) {
+                        return false; // The page is already the desired page
+                    } else if (page <= this._paginators[paginator].pagination.lastPage) {
+                        return true;
+                    }
                 } else {
                     throw new Error(`Invalid page "${page}" for type "paginator".`);
                 }
