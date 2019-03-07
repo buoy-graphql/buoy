@@ -5,7 +5,7 @@ export class BuoyConfig {
     /**
      * The endpoint that Buoy will query.
      */
-    endpoint = '/graph';
+    endpoint ? = '/graph';
 
     /**
      * How should queries and mutations be sent to the server?
@@ -52,10 +52,10 @@ export class BuoyConfig {
     /**
      * Which type of paginators does the GraphQL server use as a default?
      */
-    paginatorType: 'paginator' = 'paginator'; // TODO Add support for 'connection'
+    paginatorType?: 'paginator' = 'paginator'; // TODO Add support for 'connection'
 
     /**
      * Default limit to be used in paginators.
      */
-    defaultLimit = 25;
+    defaultLimit ? = 25;
 }
