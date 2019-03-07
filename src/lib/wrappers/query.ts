@@ -23,7 +23,7 @@ export class Query extends Wrapper {
         this.debug('debug', 'Initializing Query...');
 
         // Init QueryPagination
-        this._queryPagination = new QueryPagination(buoy, _options, query); // TODO: Re-init if _options.pagination changes.
+        this._queryPagination = new QueryPagination(buoy, _options, query, _variables); // TODO: Re-init if _options.pagination changes.
 
         this._query = this.buoy.apollo.watchQuery({
             query: this._queryPagination.query, // Use the manipulated query

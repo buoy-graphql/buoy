@@ -39,7 +39,10 @@ export class BuoyConfig {
      */
     extensions?: () => any; // TODO: Add parameters
 
-    middleware?: any;
+    /**
+     * Register global middleware.
+     */
+    middleware?: any = [];
 
     /**
      * Would you like to subscribe to changes server-side?
@@ -50,4 +53,9 @@ export class BuoyConfig {
      * Which type of paginators does the GraphQL server use as a default?
      */
     paginatorType: 'paginator' = 'paginator'; // TODO Add support for 'connection'
+
+    /**
+     * Default limit to be used in paginators.
+     */
+    defaultLimit = 25;
 }

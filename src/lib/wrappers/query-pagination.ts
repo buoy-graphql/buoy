@@ -1,14 +1,14 @@
 import {dotsToCamelCase, scope} from 'ngx-plumber';
 import {Buoy} from '../buoy';
 import {QueryOptions} from './options';
-import {scopeChild, scopeCount} from 'ngx-plumber';
+import {scopeChild, scopeCount, issetElse} from 'ngx-plumber';
 
 export class QueryPagination {
     private _paginators = {};
-    constructor(private _buoy: Buoy, private _queryOptions: QueryOptions, private _query) {
+    constructor(private _buoy: Buoy, private _queryOptions: QueryOptions, private _query, variables: any) {
         console.log('PA init', _query);
 
-        this.getPaginatorScopes();
+        this.getPaginatorScopes(variables);
 
         this.findPaginatorsInQuery();
     }
@@ -179,14 +179,14 @@ export class QueryPagination {
     /**
      * Converts the pagination parameter from QueryOptions into an object with paginators
      */
-    private getPaginatorScopes(): void {
+    private getPaginatorScopes(variables: any): void {
         if (typeof this._queryOptions.pagination === 'string') {
             // Simple pagination
-            this._paginators = this.convertScopesToPaginators([this._queryOptions.pagination]);
+            this._paginators = this.convertScopesToPaginators([this._queryOptions.pagination], variables);
         } else {
             if (this._queryOptions.pagination instanceof Array) {
                 // Multiple paginators
-                this._paginators = this.convertScopesToPaginators(this._queryOptions.pagination);
+                this._paginators = this.convertScopesToPaginators(this._queryOptions.pagination, variables);
             } else {
                 // Advanced pagination
                 this._paginators = this._queryOptions.pagination;
@@ -198,7 +198,7 @@ export class QueryPagination {
     /**
      * Converts a list of scopes to an object with paginators.
      */
-    private convertScopesToPaginators(scopes: string[]) {
+    private convertScopesToPaginators(scopes: string[], variables: any) {
         const paginators = {};
 
         scopes.forEach((scopeStr) => {
@@ -208,8 +208,10 @@ export class QueryPagination {
                     type: 'paginator',
                     page: scopes.length === 1 ? 'page' : `${prefix}Page`,
                     limit: scopes.length === 1 ? 'limit' : `${prefix}Limit`,
-                    desiredPage: 1,
-                    desiredLimit: 25
+                    desiredPage: scopes.length === 1 ? issetElse(variables['page'], 1) : issetElse(variables[`${prefix}Page`], 1),
+                    desiredLimit: scopes.length === 1 ?
+                        issetElse(variables['limit'], this._buoy.config.defaultLimit) :
+                        issetElse(variables[`${prefix}Limit`], this._buoy.config.defaultLimit)
                 };
             } else {
                 paginators[scopeStr] = {
