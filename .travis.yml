@@ -1,13 +1,14 @@
+dist: trusty
 language: node_js
 node_js:
-  - "8.9"
+  - "10.15"
 
 addons:
   chrome: stable
 
 before_script:
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
   - npm install
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 script:
   - npm run test
