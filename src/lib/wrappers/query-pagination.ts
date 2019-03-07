@@ -43,9 +43,26 @@ export class QueryPagination {
     }
 
     /**
+     * Returns all pagination-values (page, lastPage, etc.)
+     */
+    public get pagination() {
+        let pagination = {};
+
+        if (Object.keys(this._paginators).length === 1) {
+            pagination = this._paginators[Object.keys(this._paginators)[0]].pagination;
+        } else {
+            for (const paginator of Object.keys(this._paginators)) {
+                pagination[paginator] = this._paginators[paginator].pagination;
+            }
+        }
+
+        return pagination;
+    }
+
+    /**
      * Save lastPage, currentPage, etc. for all paginators.
      */
-    public savePagination(data: any): void {
+    public readPaginationFromResponse(data: any): void {
         for (const paginator in this._paginators) {
             if (this._paginators[paginator].type === 'paginator') {
                 const paginatorInfo = scope(data.data, paginator).paginatorInfo;
@@ -155,7 +172,7 @@ export class QueryPagination {
     }
 
     /**
-     * Check if a page exists in a paginator.
+     * Check if a page exists in the paginator.
      */
     private checkIfPageExists(paginator: string, page: number|string|'-'|'+'): boolean {
         if (typeof paginator !== 'undefined') {
@@ -189,7 +206,6 @@ export class QueryPagination {
                 // TODO add support for connection
             }
         }
-        console.log('AA Checking for page', this._paginators, page);
 
         return false;
     }

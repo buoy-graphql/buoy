@@ -14,7 +14,6 @@ export class Query extends Wrapper {
     private _initialized = false;
 
     public data: any;
-    public pagination;
 
     public loading = true;
 
@@ -37,6 +36,11 @@ export class Query extends Wrapper {
 
         this.debug('debug', 'Query initialized successfully.');
         return this;
+    }
+
+    public get pagination() {
+        console.log('PAGINATION :: ', this._queryPagination.pagination);
+        return this._queryPagination.pagination;
     }
 
     public refetch(): this {
@@ -125,16 +129,9 @@ export class Query extends Wrapper {
 
     private mapResponse(data, mode: 'http' | 'ws'): void {
         // Set loading
-        this.loading = data.loading;
+        this.loading = data.loading; // TODO Necessary?
 
-        // Set pagination (if enabled)
-        if (this._options.pagination !== false) {
-            // Save lastPage, currentPage, etc.
-            this._queryPagination.savePagination(data);
-//            this.pagination = scope(data.data, <string>this._options.pagination).paginatorInfo; // TODO
-            console.log('DE', this.pagination);
-        }
-        // TODO
+        this._queryPagination.readPaginationFromResponse(data);
 
         // Set data
         this.data = scope(data.data, this._options.scope);
