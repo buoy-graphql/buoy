@@ -1,15 +1,14 @@
 import {dotsToCamelCase, scope} from 'ngx-plumber';
 import {Buoy} from '../buoy';
 import {QueryOptions} from './options';
-import {scopeChild} from "ngx-plumber/lib/methods/scope-child";
-import {scopeCount} from "ngx-plumber/lib/methods/scope-count";
+import {scopeChild, scopeCount, issetElse} from 'ngx-plumber';
 
 export class QueryPagination {
     private _paginators = {};
-    constructor(private _buoy: Buoy, private _queryOptions: QueryOptions, private _query) {
+    constructor(private _buoy: Buoy, private _queryOptions: QueryOptions, private _query, variables: any) {
         console.log('PA init', _query);
 
-        this.getPaginatorScopes();
+        this.getPaginatorScopes(variables);
 
         this.findPaginatorsInQuery();
     }
@@ -44,9 +43,26 @@ export class QueryPagination {
     }
 
     /**
+     * Returns all pagination-values (page, lastPage, etc.)
+     */
+    public get pagination() {
+        let pagination = {};
+
+        if (Object.keys(this._paginators).length === 1) {
+            pagination = this._paginators[Object.keys(this._paginators)[0]].pagination;
+        } else {
+            for (const paginator of Object.keys(this._paginators)) {
+                pagination[paginator] = this._paginators[paginator].pagination;
+            }
+        }
+
+        return pagination;
+    }
+
+    /**
      * Save lastPage, currentPage, etc. for all paginators.
      */
-    public savePagination(data: any): void {
+    public readPaginationFromResponse(data: any): void {
         for (const paginator in this._paginators) {
             if (this._paginators[paginator].type === 'paginator') {
                 const paginatorInfo = scope(data.data, paginator).paginatorInfo;
@@ -72,7 +88,7 @@ export class QueryPagination {
      * Go to the previous page.
      */
     public prevPage(paginator?: string): boolean {
-        paginator = this.prePageChange(paginator);
+        paginator = this.checkPaginator(paginator, 'page');
 
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, '-')) {
@@ -89,7 +105,7 @@ export class QueryPagination {
      * Go the the next page.
      */
     public nextPage(paginator?: string): boolean {
-        paginator = this.prePageChange(paginator);
+        paginator = this.checkPaginator(paginator, 'page');
 
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, '+')) {
@@ -106,7 +122,7 @@ export class QueryPagination {
      * Set the page.
      */
     public setPage(page: number | string, paginator?: string): boolean {
-        paginator = this.prePageChange(paginator);
+        paginator = this.checkPaginator(paginator, 'page');
 
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, page)) {
@@ -118,9 +134,23 @@ export class QueryPagination {
     }
 
     /**
-     * Validate everything before a page change.
+     * Set the limit for a paginator
      */
-    private prePageChange(paginator: string): string {
+    public setLimit(limit: number, paginator: string): void {
+        paginator = this.checkPaginator(paginator, 'limit');
+
+        if (this._paginators[paginator].desiredLimit !== limit) {
+            // Jump back to page 1 if the limit was changed.
+            this._paginators[paginator].desiredPage = 1;
+        }
+
+        this._paginators[paginator].desiredLimit = limit;
+    }
+
+    /**
+     * Check if the paginator exists.
+     */
+    private checkPaginator(paginator: string, variable: 'page'|'limit'): string {
         // Check if there are any paginators
         if (Object.keys(this._paginators).length === 0) {
             throw new Error('There are no paginators in this query.');
@@ -131,7 +161,7 @@ export class QueryPagination {
             if (Object.keys(this._paginators).length > 1) {
                 // If there are more than one paginator, and no one is selected, we can't continue
                 throw new Error('You must define in which paginator you ' +
-                    'want to change the page, when there are multiple paginators in a query!');
+                    `want to change the ${variable}, when there are multiple paginators in a query!`);
             } else {
                 // If there is only one paginator, change the value of paginator to that
                 paginator = Object.keys(this._paginators)[0];
@@ -142,7 +172,7 @@ export class QueryPagination {
     }
 
     /**
-     * Check if a page exists in a paginator.
+     * Check if a page exists in the paginator.
      */
     private checkIfPageExists(paginator: string, page: number|string|'-'|'+'): boolean {
         if (typeof paginator !== 'undefined') {
@@ -160,7 +190,11 @@ export class QueryPagination {
                         }
                     }
                 } else if (!isNaN(<number>page)) {
-                    // The page is already the desired page
+                    if (page === this._paginators[paginator].desiredPage) {
+                        return false; // The page is already the desired page
+                    } else if (page <= this._paginators[paginator].pagination.lastPage) {
+                        return true;
+                    }
                 } else {
                     throw new Error(`Invalid page "${page}" for type "paginator".`);
                 }
@@ -172,7 +206,6 @@ export class QueryPagination {
                 // TODO add support for connection
             }
         }
-        console.log('AA Checking for page', this._paginators, page);
 
         return false;
     }
@@ -180,14 +213,14 @@ export class QueryPagination {
     /**
      * Converts the pagination parameter from QueryOptions into an object with paginators
      */
-    private getPaginatorScopes(): void {
+    private getPaginatorScopes(variables: any): void {
         if (typeof this._queryOptions.pagination === 'string') {
             // Simple pagination
-            this._paginators = this.convertScopesToPaginators([this._queryOptions.pagination]);
+            this._paginators = this.convertScopesToPaginators([this._queryOptions.pagination], variables);
         } else {
             if (this._queryOptions.pagination instanceof Array) {
                 // Multiple paginators
-                this._paginators = this.convertScopesToPaginators(this._queryOptions.pagination);
+                this._paginators = this.convertScopesToPaginators(this._queryOptions.pagination, variables);
             } else {
                 // Advanced pagination
                 this._paginators = this._queryOptions.pagination;
@@ -199,7 +232,7 @@ export class QueryPagination {
     /**
      * Converts a list of scopes to an object with paginators.
      */
-    private convertScopesToPaginators(scopes: string[]) {
+    private convertScopesToPaginators(scopes: string[], variables: any) {
         const paginators = {};
 
         scopes.forEach((scopeStr) => {
@@ -209,8 +242,10 @@ export class QueryPagination {
                     type: 'paginator',
                     page: scopes.length === 1 ? 'page' : `${prefix}Page`,
                     limit: scopes.length === 1 ? 'limit' : `${prefix}Limit`,
-                    desiredPage: 1,
-                    desiredLimit: 25
+                    desiredPage: scopes.length === 1 ? issetElse(variables['page'], 1) : issetElse(variables[`${prefix}Page`], 1),
+                    desiredLimit: scopes.length === 1 ?
+                        issetElse(variables['limit'], this._buoy.config.defaultLimit) :
+                        issetElse(variables[`${prefix}Limit`], this._buoy.config.defaultLimit)
                 };
             } else {
                 paginators[scopeStr] = {

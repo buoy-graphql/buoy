@@ -5,7 +5,6 @@ import {Apollo} from 'apollo-angular';
 import {MutationOptions, QueryOptions} from './wrappers/options';
 import {BuoyConfig} from './buoy-config';
 import {LighthouseLink} from './http-link/lighthouse-link';
-import {LighthouseLinkOptions} from './http-link/lighthouse-link-options';
 import {InMemoryCache} from 'apollo-cache-inmemory';
 import {HttpClient} from '@angular/common/http';
 

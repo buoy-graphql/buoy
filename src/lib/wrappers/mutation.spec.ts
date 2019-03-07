@@ -4,7 +4,7 @@ import gql from 'graphql-tag';
 import {BuoyModule} from '../buoy.module';
 import {Buoy} from '../buoy';
 
-describe('QueryPagination', () => {
+describe('Mutation', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [BuoyModule]

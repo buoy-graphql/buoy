@@ -14,7 +14,6 @@ export class Query extends Wrapper {
     private _initialized = false;
 
     public data: any;
-    public pagination;
 
     public loading = true;
 
@@ -23,7 +22,7 @@ export class Query extends Wrapper {
         this.debug('debug', 'Initializing Query...');
 
         // Init QueryPagination
-        this._queryPagination = new QueryPagination(buoy, _options, query); // TODO: Re-init if _options.pagination changes.
+        this._queryPagination = new QueryPagination(buoy, _options, query, _variables); // TODO: Re-init if _options.pagination changes.
 
         this._query = this.buoy.apollo.watchQuery({
             query: this._queryPagination.query, // Use the manipulated query
@@ -37,6 +36,11 @@ export class Query extends Wrapper {
 
         this.debug('debug', 'Query initialized successfully.');
         return this;
+    }
+
+    public get pagination() {
+        console.log('PAGINATION :: ', this._queryPagination.pagination);
+        return this._queryPagination.pagination;
     }
 
     public refetch(): this {
@@ -81,7 +85,18 @@ export class Query extends Wrapper {
      * Set the page.
      */
     public setPage(page: number | string, refetch = true, paginator?: string): this {
-        this._queryPagination.setPage(page, paginator);
+        if (refetch === true && this._queryPagination.setPage(page, paginator)) {
+            this.refetch();
+        }
+
+        return this;
+    }
+
+    /**
+     * Set the limit.
+     */
+    public setLimit(limit: number, refetch = true, paginator?: string): this {
+        this._queryPagination.setLimit(limit, paginator);
 
         if (refetch === true) {
             this.refetch();
@@ -114,16 +129,9 @@ export class Query extends Wrapper {
 
     private mapResponse(data, mode: 'http' | 'ws'): void {
         // Set loading
-        this.loading = data.loading;
+        this.loading = data.loading; // TODO Necessary?
 
-        // Set pagination (if enabled)
-        if (this._options.pagination !== false) {
-            // Save lastPage, currentPage, etc.
-            this._queryPagination.savePagination(data);
-//            this.pagination = scope(data.data, <string>this._options.pagination).paginatorInfo; // TODO
-            console.log('DE', this.pagination);
-        }
-        // TODO
+        this._queryPagination.readPaginationFromResponse(data);
 
         // Set data
         this.data = scope(data.data, this._options.scope);
