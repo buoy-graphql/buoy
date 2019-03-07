@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+  - "8.9"
+
+addons:
+  chrome: stable
+
+before_script:
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  - npm install
+
+script:
+  - npm run test
+  - npm run test:coverage
