@@ -316,6 +316,19 @@ The scope should generally be the name of the first node in your query followed 
 ### subscribe
 TODO
 
+### router
+This enabled RouteRW, which automatically changes the necessary query params for page and limit.
+
+```
+// Options
+{
+    router: {
+        route: ActiveRoute,
+        router: Router
+    }
+}
+```
+
 ## EventListeners
 The EventListeners are also added as options on a query.
 All EventListeners must be defined as a callback.

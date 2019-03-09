@@ -11,40 +11,37 @@ export class Query extends Wrapper {
     private _querySubscription: Subscription;
     private _queryPagination: QueryPagination;
 
-    private _initialized = false;
+    public _initialized = false;
 
     public data: any;
 
     public loading = true;
 
-    constructor(buoy: Buoy, id: number, query, private _variables, protected _options: QueryOptions) {
+    constructor(buoy: Buoy, id: number, query, public _variables, protected _options: QueryOptions) {
         super(buoy, id, 'query');
         this.debug('debug', 'Initializing Query...');
 
         // Init QueryPagination
-        this._queryPagination = new QueryPagination(buoy, _options, query, _variables); // TODO: Re-init if _options.pagination changes.
+        this._queryPagination = new QueryPagination(this, query, _options, _variables); // TODO: Re-init if _options.pagination changes.
 
-        this._query = this.buoy.apollo.watchQuery({
-            query: this._queryPagination.query, // Use the manipulated query
-            variables: this.variables // Use manipulated variables
-        });
+        if (_options.fetch !== false) {
+            this.initQuery();
+        }
 
-        // Subscribe to changes
-        this._querySubscription = this._query.valueChanges.subscribe((data) => this.mapResponse(data, 'http'));
-
-        this._initialized = true;
-
-        this.debug('debug', 'Query initialized successfully.');
         return this;
     }
 
     public get pagination() {
-        console.log('PAGINATION :: ', this._queryPagination.pagination);
         return this._queryPagination.pagination;
     }
 
     public refetch(): this {
         this.debug('debug', 'Refecthing data...');
+
+        if (this._options.fetch === false && this._initialized === false) {
+            this.initQuery();
+        }
+
         if (this._initialized) {
             this._query.refetch(this.variables);
         }
@@ -106,8 +103,7 @@ export class Query extends Wrapper {
     }
 
     public destroy(): void {
-        alert('Destroyed query object.'); // TODO can Angular's built-in lifecycle hooks be used?
-        this.debug('debug', 'Query has been destroyed.');
+        this._queryPagination.destroy();
     }
 
     private get variables() {
@@ -115,16 +111,26 @@ export class Query extends Wrapper {
         let variables = Object.assign(this._variables, this._queryPagination.variables);
 
         // Run middlewares
-        this.buoy._config.middleware.forEach((middleware) => {
+        this._buoy._config.middleware.forEach((middleware) => {
             // TODO Make sure that the method exists on the Middleware class
-            variables = new middleware(this.buoy).manipulateVariables(this._queryPagination.query, variables, this._options);
+            variables = new middleware(this._buoy).manipulateVariables(this._queryPagination.query, variables, this._options);
         });
 
         return variables;
     }
 
-    private applyOptions(options: QueryOptions): void {
+    private initQuery() {
+        this._query = this._buoy.apollo.watchQuery({
+            query: this._queryPagination.query, // Use the manipulated query
+            variables: this.variables // Use manipulated variables,
+        });
 
+        // Subscribe to changes
+        this._querySubscription = this._query.valueChanges.subscribe((data) => this.mapResponse(data, 'http'));
+
+        this._initialized = true;
+
+        this.debug('debug', 'Query initialized successfully.');
     }
 
     private mapResponse(data, mode: 'http' | 'ws'): void {
