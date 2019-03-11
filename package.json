@@ -13,7 +13,7 @@
     "client"
   ],
   "repository": {
-    "url": "https://github.com/haffdata/ngx-buoy"
+    "url": "https://github.com/haffdata/buoy"
   },
   "homepage": "https://ngx-buoy.com",
   "module": "src/public_api.ts",
@@ -21,9 +21,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "lint": "ng lint",
+    "lint": "ng lint buoy",
     "e2e": "ng e2e",
-    "test": "./node_modules/@angular/cli/bin/ng test ngx-buoy --browsers ChromeHeadless --watch=false",
+    "test": "./node_modules/@angular/cli/bin/ng test buoy --browsers ChromeHeadless --watch=false",
     "test:coverage": "cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "peerDependencies": {

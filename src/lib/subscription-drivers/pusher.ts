@@ -1,5 +1,5 @@
-import {Observable} from 'apollo-link';
-import {SubscriptionDriver} from './subscription-driver';
+import { Observable } from 'apollo-link';
+import { SubscriptionDriver } from './subscription-driver';
 
 export class Pusher extends SubscriptionDriver {
 

@@ -1,12 +1,12 @@
-import {Buoy} from '../buoy';
-import {ApolloLink, Operation, RequestHandler, Observable as LinkObservable, FetchResult} from 'apollo-link';
-import {mergeHeaders, prioritize} from 'apollo-angular-link-http-common';
-import {print} from 'graphql/language/printer';
-import {extractFiles} from 'extract-files';
-import {Context} from './lighthouse-link-options';
-import {SubscriptionDriver} from '../subscription-drivers/subscription-driver';
+import { Buoy } from '../buoy';
+import { ApolloLink, Operation, RequestHandler, Observable as LinkObservable, FetchResult } from 'apollo-link';
+import { mergeHeaders, prioritize } from 'apollo-angular-link-http-common';
+import { print } from 'graphql/language/printer';
+import { extractFiles } from 'extract-files';
+import { Context } from './lighthouse-link-options';
+import { SubscriptionDriver } from '../subscription-drivers/subscription-driver';
 import Pusher from '../subscription-drivers/pusher';
-import {BuoyConfig} from '../buoy-config';
+import { BuoyConfig } from '../buoy-config';
 
 export class LighthouseLink extends ApolloLink {
     public requester: RequestHandler;

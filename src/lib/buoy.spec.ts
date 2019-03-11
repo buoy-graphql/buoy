@@ -1,10 +1,10 @@
-import {TestBed, inject} from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 
-import {Buoy} from './buoy';
-import {BuoyModule} from './buoy.module';
+import { Buoy } from './buoy';
+import { BuoyModule } from './buoy.module';
 import gql from 'graphql-tag';
-import {BuoyConfig} from './buoy-config';
-import {HttpHeaders} from '@angular/common/http';
+import { BuoyConfig } from './buoy-config';
+import { HttpHeaders } from '@angular/common/http';
 
 const buoyConfig: BuoyConfig = {
     middleware: [],

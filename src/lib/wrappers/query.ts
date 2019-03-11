@@ -1,9 +1,9 @@
-import {QueryOptions} from './options';
-import {Observable, Subscription} from 'rxjs';
-import {scope} from 'ngx-plumber';
-import {Buoy} from '../buoy';
-import {Wrapper} from './wrapper';
-import {QueryPagination} from './query-pagination';
+import { QueryOptions } from './options';
+import { Observable, Subscription } from 'rxjs';
+import { scope } from 'ngx-plumber';
+import { Buoy } from '../buoy';
+import { Wrapper } from './wrapper';
+import { QueryPagination } from './query-pagination';
 
 
 export class Query extends Wrapper {
@@ -31,7 +31,7 @@ export class Query extends Wrapper {
         return this;
     }
 
-    public get pagination() {
+    public get pagination(): any {
         return this._queryPagination.pagination;
     }
 
