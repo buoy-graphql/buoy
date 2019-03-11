@@ -1,4 +1,4 @@
-import {QueryOptions} from '../wrappers/options';
+import { QueryOptions } from '../wrappers/options';
 
 export interface QueryManipulator {
     /**

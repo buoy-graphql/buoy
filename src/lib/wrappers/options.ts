@@ -16,5 +16,5 @@ export interface QueryOptions extends Options {
 }
 
 export interface MutationOptions extends Options {
-    asd: boolean;
+    asd?: boolean;
 }

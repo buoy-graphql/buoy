@@ -1,5 +1,5 @@
-import {Apollo} from 'apollo-angular';
-import {MutationOptions} from './options';
+import { Apollo } from 'apollo-angular';
+import { MutationOptions } from './options';
 
 export class Mutation {
     private _query;

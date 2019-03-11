@@ -1,4 +1,4 @@
-import {Buoy} from '../buoy';
+import { Buoy } from '../buoy';
 
 export class Wrapper {
     constructor(public _buoy: Buoy, protected _id: number, protected _type) {

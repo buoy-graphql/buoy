@@ -1,7 +1,7 @@
-import {Options as ApolloOptions} from 'apollo-angular-link-http-common';
-import {HttpHeaders} from '@angular/common/http';
-import {SubscriptionDriver} from '../subscription-drivers/subscription-driver';
-import Pusher from "../subscription-drivers/pusher";
+import { Options as ApolloOptions } from 'apollo-angular-link-http-common';
+import { HttpHeaders } from '@angular/common/http';
+import { SubscriptionDriver } from '../subscription-drivers/subscription-driver';
+import Pusher from '../subscription-drivers/pusher';
 
 export declare type LighthouseLinkOptions = {
     /**

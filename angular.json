@@ -3,8 +3,8 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-buoy": {
-      "root": "ngx-buoy",
+    "buoy": {
+      "root": "buoy",
       "sourceRoot": "src",
       "projectType": "library",
       "prefix": "lib",
@@ -166,5 +166,5 @@
       }
     }
   },
-  "defaultProject": "ngx-buoy"
+  "defaultProject": "buoy"
 }

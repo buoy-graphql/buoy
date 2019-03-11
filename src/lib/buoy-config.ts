@@ -1,5 +1,5 @@
-import {HttpHeaders} from '@angular/common/http';
-import {Middleware} from './middleware/middleware';
+import { HttpHeaders } from '@angular/common/http';
+import { Middleware } from './middleware/middleware';
 
 export class BuoyConfig {
     /**
