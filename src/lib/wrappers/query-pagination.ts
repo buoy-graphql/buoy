@@ -1,16 +1,27 @@
-import {dotsToCamelCase, scope} from 'ngx-plumber';
-import {Buoy} from '../buoy';
-import {QueryOptions} from './options';
-import {scopeChild, scopeCount, issetElse} from 'ngx-plumber';
+import { dotsToCamelCase, scope, scopeChild, scopeCount, issetElse } from 'ngx-plumber';
+import { QueryOptions } from './options';
+import { Query } from './query';
+import { QueryRoute } from './query-route';
 
 export class QueryPagination {
-    private _paginators = {};
-    constructor(private _buoy: Buoy, private _queryOptions: QueryOptions, private _query, variables: any) {
-        console.log('PA init', _query);
+    public _paginators = {};
+    private _queryRoute: QueryRoute;
 
-        this.getPaginatorScopes(variables);
+    constructor(public _query: Query, private _gqlQuery, public _queryOptions: QueryOptions, variables: any) {
+        if (typeof this._queryOptions.pagination !== 'undefined') {
+            this.getPaginatorScopes(variables);
 
-        this.findPaginatorsInQuery();
+            this.findPaginatorsInQuery();
+
+            // Subscribe to the Router if defined.
+            this._queryRoute = new QueryRoute(this);
+        }
+    }
+
+    public destroy(): void {
+        if (this._queryRoute) {
+            this._queryRoute.destroy();
+        }
     }
 
     /**
@@ -80,8 +91,8 @@ export class QueryPagination {
      * Returns the manipulated query (graphql-tag).
      */
     public get query() {
-        console.log('PA FINAL QUERY', this._query);
-        return this._query;
+        console.log('PA FINAL QUERY', this._gqlQuery);
+        return this._gqlQuery;
     }
 
     /**
@@ -93,6 +104,7 @@ export class QueryPagination {
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, '-')) {
             this._paginators[paginator].desiredPage--;
+            this._queryRoute.writeRoute();
 
             // TODO add support for connection
             return true;
@@ -110,6 +122,7 @@ export class QueryPagination {
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, '+')) {
             this._paginators[paginator].desiredPage++;
+            this._queryRoute.writeRoute();
 
             // TODO add support for connection
             return true;
@@ -121,12 +134,15 @@ export class QueryPagination {
     /**
      * Set the page.
      */
-    public setPage(page: number | string, paginator?: string): boolean {
+    public setPage(page: number | string, paginator?: string, checkPage = true): boolean {
         paginator = this.checkPaginator(paginator, 'page');
 
         // Only continue if the page actually is available
-        if (this.checkIfPageExists(paginator, page)) {
+        if (this.checkIfPageExists(paginator, page) || checkPage === false) {
             this._paginators[paginator].desiredPage = page;
+            if (this._query._initialized) {
+                this._queryRoute.writeRoute();
+            }
             return true;
         }
 
@@ -136,12 +152,15 @@ export class QueryPagination {
     /**
      * Set the limit for a paginator
      */
-    public setLimit(limit: number, paginator: string): void {
+    public setLimit(limit: number, paginator: string, checkPage = true): void {
         paginator = this.checkPaginator(paginator, 'limit');
 
         if (this._paginators[paginator].desiredLimit !== limit) {
             // Jump back to page 1 if the limit was changed.
             this._paginators[paginator].desiredPage = 1;
+            if (this._query._initialized) {
+                this._queryRoute.writeRoute();
+            }
         }
 
         this._paginators[paginator].desiredLimit = limit;
@@ -175,36 +194,42 @@ export class QueryPagination {
      * Check if a page exists in the paginator.
      */
     private checkIfPageExists(paginator: string, page: number|string|'-'|'+'): boolean {
-        if (typeof paginator !== 'undefined') {
-            if (this._paginators[paginator].type === 'paginator') {
-                if (page === '-') {
-                    if (typeof this._paginators[paginator].pagination !== 'undefined') {
-                        if (this._paginators[paginator].pagination.currentPage - 1 >= 1) {
+        try {
+            if (typeof paginator !== 'undefined') {
+                if (this._paginators[paginator].type === 'paginator') {
+                    if (page === '-') {
+                        if (typeof this._paginators[paginator].pagination !== 'undefined') {
+                            if (this._paginators[paginator].pagination.currentPage - 1 >= 1) {
+                                return true;
+                            }
+                        }
+                    } else if (page === '+') {
+                        if (typeof this._paginators[paginator].pagination !== 'undefined') {
+                            if (this._paginators[paginator].pagination.currentPage + 1 <= this._paginators[paginator].pagination.lastPage) {
+                                return true;
+                            }
+                        }
+                    } else if (!isNaN(<number>page)) {
+                        if (page === this._paginators[paginator].desiredPage) {
+                            return false; // The page is already the desired page
+                        } else if (page <= this._paginators[paginator].pagination.lastPage) {
                             return true;
                         }
+                    } else {
+                        throw new Error(`Invalid page "${page}" for type "paginator".`);
                     }
-                } else if (page === '+') {
-                    if (typeof this._paginators[paginator].pagination !== 'undefined') {
-                        if (this._paginators[paginator].pagination.currentPage + 1 <= this._paginators[paginator].pagination.lastPage) {
-                            return true;
-                        }
-                    }
-                } else if (!isNaN(<number>page)) {
-                    if (page === this._paginators[paginator].desiredPage) {
-                        return false; // The page is already the desired page
-                    } else if (page <= this._paginators[paginator].pagination.lastPage) {
-                        return true;
+                    switch (page) {
+                        case '-':
+                            break;
+                        case '+':
+                            break;
                     }
                 } else {
-                    throw new Error(`Invalid page "${page}" for type "paginator".`);
+                    // TODO add support for connection
                 }
-                switch (page) {
-                    case '-': break;
-                    case '+': break;
-                }
-            } else {
-                // TODO add support for connection
             }
+        } catch (e) {
+            return false;
         }
 
         return false;
@@ -237,15 +262,15 @@ export class QueryPagination {
 
         scopes.forEach((scopeStr) => {
             const prefix = dotsToCamelCase(scopeStr);
-            if (this._buoy._config.paginatorType === 'paginator') {
+            if (this._query._buoy._config.paginatorType === 'paginator') {
                 paginators[scopeStr] = {
                     type: 'paginator',
                     page: scopes.length === 1 ? 'page' : `${prefix}Page`,
                     limit: scopes.length === 1 ? 'limit' : `${prefix}Limit`,
                     desiredPage: scopes.length === 1 ? issetElse(variables['page'], 1) : issetElse(variables[`${prefix}Page`], 1),
                     desiredLimit: scopes.length === 1 ?
-                        issetElse(variables['limit'], this._buoy.config.defaultLimit) :
-                        issetElse(variables[`${prefix}Limit`], this._buoy.config.defaultLimit)
+                        issetElse(variables['limit'], this._query._buoy.config.defaultLimit) :
+                        issetElse(variables[`${prefix}Limit`], this._query._buoy.config.defaultLimit)
                 };
             } else {
                 paginators[scopeStr] = {
@@ -267,7 +292,7 @@ export class QueryPagination {
         // Loop through all paginators
         for (const paginator of Object.keys(this._paginators)) {
             // Loop through all definitions in query
-            scope(this.query, 'definitions').forEach((definition, definitionI) => {
+            scope(this._gqlQuery, 'definitions').forEach((definition, definitionI) => {
                 // Loop through all definitions
                 this.queryScoped(`definitions.${definitionI}.selectionSet.selections`)
                     .forEach((selection, selectionI) => {
@@ -382,7 +407,7 @@ export class QueryPagination {
             let limitVariableId;
 
             // Loop through all variables in the query
-            this._query.definitions[0].variableDefinitions.forEach((variableDefinition, i) => {
+            this._gqlQuery.definitions[0].variableDefinitions.forEach((variableDefinition, i) => {
                 switch (variableDefinition.variable.name.value) {
                     case this._paginators[paginator].page:  pageVariableId = i; break;
                     case this._paginators[paginator].limit: limitVariableId = i; break;
@@ -390,14 +415,14 @@ export class QueryPagination {
             });
 
             if (typeof pageVariableId === 'undefined') {
-                this._query.definitions[0].variableDefinitions.push(this.generateVariable(
+                this._gqlQuery.definitions[0].variableDefinitions.push(this.generateVariable(
                     this._paginators[paginator].page,
                     'Int'
                 ));
             }
 
             if (typeof limitVariableId === 'undefined') {
-                this._query.definitions[0].variableDefinitions.push(this.generateVariable(
+                this._gqlQuery.definitions[0].variableDefinitions.push(this.generateVariable(
                     this._paginators[paginator].limit,
                     'Int'
                 ));
@@ -406,7 +431,7 @@ export class QueryPagination {
 
             console.log(`PA CVOQ :: VARIABLE
             `,
-                this._query.definitions[0].variableDefinitions
+                this._gqlQuery.definitions[0].variableDefinitions
             );
         } else {
             // TODO add support for connection.
@@ -474,6 +499,6 @@ export class QueryPagination {
     }
 
     private queryScoped(scopeStr): any {
-        return scope(this._query, scopeStr);
+        return scope(this._gqlQuery, scopeStr);
     }
 }
