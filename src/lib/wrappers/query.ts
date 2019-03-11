@@ -102,6 +102,9 @@ export class Query extends Wrapper {
         return this;
     }
 
+    /**
+     * Destroy the Query.
+     */
     public destroy(): void {
         this._queryPagination.destroy();
     }
