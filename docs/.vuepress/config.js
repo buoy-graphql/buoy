@@ -29,8 +29,9 @@ module.exports = {
         logo: '/img/logo_white.svg',
         editLinks: true,
         lastUpdated: 'Last Updated',
-        repo: 'haffdata/buoy', // GitHub repository
-        docsDir: 'docs/', // docs folder inside repository
+        repo: 'haffdata/buoy',      // GitHub repository
+        npmPackage: 'ngx-buoy',     // NPM package
+        docsDir: 'docs/',           // docs folder inside repository
         /*versions: {
             latest: versioning.versions.latest,
             selected: versioning.versions.latest,
