@@ -34,10 +34,10 @@
             <SearchBox v-else-if="$site.themeConfig.search !== false"/>
 
             <div class="link-icons">
-                <a href="https://github.com/alberthaff/ngx-buoy" target="new" class="iconLink">
+                <a :href="'https://github.com/' + $site.themeConfig.repo" target="new" class="iconLink">
                     <font-awesome-icon :icon="{prefix: 'fab', iconName:'github'}" size="2x"></font-awesome-icon>
                 </a>
-                <a href="https://npmjs.com/package/ngx-buoy" target="new" class="iconLink">
+                <a :href="'https://npmjs.com/package/' + $site.themeConfig.npmPackage" target="new" class="iconLink">
                     <font-awesome-icon :icon="{prefix: 'fab', iconName:'npm'}" size="2x"></font-awesome-icon>
                 </a>
             </div>
