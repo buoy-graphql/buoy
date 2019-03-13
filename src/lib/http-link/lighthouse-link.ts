@@ -1,12 +1,10 @@
 import { Buoy } from '../buoy';
 import { ApolloLink, Operation, RequestHandler, Observable as LinkObservable, FetchResult } from 'apollo-link';
-import { mergeHeaders, prioritize } from 'apollo-angular-link-http-common';
 import { print } from 'graphql/language/printer';
 import { extractFiles } from 'extract-files';
 import { Context } from './lighthouse-link-options';
 import { SubscriptionDriver } from '../subscription-drivers/subscription-driver';
 import Pusher from '../subscription-drivers/pusher';
-import { BuoyConfig } from '../buoy-config';
 
 export class LighthouseLink extends ApolloLink {
     public requester: RequestHandler;
@@ -19,7 +17,6 @@ export class LighthouseLink extends ApolloLink {
 
     constructor(private buoy: Buoy) {
         super();
-
         // this.initSubscriptions(options.subscriptions);
 
         this.requester = (operation: Operation) =>
@@ -92,24 +89,23 @@ export class LighthouseLink extends ApolloLink {
                 };
 
                 // Send the POST request
-                this.debug('debug', 'Fetching data', {context: context, httpOptions: httpOptions});
                 this.buoy.http.post(this.buoy.config.endpoint, payload, httpOptions)
                     .toPromise()
                     .then(
                         (result) => {
-                            operation.setContext({result});
+                            operation.setContext(result);
                             observer.next(result);
-
-                            this.debug('debug', 'Response from GraphQL', result);
+                            observer.complete();
                         },
                         (error) => {
-                            observer.error(error);
+                            observer.error(error); // TODO complete necessary?
                         }
                     );
             });
     }
 
     public request(op: Operation): LinkObservable<FetchResult> | null {
+        console.log('REQUEST!', op);
         return this.requester(op);
     }
 

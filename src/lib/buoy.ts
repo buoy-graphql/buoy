@@ -41,8 +41,8 @@ export class Buoy {
     /**
      * Run a mutation.
      */
-    public mutate(mutation, parameters?: any, options?: MutationOptions): Mutation {
-        return new Mutation(this.apollo, mutation, options);
+    public mutate(mutation, variables?: any, options?: MutationOptions): Promise<any> {
+        return new Mutation(this, uniqueId++, mutation, variables, options).toPromise();
     }
 
     public get config(): BuoyConfig {
