@@ -48,8 +48,6 @@ describe('Buoy', () => {
             }
         );
 
-        console.log(query);
-
         expect(typeof query === 'object').toBeTruthy();
     }));
 

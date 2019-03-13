@@ -110,7 +110,6 @@ export class LighthouseLink extends ApolloLink {
     }
 
     public request(op: Operation): LinkObservable<FetchResult> | null {
-        // console.log('REQUEST!', op);
         return this.requester(op);
     }
 
@@ -136,9 +135,5 @@ export class LighthouseLink extends ApolloLink {
             );
         }
 
-    }
-
-    private debug(severity: 'debug', message: string, data: any): void {
-        this.buoy.debug('lighthouse-link', 'buoy', false, severity, message, data);
     }
 }

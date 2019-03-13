@@ -19,7 +19,6 @@ export class Query extends Wrapper {
 
     constructor(buoy: Buoy, id: number, query, public _variables, protected _options: QueryOptions) {
         super(buoy, id, 'query');
-        this.debug('debug', 'Initializing Query...');
 
         // Init QueryPagination
         this._queryPagination = new QueryPagination(this, query, _options, _variables); // TODO: Re-init if _options.pagination changes.
@@ -36,8 +35,6 @@ export class Query extends Wrapper {
     }
 
     public refetch(): this {
-        this.debug('debug', 'Refecthing data...');
-
         if (this._options.fetch === false && this._initialized === false) {
             this.initQuery();
         }
@@ -132,8 +129,6 @@ export class Query extends Wrapper {
         this._querySubscription = this._query.valueChanges.subscribe((data) => this.mapResponse(data, 'http'));
 
         this._initialized = true;
-
-        this.debug('debug', 'Query initialized successfully.');
     }
 
     private mapResponse(data, mode: 'http' | 'ws'): void {
@@ -144,11 +139,5 @@ export class Query extends Wrapper {
 
         // Set data
         this.data = scope(data.data, this._options.scope);
-
-        this.debug(
-            'debug',
-            'Mapped response.',
-            { input: data, output: this.data}
-        );
     }
 }

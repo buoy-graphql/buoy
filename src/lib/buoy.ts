@@ -48,8 +48,4 @@ export class Buoy {
     public get config(): BuoyConfig {
         return this._config;
     }
-
-    public debug(id: number|string, type: 'buoy'|'query'|'mutation', forced: boolean, severity: 'debug', message: string, data: any): void {
-        // TODO REMOVE
-    }
 }
