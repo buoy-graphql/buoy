@@ -111,7 +111,7 @@
           "options": {
             "main": "example/test.ts",
             "polyfills": "example/polyfills.ts",
-            "tsConfig": "example/tsconfig.spec.json",
+            "tsConfig": "example/src/tsconfig.spec.json",
             "karmaConfig": "example/karma.conf.js",
             "styles": [
               "example/styles.scss"
@@ -127,37 +127,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "example/tsconfig.app.json",
-              "example/tsconfig.spec.json"
+              "example/src/tsconfig.app.json",
+              "example/src/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
-    "example-e2e": {
-      "root": "example/e2e/",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "example:serve"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "example:serve:production"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "e2e/tsconfig.e2e.json",
             "exclude": [
               "**/node_modules/**"
             ]

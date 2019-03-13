@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import gql from 'graphql-tag';
-import {Buoy} from '../../../src/lib/buoy';
-import {Query} from '../../../src/lib/wrappers/query';
-import {QueryOptions} from '../../../src/lib/wrappers/options';
+import { Buoy } from '../../../src/lib/buoy';
+import { Query } from '../../../src/lib/wrappers/query';
+import { QueryOptions } from '../../../src/lib/wrappers/options';
 
 @Component({
   selector: 'app-root',
