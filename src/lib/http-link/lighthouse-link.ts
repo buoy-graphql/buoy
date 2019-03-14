@@ -27,56 +27,6 @@ export class LighthouseLink extends ApolloLink {
                 // const includeExtensions = pick('includeExtensions', false);
                 const withCredentials = null; // pick('withCredentials');
 
-                let httpMode = this.buoy.config.httpMode;
-                let payload;
-
-                // Count the number of files in this request
-                const files = extractFiles(operation.variables);
-
-                // Change the httpMode if mode is opportunistic and there are files in the variables
-                if (httpMode === 'opportunistic') {
-                   httpMode = files.length === 0 ? 'json' : 'multipart';
-                }
-
-                // Handle files
-                if (httpMode === 'json') {
-                    // Init the payload object
-                    payload = {};
-
-                    // TODO
-                } else {
-                    // Init the formData object
-                    payload = new FormData();
-
-                    for (const file of files) {
-                        payload.append(file.path, file, file.name);
-                    }
-                }
-
-                // Add Query
-                if (httpMode === 'json') {
-                    payload['query'] = print(operation.query);
-                } else {
-                    payload.append('query', print(operation.query));
-                }
-
-
-                // Add variables
-                if (httpMode === 'json') {
-                    payload['variables'] = operation.variables;
-                } else {
-                    payload.append('variables', JSON.stringify(operation.variables));
-                }
-
-                // Add extensions
-                if (includeExtensions) {
-                    if (httpMode === 'json') {
-                        payload['extensions'] = operation.extensions;
-                    } else {
-                        payload.append('extensions', JSON.stringify(operation.extensions));
-                    }
-                }
-
                 // Add headers
                 let headers;
                 if (typeof this.buoy.config.headers !== 'undefined') {
@@ -89,7 +39,7 @@ export class LighthouseLink extends ApolloLink {
                 };
 
                 // Send the POST request
-                this.buoy.http.post(this.buoy.config.endpoint, payload, httpOptions)
+                this.buoy.http.post(this.buoy.config.endpoint, this.payload(operation), httpOptions)
                     .toPromise()
                     .then(
                         (result: any) => {
@@ -106,8 +56,49 @@ export class LighthouseLink extends ApolloLink {
     }
 
     public request(op: Operation): LinkObservable<FetchResult> | null {
-        console.log('REQUEST!', op);
+        // console.log('REQUEST!', op);
         return this.requester(op);
+    }
+
+    /**
+     * Generate the HTTP Payload.
+     */
+    private payload(operation) {
+        // Extract files from variables
+        const files = extractFiles(operation.variables);
+
+        // Define operations
+        const operations = {
+            // operationName: operation.operationName,
+            query: print(operation.query),
+            variables: operation.variables,
+            extensions: operation.extensions
+        };
+
+        if (files.length === 0) {
+            return operations;
+        }
+
+        // Generate map
+        const map = {};
+        for (const i of Object.keys(files)) {
+            const file = files[i];
+            map[i] = ['variables.' + file.path];
+        }
+
+        const payload = new FormData();
+
+        payload.append('operations', JSON.stringify(operations));
+        payload.append('map', JSON.stringify(map));
+
+        // Append files to payload
+        for (const i of Object.keys(files)) {
+            const file = files[i];
+
+            payload.append(i, file.file, file.file.name);
+        }
+
+        return payload;
     }
 
     private initSubscriptions(subscriptionsConfig) {
