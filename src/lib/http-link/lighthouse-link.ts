@@ -92,12 +92,13 @@ export class LighthouseLink extends ApolloLink {
                 this.buoy.http.post(this.buoy.config.endpoint, payload, httpOptions)
                     .toPromise()
                     .then(
-                        (result) => {
+                        (result: any) => {
                             operation.setContext(result);
                             observer.next(result);
                             observer.complete();
                         },
                         (error) => {
+                            // TODO Handle Http Error
                             observer.error(error); // TODO complete necessary?
                         }
                     );

@@ -2,6 +2,7 @@ import { MutationOptions } from './options';
 import { Wrapper } from './wrapper';
 import { Buoy } from '../buoy';
 import { scope } from 'ngx-plumber';
+import { Observable } from 'rxjs';
 
 export class Mutation implements Wrapper {
     constructor(
@@ -14,24 +15,31 @@ export class Mutation implements Wrapper {
         return this;
     }
 
-    public toPromise(): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
+    public execute(): Observable<any> {
+        return new Observable<any>(observer => {
+            // TODO Implement Optimistic UI (#16)
+
             this._buoy.apollo.mutate({
                 mutation: this._gqlMutation,
-                variables: this.variables
+                variables: this.variables,
             }).toPromise().then(
                 (success) => {
-                    resolve(this.mapResponse(success));
+                    observer.next(this.mapResponse(success));
+                    observer.complete();
+                    // resolve(this.mapResponse(success));
                 },
                 (error) => {
-                    reject(error);
+                    observer.error({
+                        graphQl: error.graphQLErrors,
+                        network: error.networkError
+                    });
                 }
             );
         });
     }
 
     private mapResponse(data): any {
-        return data = scope(data.data, this._options.scope);
+        return scope(data.data, this._options.scope);
     }
 
     private get variables() {
