@@ -5,7 +5,7 @@ export class BuoyConfig {
     /**
      * The endpoint that Buoy will query.
      */
-    endpoint ? = '/graph';
+    uri ? = '/graph';
 
     /**
      * Would you like to add any custom headers to the requests? Define a callback,

@@ -39,7 +39,7 @@ export class LighthouseLink extends ApolloLink {
                 };
 
                 // Send the POST request
-                this.buoy.http.post(this.buoy.config.endpoint, this.payload(operation), httpOptions)
+                this.buoy.http.post(this.buoy.config.uri, this.payload(operation), httpOptions)
                     .toPromise()
                     .then(
                         (result: any) => {
