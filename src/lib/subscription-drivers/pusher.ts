@@ -8,8 +8,6 @@ export class Pusher extends SubscriptionDriver {
     constructor(options) {
         super();
 
-        console.log('PUSHER DRIVER INIT!');
-
         // Retain a handle to the Pusher client
         // this.pusher = options.pusher;
     }

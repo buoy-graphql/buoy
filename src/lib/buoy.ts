@@ -7,6 +7,7 @@ import { BuoyConfig } from './buoy-config';
 import { LighthouseLink } from './http-link/lighthouse-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 let uniqueId = 1;
 
@@ -41,15 +42,11 @@ export class Buoy {
     /**
      * Run a mutation.
      */
-    public mutate(mutation, parameters?: any, options?: MutationOptions): Mutation {
-        return new Mutation(this.apollo, mutation, options);
+    public mutate(mutation, variables?: any, options?: MutationOptions): Observable<any> {
+        return new Mutation(this, uniqueId++, mutation, variables, options).execute();
     }
 
     public get config(): BuoyConfig {
         return this._config;
-    }
-
-    public debug(id: number|string, type: 'buoy'|'query'|'mutation', forced: boolean, severity: 'debug', message: string, data: any): void {
-        // TODO REMOVE
     }
 }

@@ -1,18 +1,14 @@
 import { Buoy } from '../buoy';
 
-export class Wrapper {
-    constructor(public _buoy: Buoy, protected _id: number, protected _type) {
-
-    }
-
-    protected debug(severity: 'debug', message: string, data?: any): void {
-        this._buoy.debug(this._id, this._type, false, severity, message, data);
-    }
+export interface Wrapper {
 
     /**
-     * Destroy the Query / Mutation
+     * Contains the Buoy service.
      */
-    public destroy () {
-        // Will be overwritten by Query / Mutation.
-    }
+    _buoy: Buoy;
+
+    /**
+     * Unique id for current query or mutation.
+     */
+    _id: number;
 }

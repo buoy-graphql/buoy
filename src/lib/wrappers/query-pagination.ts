@@ -32,7 +32,6 @@ export class QueryPagination {
             return {};
         }
 
-        console.log('GENERATING VARIABLES', this._paginators);
         const variables = {};
 
         if (Object.keys(this._paginators).length === 1) {
@@ -91,7 +90,6 @@ export class QueryPagination {
      * Returns the manipulated query (graphql-tag).
      */
     public get query() {
-        console.log('PA FINAL QUERY', this._gqlQuery);
         return this._gqlQuery;
     }
 
@@ -428,11 +426,6 @@ export class QueryPagination {
                 ));
             }
 
-
-            console.log(`PA CVOQ :: VARIABLE
-            `,
-                this._gqlQuery.definitions[0].variableDefinitions
-            );
         } else {
             // TODO add support for connection.
         }

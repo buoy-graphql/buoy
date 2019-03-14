@@ -8,12 +8,11 @@ import { HttpHeaders } from '@angular/common/http';
 
 const buoyConfig: BuoyConfig = {
     middleware: [],
-    httpMode: 'opportunistic',
     paginatorType: 'paginator',
     headers: () => {
         return new HttpHeaders().set('CLIENT', 'test');
     },
-    endpoint: '',
+    uri: '',
 };
 
 describe('Buoy', () => {
@@ -47,8 +46,6 @@ describe('Buoy', () => {
                 pagination: 'movies'
             }
         );
-
-        console.log(query);
 
         expect(typeof query === 'object').toBeTruthy();
     }));

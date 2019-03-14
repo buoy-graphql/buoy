@@ -1,12 +1,12 @@
 import { QueryOptions } from './options';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { scope } from 'ngx-plumber';
 import { Buoy } from '../buoy';
 import { Wrapper } from './wrapper';
 import { QueryPagination } from './query-pagination';
 
 
-export class Query extends Wrapper {
+export class Query implements Wrapper {
     private _query;
     private _querySubscription: Subscription;
     private _queryPagination: QueryPagination;
@@ -17,10 +17,13 @@ export class Query extends Wrapper {
 
     public loading = true;
 
-    constructor(buoy: Buoy, id: number, query, public _variables, protected _options: QueryOptions) {
-        super(buoy, id, 'query');
-        this.debug('debug', 'Initializing Query...');
-
+    constructor(
+        public _buoy: Buoy,
+        public _id: number,
+        query,
+        public _variables,
+        protected _options: QueryOptions
+    ) {
         // Init QueryPagination
         this._queryPagination = new QueryPagination(this, query, _options, _variables); // TODO: Re-init if _options.pagination changes.
 
@@ -36,8 +39,6 @@ export class Query extends Wrapper {
     }
 
     public refetch(): this {
-        this.debug('debug', 'Refecthing data...');
-
         if (this._options.fetch === false && this._initialized === false) {
             this.initQuery();
         }
@@ -52,7 +53,6 @@ export class Query extends Wrapper {
     public setVariable(variable: string, value: any): this {
         this._variables[variable] = value;
 
-        this.debug('debug', 'Variable ' + variable + ' has been set to:', value);
         return this;
     }
 
@@ -107,10 +107,11 @@ export class Query extends Wrapper {
      */
     public destroy(): void {
         this._queryPagination.destroy();
+        this._querySubscription.unsubscribe();
     }
 
     private get variables() {
-        // Inject variables from QqueryPagination
+        // Inject variables from QueryPagination
         let variables = Object.assign(this._variables, this._queryPagination.variables);
 
         // Run middlewares
@@ -132,8 +133,6 @@ export class Query extends Wrapper {
         this._querySubscription = this._query.valueChanges.subscribe((data) => this.mapResponse(data, 'http'));
 
         this._initialized = true;
-
-        this.debug('debug', 'Query initialized successfully.');
     }
 
     private mapResponse(data, mode: 'http' | 'ws'): void {
@@ -144,11 +143,5 @@ export class Query extends Wrapper {
 
         // Set data
         this.data = scope(data.data, this._options.scope);
-
-        this.debug(
-            'debug',
-            'Mapped response.',
-            { input: data, output: this.data}
-        );
     }
 }

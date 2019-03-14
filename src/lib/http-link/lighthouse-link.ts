@@ -1,12 +1,10 @@
 import { Buoy } from '../buoy';
 import { ApolloLink, Operation, RequestHandler, Observable as LinkObservable, FetchResult } from 'apollo-link';
-import { mergeHeaders, prioritize } from 'apollo-angular-link-http-common';
 import { print } from 'graphql/language/printer';
 import { extractFiles } from 'extract-files';
 import { Context } from './lighthouse-link-options';
 import { SubscriptionDriver } from '../subscription-drivers/subscription-driver';
 import Pusher from '../subscription-drivers/pusher';
-import { BuoyConfig } from '../buoy-config';
 
 export class LighthouseLink extends ApolloLink {
     public requester: RequestHandler;
@@ -19,7 +17,6 @@ export class LighthouseLink extends ApolloLink {
 
     constructor(private buoy: Buoy) {
         super();
-
         // this.initSubscriptions(options.subscriptions);
 
         this.requester = (operation: Operation) =>
@@ -29,56 +26,6 @@ export class LighthouseLink extends ApolloLink {
                 const includeExtensions = true; // TODO
                 // const includeExtensions = pick('includeExtensions', false);
                 const withCredentials = null; // pick('withCredentials');
-
-                let httpMode = this.buoy.config.httpMode;
-                let payload;
-
-                // Count the number of files in this request
-                const files = extractFiles(operation.variables);
-
-                // Change the httpMode if mode is opportunistic and there are files in the variables
-                if (httpMode === 'opportunistic') {
-                   httpMode = files.length === 0 ? 'json' : 'multipart';
-                }
-
-                // Handle files
-                if (httpMode === 'json') {
-                    // Init the payload object
-                    payload = {};
-
-                    // TODO
-                } else {
-                    // Init the formData object
-                    payload = new FormData();
-
-                    for (const file of files) {
-                        payload.append(file.path, file, file.name);
-                    }
-                }
-
-                // Add Query
-                if (httpMode === 'json') {
-                    payload['query'] = print(operation.query);
-                } else {
-                    payload.append('query', print(operation.query));
-                }
-
-
-                // Add variables
-                if (httpMode === 'json') {
-                    payload['variables'] = operation.variables;
-                } else {
-                    payload.append('variables', JSON.stringify(operation.variables));
-                }
-
-                // Add extensions
-                if (includeExtensions) {
-                    if (httpMode === 'json') {
-                        payload['extensions'] = operation.extensions;
-                    } else {
-                        payload.append('extensions', JSON.stringify(operation.extensions));
-                    }
-                }
 
                 // Add headers
                 let headers;
@@ -92,18 +39,17 @@ export class LighthouseLink extends ApolloLink {
                 };
 
                 // Send the POST request
-                this.debug('debug', 'Fetching data', {context: context, httpOptions: httpOptions});
-                this.buoy.http.post(this.buoy.config.endpoint, payload, httpOptions)
+                this.buoy.http.post(this.buoy.config.uri, this.payload(operation), httpOptions)
                     .toPromise()
                     .then(
-                        (result) => {
-                            operation.setContext({result});
+                        (result: any) => {
+                            operation.setContext(result);
                             observer.next(result);
-
-                            this.debug('debug', 'Response from GraphQL', result);
+                            observer.complete();
                         },
                         (error) => {
-                            observer.error(error);
+                            // TODO Handle Http Error
+                            observer.error(error); // TODO complete necessary?
                         }
                     );
             });
@@ -112,6 +58,47 @@ export class LighthouseLink extends ApolloLink {
     public request(op: Operation): LinkObservable<FetchResult> | null {
         // console.log('REQUEST!', op);
         return this.requester(op);
+    }
+
+    /**
+     * Generate the HTTP Payload.
+     */
+    private payload(operation) {
+        // Extract files from variables
+        const files = extractFiles(operation.variables);
+
+        // Define operations
+        const operations = {
+            // operationName: operation.operationName,
+            query: print(operation.query),
+            variables: operation.variables,
+            extensions: operation.extensions
+        };
+
+        if (files.length === 0) {
+            return operations;
+        }
+
+        // Generate map
+        const map = {};
+        for (const i of Object.keys(files)) {
+            const file = files[i];
+            map[i] = ['variables.' + file.path];
+        }
+
+        const payload = new FormData();
+
+        payload.append('operations', JSON.stringify(operations));
+        payload.append('map', JSON.stringify(map));
+
+        // Append files to payload
+        for (const i of Object.keys(files)) {
+            const file = files[i];
+
+            payload.append(i, file.file, file.file.name);
+        }
+
+        return payload;
     }
 
     private initSubscriptions(subscriptionsConfig) {
@@ -136,9 +123,5 @@ export class LighthouseLink extends ApolloLink {
             );
         }
 
-    }
-
-    private debug(severity: 'debug', message: string, data: any): void {
-        this.buoy.debug('lighthouse-link', 'buoy', false, severity, message, data);
     }
 }
