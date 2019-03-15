@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/haffdata/buoy/master/assets/readme-banner.svg?sanitize=true&" width="100%" alt="" />
+<img src="https://raw.githubusercontent.com/haffdata/buoy/master/assets/readme-banner.svg?sanitize=true" width="100%" alt="" />
 
 [![Version](https://img.shields.io/npm/v/@buoy/client.svg?style=for-the-badge)](https://www.npmjs.com/package/@buoy/client)
 [![Travis](https://img.shields.io/travis/haffdata/buoy/master.svg?style=for-the-badge)](https://travis-ci.org/haffdata/buoy)
