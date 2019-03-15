@@ -14,7 +14,7 @@ Add the `BuoyModule` to your `imports`-section and add the `BuoyConfig` provider
 ```typescript
 import { BuoyModule, BuoyConfig } from '@buoy/client';
 
-const buoyConfig = <BuoyConfig>{
+const buoyConfig = <BuoyConfig> {
     // Remember to add graphUri to your environment-file.
     uri: environment.graphUri
 };
@@ -39,7 +39,7 @@ export class AppModule {
 
 ## Executing a basic query
 
-All queries and mutation are wrapped by a [`Query`](../api-reference/query.md). These are initialized through `Buoy`.
+All queries are wrapped by a [`Query`](../api-reference/query.md). These are initialized through `Buoy`.
 
 **Example:**
 ```ts
@@ -55,24 +55,24 @@ export class AppComponent {
         this.favouriteMovie = this.buoy.query(
             gql `
                 query FavouriteMovie($movieId: Int!) {
-                    movie(id: $movieId) { # This will be the "root" of the response (because of the scope)
+                    movie(id: $movieId) {
                         title
                         poster
                     }
                 }
             `,
             {
-                movieId: 45
+                movieId: 10
             },
             {
-                scope: 'movie' // The scope changes the "root" of the response
+                scope: 'movie'
             }            
         );
     }
 }
 ```  
 
-The query will by default automatically execute the GraphQL query immediately (can be disabled). Once the query has executed, the data is accessible on `this.favouriteMovie.data`.
+The `Query` will by default automatically execute the GraphQL query immediately (can be disabled). Once the query has executed, the data is accessible on `this.favouriteMovie.data`.
 
 ```HTML
 <div *ngIf="favouriteMovie.loading">

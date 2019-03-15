@@ -9,7 +9,7 @@ Supported types are [`File`](https://developer.mozilla.org/en-US/docs/Web/API/Fi
 ## Preparing your backend
 
 Your backend must support the [graphql-multipart-request-spec](https://github.com/jaydenseric/graphql-multipart-request-spec).
-Lighthouse supports this out-of-the-box from version 3 and up. Follow their
+Lighthouse supports this out-of-the-box in the master branch. Follow their
 [guide to enable file uploads](https://lighthouse-php.com/master/guides/file-uploads.html) in your schema.
 
 ## Uploading a file
