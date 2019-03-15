@@ -1,6 +1,6 @@
 {
-  "version": "0.0.0-alpha.3",
   "name": "@buoy/client",
+  "version": "0.1.0",
   "description": "A Lighthouse client for Angular. Build your Angular apps with a Laravel backend!",
   "author": "Albert Haff <ahn@haffdata.com>",
   "license": "MIT",
