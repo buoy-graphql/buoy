@@ -3,7 +3,7 @@
 ## Install via NPM
 
 ```bash
-$ npm i ngx-buoy
+$ npm install @buoy/client
 ```
 
 ## Include in your Project
@@ -12,9 +12,11 @@ After Buoy is installed, you must include it in your application.
 Add the `BuoyModule` to your `imports`-section and add the `BuoyConfig` provider in your `providers`-section.
 
 ```typescript
-const buoyConfig = <BuoyConfig>{
+import { BuoyModule, BuoyConfig } from '@buoy/client';
+
+const buoyConfig = <BuoyConfig> {
     // Remember to add graphUri to your environment-file.
-    endpoint: environment.graphUri
+    uri: environment.graphUri
 };
 
 @NgModule({
@@ -37,10 +39,12 @@ export class AppModule {
 
 ## Executing a basic query
 
-All queries and mutation are wrapped by a [`Query`](../api-reference/query.md) or [`Mutation`](../api-reference/mutation.md). These are initialized through `Buoy`.
+All queries are wrapped by a [`Query`](../api-reference/query.md). These are initialized through `Buoy`.
 
 **Example:**
 ```ts
+import { Buoy } from '@buoy/client';
+
 @Component()
 export class AppComponent {
     public favouriteMovie: Query;
@@ -51,24 +55,24 @@ export class AppComponent {
         this.favouriteMovie = this.buoy.query(
             gql `
                 query FavouriteMovie($movieId: Int!) {
-                    movie(id: $movieId) { # This will be the "root" of the response (because of the scope)
+                    movie(id: $movieId) {
                         title
                         poster
                     }
                 }
             `,
             {
-                movieId: 45
+                movieId: 10
             },
             {
-                scope: 'movie' // The scope changes the "root" of the response
+                scope: 'movie'
             }            
         );
     }
 }
 ```  
 
-The query will by default automatically execute the GraphQL query immediately (can be disabled). Once the query has executed, the data is accessible on `this.favouriteMovie.data`.
+The `Query` will by default automatically execute the GraphQL query immediately (can be disabled). Once the query has executed, the data is accessible on `this.favouriteMovie.data`.
 
 ```HTML
 <div *ngIf="favouriteMovie.loading">

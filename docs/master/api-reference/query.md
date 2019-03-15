@@ -56,7 +56,7 @@ The scoped response from the GraphQL-server is available in the `data`-variable.
 </div>
 ````
 
-### Waiting for response in your code
+<!--### Waiting for response in your code
 ::: warning
 This feature is experimental. It is subject to change.
 :::
@@ -80,7 +80,7 @@ export class AppComponent {
         }
     
 }
-```
+```-->
 
 ## Variables
 The Query-object has following variables available:
@@ -162,8 +162,6 @@ Remove a variable from the query. You must use [`refetch()`](#refetch) in order 
 ## Options
 Options are added as the third parameter on the `buoy.query()`-method.
 
-### debug
-This will print all relevant debug-information to the console. Should not be used in production.
 
 ### pagination
 The pagination-option can be used in a few different ways.
@@ -301,25 +299,35 @@ The scope will change the root of the data returned by the GraphQL-server.
 
 The server will often return something like this:
 
-```JSON
+```json
 {
     "movies": {
-        "data": []
+        "data": [
+            { "title": "Movie 1" },
+            { "title": "Movie 2" }
+        ]
     }
 }
 ```
 
-With the scope `movies.data`, you can skip the two first levels. This allows you to refer to the returned data as `movies.data...` instead of so `movies.data.movies.data...`. 
+With the scope `movies.data`, you can skip the two first levels, and receive:
+
+```json
+[
+    { "title": "Movie 1" },
+    { "title": "Movie 2" }
+]
+``` 
 
 The scope should generally be the name of the first node in your query followed by `.data`, if your node is a paginator.
 
-### subscribe
-TODO
 
 ### router
-This enabled RouteRW, which automatically changes the necessary query params for page and limit.
+This enables Router R/W, which automatically handles the necessary query params for pagination.
 
-```
+Please refer to [Router R/W](../features/router-rw.md).
+
+```ts
 // Options
 {
     router: {
@@ -329,9 +337,9 @@ This enabled RouteRW, which automatically changes the necessary query params for
 }
 ```
 
-## EventListeners
-The EventListeners are also added as options on a query.
-All EventListeners must be defined as a callback.
+
+## Callbacks <Badge text="experimental" type="warn"/>
+The callbacks are also added as options on a query.
 
 ### onPageChange
 // TODO

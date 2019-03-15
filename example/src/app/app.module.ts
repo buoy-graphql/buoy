@@ -8,7 +8,7 @@ import { BuoyConfig } from '../../../src/lib/buoy-config';
 import { BuoyModule } from '../../../src/lib/buoy.module';
 
 const BuoyConfigValue = <BuoyConfig>{
-    endpoint: environment.graphUri
+    uri: environment.graphUri
 };
 
 @NgModule({

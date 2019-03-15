@@ -5,4 +5,4 @@ footer: Copyright © 2019 Albert Haff
 ---
 
 
-This library is still in early development. Please refer to the [documentation](/master/getting-started/installation) for now.
+Buoy is still in early development. Please refer to the [feature list](features.md) and [documentation](/master/getting-started/installation) for now.

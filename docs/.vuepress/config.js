@@ -30,7 +30,7 @@ module.exports = {
         editLinks: true,
         lastUpdated: 'Last Updated',
         repo: 'haffdata/buoy',      // GitHub repository
-        npmPackage: 'ngx-buoy',     // NPM package
+        npmPackage: '@buoy/client', // Main NPM package
         docsDir: 'docs/',           // docs folder inside repository
         /*versions: {
             latest: versioning.versions.latest,

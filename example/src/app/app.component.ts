@@ -54,9 +54,9 @@ export class AppComponent {
               }
           `,
           {
-              moviesPage: 1,
-              moviesLimit: 2,
-              test: 'qweqwe'
+          //    moviesPage: 1,
+          //    moviesLimit: 2,
+          //    test: 'qweqwe'
           },
           <QueryOptions>{
               subscribe: true,
