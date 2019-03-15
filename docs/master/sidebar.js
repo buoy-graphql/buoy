@@ -6,22 +6,24 @@ module.exports = [
             'getting-started/configuration'
         ]
     },
-    {
+    /*{
         title: 'Guides'
-    },
+    },*/
     {
         title: 'Features',
         children: [
             'features/file-uploads',
             'features/middleware',
-            'features/subscriptions',
+            'features/router-rw',
+//            'features/subscriptions',
         ]
     },
     {
         title: 'API Reference',
         children: [
             'api-reference/query',
-            'api-reference/mutation'
+            'api-reference/mutation',
+            'api-reference/events'
         ]
     }
 ];

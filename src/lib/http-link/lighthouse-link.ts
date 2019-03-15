@@ -69,7 +69,7 @@ export class LighthouseLink extends ApolloLink {
 
         // Define operations
         const operations = {
-            // operationName: operation.operationName,
+            operationName: operation.operationName,
             query: print(operation.query),
             variables: operation.variables,
             extensions: operation.extensions

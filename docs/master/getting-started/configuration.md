@@ -1,49 +1,44 @@
 # Configuration
 You must define the Buoy-configuration and add it as a provider. See [installation](installation.md#include-in-your-project) for an example.
 
-## General configuration
 Please note that some of these values can be overwritten by the options on a
 specific [`Query`](../api-reference/query.md) or [`Mutation`](../api-reference/mutation.md).
-If an option with the same name is available in QueryOptions or MutationOptions, they can be overwritten locally.
+Generally, if an option with the same name is available in
+[`QueryOptions`](../api-reference/query.md#options) or
+[`MutationOptions`](../api-reference/mutation.md#options), they can be overwritten locally.
 
-### debug
-Enable debug-mode? This will output large amounts of debugging-information to the browser console.
-This feature can also be enabled for a specific `Query` or `Mutation` if you only need to debug a single case.
 
-### endpoint
-The URL of the GraphQL-server. Currently, only HTTP POST-request are supported.
+## defaultLimit
+Set the default limit per page for paginators.
 
-### fileUploads
 
-::: tip
-You must enable file uploads on your Lighthouse-server. See [this guide](../features/file-uploads.md) for more information.
-:::
-
-// TODO (WIP)
-
-### headers
+## headers
 Add headers to all HTTP-requests made by the Buoy-client to your GraphQL-endpoint.
 
-Must be an anonymous function that return a `HttpHeaders`-instance.
+**Example:**
+```ts
+import { HttpHeaders } from '@angular/common/http';
+{
+    headers: () => {
+        return new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    },
+}
+```
 
-// TODO (WIP)
 
-### httpMode
-Determine how the Buoy-client will send requests to your GraphQL API.
+## middleware <Badge text="experimental" type="warn"/>
+Manipulate queries and mutations before and after execution. Please refer to [Middleware](../features/middleware.md).
 
-### paginatorType
-Does your backend use `paginator` or `connection` as default paginators?
 
-Default: `paginator`
+## paginatorType
+Does your backend use `paginator` (default) or `connection` as default paginators?
 
-### defaultLimit
-Set the default limit per page for paginators. Can be overwritten locally.
 
-## Middleware
+## uri
+The URL of the GraphQL-server. Buoy will send all requests to this address.
 
-// TODO
 
-## Extensions
+<!--## Extensions
 
 ### extensions
 // TODO (WIP)
@@ -54,6 +49,6 @@ Set the default limit per page for paginators. Can be overwritten locally.
 ### subscriptions
 // TODO (WIP)
 
-
+-->
 
 

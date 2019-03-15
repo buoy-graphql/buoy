@@ -3,7 +3,7 @@
         <div class="hero">
             <h1>Who is using Buoy?</h1>
 
-            <p>Buoy handles the GraphQL queries and mutations for the following:</p>
+            <p>Buoy handles GraphQL queries and mutations for the following:</p>
         </div>
 
         <div class="users">
@@ -19,8 +19,8 @@
 
         <div class="hero" style="padding-top: 30px;">
             <p>
-                <strong>Is your project using Buoy, but not on the list?</strong><br>
-                Edit this page with a <a href="">Pull Request</a> to add your logo.
+                <strong>Is your project using Buoy, but not on the list yet?</strong><br>
+                Edit this page with a <a :href="'https://github.com/' + $site.themeConfig.repo + '/edit/master/docs/.vuepress/users.js'" target="new">Pull Request</a> to add your logo.
             </p>
         </div>
     </div>
