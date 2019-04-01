@@ -1,6 +1,6 @@
 {
-    "$schema": "../node_modules/ng-packagr/ng-package.schema.json",
-    "dest": "dist/ngx-buoy",
+    "$schema": "node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "dist/buoy-client",
     "lib": {
         "entryFile": "src/public_api.ts"
     },

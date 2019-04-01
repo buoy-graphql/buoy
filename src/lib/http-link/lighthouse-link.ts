@@ -5,6 +5,7 @@ import { extractFiles } from 'extract-files';
 import { Context } from './lighthouse-link-options';
 import { SubscriptionDriver } from '../subscription-drivers/subscription-driver';
 import Pusher from '../subscription-drivers/pusher';
+import { isFunction } from 'ngx-plumber';
 
 export class LighthouseLink extends ApolloLink {
     public requester: RequestHandler;
@@ -33,6 +34,14 @@ export class LighthouseLink extends ApolloLink {
                     headers = this.buoy.config.headers();
                 }
 
+                // Run HeaderManipulator middleware
+                this.buoy._middleware.forEach((middleware: any) => {
+                    if (isFunction(middleware.manipulateHeaders)) {
+                        // TODO Check returned data - throw exception if invalid
+                        headers = middleware.manipulateHeaders(headers, operation.query, operation.variables);
+                    }
+                });
+
                 const httpOptions = {
                     headers: headers,
                     withCredentials: withCredentials
@@ -43,6 +52,14 @@ export class LighthouseLink extends ApolloLink {
                     .toPromise()
                     .then(
                         (result: any) => {
+                            // Run ResponseManipulator middleware
+                            this.buoy._middleware.forEach((middleware: any) => {
+                                if (isFunction(middleware.manipulateResponse)) {
+                                    // TODO Check returned data - throw exception if invalid
+                                    result = middleware.manipulateResponse(result, operation.query, operation.variables);
+                                }
+                            });
+
                             operation.setContext(result);
                             observer.next(result);
                             observer.complete();
