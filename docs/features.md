@@ -19,12 +19,19 @@ subscriptions to reflect the current page and limit.
 [Uploading files](master/features/file-uploads.md) with GraphQL has never been easier. 
 Simply add the files as variables to your mutations, and let Buoy take care of the rest!
 
+### Middleware
+
+With [Middleware](master/features/middleware.md), you can change queries, variables, headers and responses.
+
+### Caching
+
+Buoy utilizes InMemoryCache which is automatically used unless you instruct Buoy otherwise. 
+
+
 ## Roadmap
 
 Following features are planned or in the works.
 
-* [Middleware](https://github.com/haffdata/buoy/issues/5) - Manipulate queries and mutations before and after execution.
 * [Optimistic UI](https://github.com/haffdata/buoy/issues/16) - Use a predicted response in templates until the actual response is received. 
 * [Connection support](https://github.com/haffdata/buoy/issues/16) - Support paginators of type "connection". 
 * [Lighthouse subscriptions](https://github.com/haffdata/buoy/issues/3) - Subscribe to changes in the backend.
-* [Caching](https://github.com/haffdata/buoy/issues/17) - Cache query responses locally.
