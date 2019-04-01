@@ -1,7 +1,7 @@
 import { MutationOptions } from './options';
 import { Wrapper } from './wrapper';
 import { Buoy } from '../buoy';
-import { scope } from 'ngx-plumber';
+import { isFunction, scope } from 'ngx-plumber';
 import { Observable } from 'rxjs';
 
 export class Mutation implements Wrapper {
@@ -12,6 +12,8 @@ export class Mutation implements Wrapper {
         private _variables,
         protected _options: MutationOptions
     ) {
+        this._gqlMutation = this.mutation;
+        this._variables = this.variables;
         return this;
     }
 
@@ -21,7 +23,7 @@ export class Mutation implements Wrapper {
 
             this._buoy.apollo.mutate({
                 mutation: this._gqlMutation,
-                variables: this.variables,
+                variables: this._variables,
             }).toPromise().then(
                 (success) => {
                     observer.next(this.mapResponse(success));
@@ -46,12 +48,27 @@ export class Mutation implements Wrapper {
         // Get user defined variables
         let variables = this._variables;
 
-        // Run middleware
-        this._buoy._config.middleware.forEach((middleware) => {
-            // TODO Make sure that the method exists on the Middleware class
-            variables = new middleware(this._buoy).manipulateVariables(this._gqlMutation, variables, this._options);
+        // Run VariableManipulator middleware
+        this._buoy._middleware.forEach((middleware: any) => {
+            if (isFunction(middleware.manipulateVariables)) {
+                // TODO Check response from middleware
+                variables = middleware.manipulateVariables(this._gqlMutation, variables, this._options);
+            }
         });
 
         return variables;
+    }
+
+    private get mutation() {
+        let mutation = this._gqlMutation;
+        // Run QueryManipulator middleware
+        this._buoy._middleware.forEach((middleware: any) => {
+            if (isFunction(middleware.manipulateQuery)) {
+                // TODO Check response from middleware
+                mutation = middleware.manipulateQuery(mutation, this._variables, this._options);
+            }
+        });
+
+        return mutation;
     }
 }

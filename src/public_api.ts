@@ -8,6 +8,6 @@ export * from './lib/buoy.module';
 export * from './lib/wrappers/query';
 export * from './lib/wrappers/mutation';
 export * from './lib/wrappers/options';
-export * from './lib/middleware/middleware';
+export * from './lib/middleware/header-manipulator';
 export * from './lib/middleware/query-manipulator';
 export * from './lib/middleware/variable-manipulator';

@@ -26,8 +26,10 @@ import { HttpHeaders } from '@angular/common/http';
 ```
 
 
-## middleware <Badge text="experimental" type="warn"/>
-Manipulate queries and mutations before and after execution. Please refer to [Middleware](../features/middleware.md).
+## middleware
+Add an array of middleware that can manipulate queries and mutations before and after execution.
+
+Please refer to [Middleware](../features/middleware.md) for more information.
 
 
 ## paginatorType

@@ -22,7 +22,7 @@ export class BuoyConfig {
     /**
      * Register global middleware.
      */
-    middleware?: any = [];
+    middleware?: any[] = [];
 
     /**
      * Would you like to subscribe to changes server-side?

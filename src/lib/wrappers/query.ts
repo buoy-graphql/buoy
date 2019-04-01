@@ -1,9 +1,10 @@
 import { QueryOptions } from './options';
 import { Subscription } from 'rxjs';
-import { scope } from 'ngx-plumber';
+import { isFunction, scope } from 'ngx-plumber';
 import { Buoy } from '../buoy';
 import { Wrapper } from './wrapper';
 import { QueryPagination } from './query-pagination';
+import { OnChangeEvent } from '../events/on-change.event';
 
 
 export class Query implements Wrapper {
@@ -24,6 +25,14 @@ export class Query implements Wrapper {
         public _variables,
         protected _options: QueryOptions
     ) {
+        // Run QueryManipulator middleware
+        this._buoy._middleware.forEach((middleware: any) => {
+            if (isFunction(middleware.manipulateQuery)) {
+                // TODO Check response from middleware
+                query = middleware.manipulateQuery(query, this._variables, this._options);
+            }
+        });
+
         // Init QueryPagination
         this._queryPagination = new QueryPagination(this, query, _options, _variables); // TODO: Re-init if _options.pagination changes.
 
@@ -114,10 +123,12 @@ export class Query implements Wrapper {
         // Inject variables from QueryPagination
         let variables = Object.assign(this._variables, this._queryPagination.variables);
 
-        // Run middlewares
-        this._buoy._config.middleware.forEach((middleware) => {
-            // TODO Make sure that the method exists on the Middleware class
-            variables = new middleware(this._buoy).manipulateVariables(this._queryPagination.query, variables, this._options);
+        // Run VariableManipulator middleware
+        this._buoy._middleware.forEach((middleware: any) => {
+            if (isFunction(middleware.manipulateVariables)) {
+                // TODO Check response from middleware
+                variables = middleware.manipulateVariables(this._queryPagination.query, variables, this._options);
+            }
         });
 
         return variables;
@@ -126,7 +137,8 @@ export class Query implements Wrapper {
     private initQuery() {
         this._query = this._buoy.apollo.watchQuery({
             query: this._queryPagination.query, // Use the manipulated query
-            variables: this.variables // Use manipulated variables,
+            variables: this.variables, // Use manipulated variables,
+            fetchPolicy: typeof this._options.fetchPolicy !== 'undefined' ? this._options.fetchPolicy : 'cache-first'
         });
 
         // Subscribe to changes
@@ -143,5 +155,10 @@ export class Query implements Wrapper {
 
         // Set data
         this.data = scope(data.data, this._options.scope);
+
+        // OnChange event
+        if (typeof this._options.onChange !== 'undefined') {
+            this._options.onChange(new OnChangeEvent(this.data));
+        }
     }
 }
