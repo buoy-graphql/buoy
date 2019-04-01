@@ -1,5 +1,4 @@
 import { HttpHeaders } from '@angular/common/http';
-import { Middleware } from './middleware/middleware';
 
 export class BuoyConfig {
     /**
@@ -27,7 +26,7 @@ export class BuoyConfig {
     /**
      * Would you like to subscribe to changes server-side?
      */
-    subscriptions?: Array<Middleware>;
+    subscriptions?: any;
 
     /**
      * Which type of paginators does the GraphQL server use as a default?
