@@ -52,6 +52,14 @@ export class LighthouseLink extends ApolloLink {
                     .toPromise()
                     .then(
                         (result: any) => {
+                            // Run ResponseManipulator middleware
+                            this.buoy._middleware.forEach((middleware: any) => {
+                                if (isFunction(middleware.manipulateResponse)) {
+                                    // TODO Check returned data - throw exception if invalid
+                                    result = middleware.manipulateResponse(result, operation.query, operation.variables);
+                                }
+                            });
+
                             operation.setContext(result);
                             observer.next(result);
                             observer.complete();

@@ -1,7 +1,5 @@
 # Middleware
 
-## Introduction
-
 Middleware allows you to manipulate queries and mutations before and after they are executed.
 
 A use-case could be to inject variable-values into the query or to add something to the response from your backend.
@@ -41,6 +39,19 @@ export class MyMiddleware implements QueryManipulator {
 }
 ```
 
+### ResponseManipulator
+
+Will be called when the HTTP-link receives a response from the GraphQL-server.
+
+**Example:**
+```typescript
+export class MyMiddleware implements ResponseManipulator {
+    manipulateResponse(response: any, query: Document, variables: any): any {
+        return response;
+    }
+}
+```
+
 ### VariableManipulator
 
 Will be called just before the query/ mutation is executed. Allows you to manipulate the defined variables and their values.
@@ -52,7 +63,7 @@ export class MyMiddleware implements VariableManipulator {
         return variables;
     }
 }
-```  
+```
 
 ## Registering middleware
 
