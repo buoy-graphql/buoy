@@ -8,6 +8,7 @@ import { LighthouseLink } from './http-link/lighthouse-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { WatchQuery } from './wrappers/watch-query';
 
 let uniqueId = 1;
 
@@ -51,6 +52,13 @@ export class Buoy {
      */
     public query(query, variables?: any, options?: QueryOptions): Query {
         return new Query(this, uniqueId++, query, variables, options);
+    }
+
+    /**
+     * Run a query - with observable data.
+     */
+    public watchQuery(query, variables?: any, options?: QueryOptions): WatchQuery {
+        return new WatchQuery(this, uniqueId++, query, variables, options);
     }
 
     /**

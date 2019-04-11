@@ -8,9 +8,9 @@ import { OnChangeEvent } from '../events/on-change.event';
 
 
 export class Query implements Wrapper {
-    private _query;
-    private _querySubscription: Subscription;
-    private _queryPagination: QueryPagination;
+    protected _query;
+    protected _querySubscription: Subscription;
+    protected _queryPagination: QueryPagination;
 
     public _initialized = false;
 
@@ -119,7 +119,14 @@ export class Query implements Wrapper {
         this._querySubscription.unsubscribe();
     }
 
-    private get variables() {
+    public reset(): void {
+        // Hotfix to trigger Angular's listeners.
+        for (const key of Object.keys(this.data)) {
+            delete this.data[key];
+        }
+    }
+
+    protected get variables() {
         // Inject variables from QueryPagination
         let variables = Object.assign(this._variables, this._queryPagination.variables);
 
@@ -134,7 +141,7 @@ export class Query implements Wrapper {
         return variables;
     }
 
-    private initQuery() {
+    protected initQuery() {
         this._query = this._buoy.apollo.watchQuery({
             query: this._queryPagination.query, // Use the manipulated query
             variables: this.variables, // Use manipulated variables,
@@ -147,7 +154,7 @@ export class Query implements Wrapper {
         this._initialized = true;
     }
 
-    private mapResponse(data, mode: 'http' | 'ws'): void {
+    protected mapResponse(data, mode: 'http' | 'ws'): void {
         // Set loading
         this.loading = data.loading; // TODO Necessary?
 
