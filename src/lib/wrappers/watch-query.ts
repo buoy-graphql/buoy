@@ -34,7 +34,6 @@ export class WatchQuery extends Query {
         this._queryPagination.readPaginationFromResponse(data);
 
         // Set data
-        console.log('TYPE :: ', typeof this.data);
         this.data.next(scope(data.data, this._options.scope));
 
         // OnChange event
