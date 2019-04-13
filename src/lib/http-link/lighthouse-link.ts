@@ -96,24 +96,19 @@ export class LighthouseLink extends ApolloLink {
             return operations;
         }
 
+        const payload = new FormData();
+
         // Generate map
         const map = {};
-        for (const i of Object.keys(files.files)) {
-            const file = files.files[i];
-            map[i] = ['variables.' + file.path];
+        let i = 0;
+        for (const [file, path] of files.files.entries()) {
+            map[i] = ['variables.' + path];
+            payload.append(i.toString(), file, file.name);
+            i++;
         }
-
-        const payload = new FormData();
 
         payload.append('operations', JSON.stringify(operations));
         payload.append('map', JSON.stringify(map));
-
-        // Append files to payload
-        for (const i of Object.keys(files.files)) {
-            const file = files.files[i];
-
-            payload.append(i, file.file, file.file.name);
-        }
 
         return payload;
     }
