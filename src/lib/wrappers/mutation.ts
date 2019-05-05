@@ -35,7 +35,8 @@ export class Mutation implements Wrapper {
                     for (const error of response.errors) {
                         if (error.extensions.category === 'graphql') {
                             throw new Error(
-                                `[Buoy :: GraphQL error]: ${error.message}, on line ${error.locations[0].line}:${error.locations[0].column}.`,
+                                '[Buoy :: GraphQL error]: ${error.message}, on line ' +
+                                `${error.locations[0].line}:${error.locations[0].column}.`,
                             );
                         }
                     }
@@ -51,8 +52,6 @@ export class Mutation implements Wrapper {
                     }
                 },
                 (error) => {
-                    console.log('ERR BUOY', error);
-
                     observer.error({
                         // graphQl: error.graphQLErrors,
                         // network: error.networkError,
