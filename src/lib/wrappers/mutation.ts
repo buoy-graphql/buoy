@@ -24,16 +24,40 @@ export class Mutation implements Wrapper {
             this._buoy.apollo.mutate({
                 mutation: this._gqlMutation,
                 variables: this._variables,
+                errorPolicy: 'all'
             }).toPromise().then(
-                (success) => {
-                    observer.next(this.mapResponse(success));
-                    observer.complete();
-                    // resolve(this.mapResponse(success));
+                (response) => {
+
+                    if (typeof response.errors === 'undefined') {
+                        response['errors'] = [];
+                    }
+
+                    for (const error of response.errors) {
+                        if (error.extensions.category === 'graphql') {
+                            throw new Error(
+                                `[Buoy :: GraphQL error]: ${error.message}, on line ${error.locations[0].line}:${error.locations[0].column}.`,
+                            );
+                        }
+                    }
+
+                    if (response.errors.length === 0) {
+                        observer.next(this.mapResponse(response));
+                        observer.complete();
+                    } else {
+                        observer.error({
+                            data: response.data ? response.data : null,
+                            extensions: response.extensions
+                        });
+                    }
                 },
                 (error) => {
+                    console.log('ERR BUOY', error);
+
                     observer.error({
-                        graphQl: error.graphQLErrors,
-                        network: error.networkError
+                        // graphQl: error.graphQLErrors,
+                        // network: error.networkError,
+                        data: {},
+                        extensions: {}
                     });
                 }
             );
