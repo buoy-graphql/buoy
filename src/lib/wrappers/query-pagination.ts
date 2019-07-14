@@ -1,13 +1,13 @@
 import { dotsToCamelCase, scope, scopeChild, scopeCount, issetElse } from 'ngx-plumber';
 import { QueryOptions } from './options';
-import { Query } from './query';
 import { QueryRoute } from './query-route';
+import { WatchQuery } from './watch-query';
 
 export class QueryPagination {
     public _paginators = {};
     private _queryRoute: QueryRoute;
 
-    constructor(public _query: Query, private _gqlQuery, public _queryOptions: QueryOptions, variables: any) {
+    constructor(public _query: WatchQuery, private _gqlQuery, public _queryOptions: QueryOptions, variables: any) {
         if (typeof this._queryOptions.pagination !== 'undefined') {
             this.getPaginatorScopes(variables);
 

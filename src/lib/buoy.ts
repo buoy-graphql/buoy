@@ -8,6 +8,8 @@ import { LighthouseLink } from './http-link/lighthouse-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { WatchQueryOld } from './wrappers/watch-query-old';
+import { onError } from 'apollo-link-error';
 import { WatchQuery } from './wrappers/watch-query';
 
 let uniqueId = 1;
@@ -40,6 +42,25 @@ export class Buoy {
         // Initialize cache
         this.cache = new InMemoryCache();
 
+        // Handle errors
+        const errorLink = onError(({ response, graphQLErrors, networkError }) => {
+            if (graphQLErrors) {
+                graphQLErrors.map((error) => {
+                    if (error.extensions.category === 'graphql') {
+                        throw new Error(
+                            `[Buoy :: GraphQL error]: ${error.message}, on line ${error.locations[0].line}:${error.locations[0].column}.`,
+                        );
+                    }
+                });
+            }
+
+            if (networkError) {
+                console.error(`[Buoy :: Network error]: ${networkError}`);
+            }
+
+            return response;
+        });
+
         // Initialize apollo-client
         this.apollo.create({
             link: new LighthouseLink(this),
@@ -50,15 +71,23 @@ export class Buoy {
     /**
      * Run a query.
      */
-    public query(query, variables?: any, options?: QueryOptions): Query {
-        return new Query(this, uniqueId++, query, variables, options);
+    public query(query, variables?: any, options?: QueryOptions): Observable<any> {
+        return new Query(this, uniqueId++, query, variables, options).execute();
+    }
+
+    /**
+     * Run an asynchronous query, that can be subscribed to.
+     */
+    public watchQuery(query, variables?: any, options?: QueryOptions): WatchQuery {
+        return new WatchQuery(this, uniqueId++, query, variables, options);
     }
 
     /**
      * Run a query - with observable data.
+     * @deprecated
      */
-    public watchQuery(query, variables?: any, options?: QueryOptions): WatchQuery {
-        return new WatchQuery(this, uniqueId++, query, variables, options);
+    public watchQueryOld(query, variables?: any, options?: QueryOptions): WatchQueryOld {
+        return new WatchQueryOld(this, uniqueId++, query, variables, options);
     }
 
     /**

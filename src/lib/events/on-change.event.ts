@@ -1,3 +1,5 @@
 export class OnChangeEvent {
-    constructor(public data: any) { }
+    constructor(
+        public data: any
+    ) { }
 }

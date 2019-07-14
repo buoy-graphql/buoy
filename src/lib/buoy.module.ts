@@ -12,6 +12,9 @@ import { ApolloModule } from 'apollo-angular';
         HttpClientModule
     ],
     providers: [
+    ],
+    exports: [
+        ApolloModule // TODO: Only necessary when overwriting the Buoy service.
     ]
 })
 export class BuoyModule {
