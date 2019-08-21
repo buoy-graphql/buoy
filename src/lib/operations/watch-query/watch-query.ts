@@ -1,8 +1,7 @@
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { isFunction, scope } from 'ngx-plumber';
+import { scope } from 'ngx-plumber';
 import { Buoy } from '../../buoy';
 import { Pagination } from './pagination';
-import { OnChangeEvent } from '../../events/on-change.event';
 import { WatchQueryOptions } from './watch-query-options';
 import { WatchQuerySubscription } from './watch-query-subscription';
 import { Operation } from '../operation';
@@ -18,7 +17,6 @@ export class WatchQuery extends Operation {
     protected subscription: WatchQuerySubscription;
 
     public _apolloInitialized = new BehaviorSubject(false);
-    public _operationInitialized = new BehaviorSubject(false);
 
     public data: any;
 
@@ -46,11 +44,6 @@ export class WatchQuery extends Operation {
             // this.subscription = new WatchQuerySubscription(this.getQuery()); // TODO
         }
 
-        // Mark this operations as initialized.
-        setTimeout(() => {
-            this._operationInitialized.next(true);
-        }, 0);
-
         return this;
     }
 
@@ -76,6 +69,8 @@ export class WatchQuery extends Operation {
     }
 
     private doRefetch() {
+        this.emitOnLoadingStart();
+        this.loading = true;
         this._apolloOperation.refetch(this.getVariables()).then(
             (success) => {
                 this.loading = false;
@@ -186,28 +181,28 @@ export class WatchQuery extends Operation {
             variables: this.getVariables(),
             fetchPolicy: typeof this._options.fetchPolicy !== 'undefined' ? this._options.fetchPolicy : 'cache-first'
         });
+        this.emitOnLoadingStart();
 
         // Subscribe to changes
         this._apolloSubscription = this._apolloOperation.valueChanges.subscribe((data) => this.mapResponse(data, 'http'));
 
         this._apolloInitialized.next(true);
+        this.emitOnInitialized();
     }
 
     protected mapResponse(data, mode: 'http' | 'ws'): void {
         // Set loading
         this.loading = data.loading; // TODO Necessary?
 
-        if (this.paginationEnabled){
+        if (this.paginationEnabled) {
             this._pagination.readPaginationFromResponse(data);
         }
 
         // Set data
         this.data = scope(data.data, this._options.scope);
 
-        // OnChange event
-        if (typeof this._options.onChange !== 'undefined') {
-            this._options.onChange(new OnChangeEvent(this.data));
-        }
+        this.emitOnLoadingFinish();
+        this.emitOnChange();
     }
 
     /**
@@ -219,5 +214,37 @@ export class WatchQuery extends Operation {
 
     protected getQuery() {
         return this.paginationEnabled ? this._pagination.query : super.getQuery();
+    }
+
+    private emitOnInitialized() {
+        if (typeof this._options.onInitialized !== 'undefined') {
+            this._options.onInitialized(this._id);
+        }
+    }
+
+    private emitOnLimitChange(paginator, limit) {
+        // TODO
+    }
+
+    private emitOnPageChange(paginator, page) {
+        // TODO
+    }
+
+    private emitOnLoadingStart() {
+        if (typeof this._options.onLoadingStart !== 'undefined') {
+            this._options.onLoadingStart(this._id);
+        }
+    }
+
+    private emitOnLoadingFinish() {
+        if (typeof this._options.onLoadingFinish !== 'undefined') {
+            this._options.onLoadingFinish(this._id);
+        }
+    }
+
+    private emitOnChange() {
+        if (typeof this._options.onChange !== 'undefined') {
+            this._options.onChange(this._id, this.data);
+        }
     }
 }

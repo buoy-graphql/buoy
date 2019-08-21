@@ -1,21 +1,19 @@
-import { Wrapper } from '../wrapper';
 import { Buoy } from '../../buoy';
-import { isFunction, scope } from 'ngx-plumber';
+import { scope } from 'ngx-plumber';
 import { MutationOptions } from './mutation-options';
 import { MutationResult } from './mutation-result';
 import { MutationError } from './mutation-error';
+import { Operation } from '../operation';
 
-export class Mutation implements Wrapper {
+export class Mutation extends Operation {
     constructor(
-        public _buoy: Buoy,
-        public _id: number,
-        private _gqlMutation,
-        private _variables,
-        protected _options: MutationOptions
+        buoy: Buoy,
+        id: number,
+        query,
+        variables,
+        options: MutationOptions
     ) {
-        this._gqlMutation = this.mutation;
-        this._variables = this.variables;
-        return this;
+        super(buoy, id, query, variables, options, 'mutation');
     }
 
     public execute(): Promise<MutationResult|MutationError> {
@@ -23,8 +21,8 @@ export class Mutation implements Wrapper {
             // TODO Implement Optimistic UI (#16)
 
             this._buoy.apollo.mutate({
-                mutation: this._gqlMutation,
-                variables: this._variables,
+                mutation: this.getQuery(),
+                variables: this.getVariables(),
                 errorPolicy: 'all'
             }).toPromise().then(
                 (response) => {
@@ -63,33 +61,5 @@ export class Mutation implements Wrapper {
 
     private mapResponse(data): any {
         return scope(data.data, this._options.scope);
-    }
-
-    private get variables() {
-        // Get user defined variables
-        let variables = this._variables;
-
-        // Run VariableManipulator middleware
-        this._buoy._middleware.forEach((middleware: any) => {
-            if (isFunction(middleware.manipulateVariables)) {
-                // TODO Check response from middleware
-                variables = middleware.manipulateVariables(this._gqlMutation, variables, this._options);
-            }
-        });
-
-        return variables;
-    }
-
-    private get mutation() {
-        let mutation = this._gqlMutation;
-        // Run QueryManipulator middleware
-        this._buoy._middleware.forEach((middleware: any) => {
-            if (isFunction(middleware.manipulateQuery)) {
-                // TODO Check response from middleware
-                mutation = middleware.manipulateQuery(mutation, this._variables, this._options);
-            }
-        });
-
-        return mutation;
     }
 }

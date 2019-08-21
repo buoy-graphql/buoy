@@ -1,29 +1,23 @@
-import { isFunction, scope } from 'ngx-plumber';
+import { scope } from 'ngx-plumber';
 import { Buoy } from '../../buoy';
-import { Wrapper } from '../wrapper';
 import { QueryResult } from './query-result';
 import { QueryError } from './query-error';
+import { Operation } from '../operation';
 import { QueryOptions } from './query-options';
 
-export class Query implements Wrapper {
+export class Query extends Operation {
     public data: any;
 
     public loading = true;
 
     constructor(
-        public _buoy: Buoy,
-        public _id: number,
-        protected _query,
-        public _variables,
-        protected _options: QueryOptions
+        buoy: Buoy,
+        id: number,
+        query,
+        variables,
+        options: QueryOptions
     ) {
-        // Run QueryManipulator middleware
-        this._buoy._middleware.forEach((middleware: any) => {
-            if (isFunction(middleware.manipulateQuery)) {
-                // TODO Check response from middleware
-                this._query = middleware.manipulateQuery(this._query, this._variables, this._options);
-            }
-        });
+        super(buoy, id, query, variables, options, 'query');
 
         return this;
     }
@@ -34,8 +28,8 @@ export class Query implements Wrapper {
     public execute(): Promise<QueryResult|QueryError> {
         return new Promise<QueryResult|QueryError>((resolve, reject) => {
             this._buoy.apollo.query({
-                query: this._query,
-                variables: this._variables,
+                query: this.getQuery(),
+                variables: this.getVariables(),
                 errorPolicy: 'all',
                 fetchResults: true
             }).toPromise().then(
@@ -72,20 +66,6 @@ export class Query implements Wrapper {
                 ));
             });
         });
-    }
-
-    protected get variables() {
-        let variables = {};
-
-        // Run VariableManipulator middleware
-        this._buoy._middleware.forEach((middleware: any) => {
-            if (isFunction(middleware.manipulateVariables)) {
-                // TODO Check response from middleware
-                variables = middleware.manipulateVariables(this._query, variables, this._options);
-            }
-        });
-
-        return variables;
     }
 
     private mapResponse(data): any {

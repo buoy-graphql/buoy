@@ -79,6 +79,7 @@ Go to the next page. Will only change page, if not on last page.
 | refetch   | boolean | (Optional / default: true) Refetch the query after page changed? |
 | paginator | string  | (Optional) The paginator. Only required if using multiple paginators. |
 
+
 ### prevPage
 Go to the previous page. Will only change page, if not on first page.
 
@@ -87,6 +88,7 @@ Go to the previous page. Will only change page, if not on first page.
 | --------- | ------- | ----------------- |
 | refetch   | boolean | (Optional / default: true) Refetch the query after page changed? |
 | paginator | string  | Optional: The paginator. Only required if using multiple paginators. |
+
 
 ### setPage
 Go to a specific page. Will only change page if the page is available.
@@ -98,6 +100,7 @@ Go to a specific page. Will only change page if the page is available.
 | refetch   | boolean | (Optional / default: true) Refetch the query after page changed? |
 | paginator | string  | Optional: The paginator. Only required if using multiple paginators. |
 
+
 ### setLimit
 Go to a specific page. Will only change page if the page is available.
 
@@ -108,12 +111,14 @@ Go to a specific page. Will only change page if the page is available.
 | refetch   | boolean | (Optional / default: true) Refetch the query after limit changed? |
 | paginator | string  | Optional: The paginator. Only required if using multiple paginators. |
 
+
 ### refetch
 Runs the query with the current options and variables. 
 
 **Parameters**
 
 _none_
+
 
 ### setVariable
 Set a variable after the query has been initialized. You must use [`refetch()`](#refetch) in order to see the changes.
@@ -125,6 +130,7 @@ Set a variable after the query has been initialized. You must use [`refetch()`](
 | variable  | string | The name of the variable. |
 | value     | any    | The value of the variable. |
 
+
 ### unsetVariable
 Remove a variable from the query. You must use [`refetch()`](#refetch) in order to see the changes.
 
@@ -133,6 +139,7 @@ Remove a variable from the query. You must use [`refetch()`](#refetch) in order 
 | Parameter | Type   | Explanation   |
 | --------- | ------ | ------------- |
 | variable  | string | The name of the variable. |
+
 
 ## Options
 Options are added as the third parameter on the `buoy.watchQuery()`-method.
@@ -162,8 +169,8 @@ Example:
 ```
 
 ```graphql
-query Movies ($limit: Int!, $page: Int!) { # Optional to add variables
-    movies(first: $limit, page: $page) { # Optional to add attributes
+query Movies ($limit: Int!, $page: Int!) {
+    movies(first: $limit, page: $page) {
         data {
             id
             title
@@ -204,7 +211,7 @@ query MyQuery (
     $actorRolesLimit: Int!,
     $actorRolesPage: Int!
 ) { 
-    movies(first: $moviesLimit, page: $moviesPage) { # Optional to add attributes
+    movies(first: $moviesLimit, page: $moviesPage) {
         data {
             id
             title
@@ -252,14 +259,14 @@ query MyQuery (
     $actorRolesLimit: Int!,
     $actorRolesPage: ID! # A paginator of type "connection" use ID! for page
 ) { 
-    movies(first: $moviesLimit, page: $moviesPage) { # Optional to add attributes
+    movies(first: $moviesLimit, page: $moviesPage) {
         data {
             id
             title
         }
     }
     actor(id: $actorId) {
-        roles(first: $actorRolesLimit, after: $actorRolesPage) { # Optional to add attributes
+        roles(first: $actorRolesLimit, after: $actorRolesPage) {
             edges {
                 character
             }
@@ -319,19 +326,67 @@ Please refer to [Router R/W](../features/router-rw.md) for more information.
 ```
 
 
-## Callbacks <Badge text="experimental" type="warn"/>
-The callbacks are also added as options on a query.
+## Callbacks
+The callbacks are also added as options on a WatchQuery. 
+
 
 ### onInitialized
-// TODO
+
+Is fired once the WatchQuery has been initialized.
+
+**Parameters**
+| Parameter | Type    | Explanation       |
+|:--------- |:------- |:----------------- |
+| id        | number  | Buoy operation ID |
+
+### onChange
+
+Is fired when the data changes.
+
+**Parameters**
+| Parameter | Type    | Explanation       |
+|:--------- |:------- |:----------------- |
+| id        | number  | Buoy operation ID |
+| data      | any     | Scoped data.      |
+<!--
+### onLimitChange
+
+Is fired on pagination limit changes.
+
+**Parameters**
+| Parameter | Type    | Explanation       |
+|:--------- |:------- |:----------------- |
+| id        | number  | Buoy operation ID |
+| paginator | string  | Paginator name / scope |
+| limit     | number  | Max items per page |
 
 ### onPageChange
-// TODO
+
+Is fired on pagination page changes.
+
+**Parameters**
+| Parameter | Type    | Explanation       |
+|:--------- |:------- |:----------------- |
+| id        | number  | Buoy operation ID |
+| paginator | string  | Paginator name / scope |
+| page      | number  | Page number       |
+-->
 
 ### onLoadingStart
-// TODO
+
+Is fired when `loading` is set to `true`.
+
+**Parameters**
+| Parameter | Type    | Explanation       |
+|:--------- |:------- |:----------------- |
+| id        | number  | Buoy operation ID |
+
 
 ### onLoadingFinished
-// TODO
 
-### 
+Is fired when `loading` is set to `false`.
+
+**Parameters**
+| Parameter | Type    | Explanation       |
+|:--------- |:------- |:----------------- |
+| id        | number  | Buoy operation ID |

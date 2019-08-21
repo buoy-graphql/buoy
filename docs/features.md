@@ -30,8 +30,9 @@ Buoy utilizes InMemoryCache which is automatically used unless you instruct Buoy
 
 ## Roadmap
 
-Following features are planned or in the works.
+Following features are planned or in the works. Click the links to follow their progress.
 
 * [Optimistic UI](https://github.com/haffdata/buoy/issues/16) - Use a predicted response in templates until the actual response is received. 
 * [Connection support](https://github.com/haffdata/buoy/issues/16) - Support paginators of type "connection". 
 * [Lighthouse subscriptions](https://github.com/haffdata/buoy/issues/3) - Subscribe to changes in the backend.
+* [Deferred fields](https://github.com/haffdata/buoy/issues/35) - Gradually load data based on priority
