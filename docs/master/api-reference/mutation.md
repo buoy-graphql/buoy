@@ -1,10 +1,10 @@
 # Mutation
 
-The Mutation-object is a wrapper around the Apollo-client.
+The mutation is a lot like the query. However, the mutation will not cache any results locally.
 
 ## Initializing a new Mutation
 
-Mutations are created through the `Buoy`-service. Buoy returns an `Observable`.
+Mutations are created through the `Buoy`-service. Buoy returns a Promise.
 The mutation is executed immediately once initialized.
 
 [Click here](/demo) to see a live example.

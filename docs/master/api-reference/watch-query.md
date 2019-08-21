@@ -163,7 +163,7 @@ Example:
 
 ```graphql
 query Movies ($limit: Int!, $page: Int!) { # Optional to add variables
-    movies(count: $limit, page: $page) { # Optional to add attributes
+    movies(first: $limit, page: $page) { # Optional to add attributes
         data {
             id
             title
@@ -204,14 +204,14 @@ query MyQuery (
     $actorRolesLimit: Int!,
     $actorRolesPage: Int!
 ) { 
-    movies(count: $moviesLimit, page: $moviesPage) { # Optional to add attributes
+    movies(first: $moviesLimit, page: $moviesPage) { # Optional to add attributes
         data {
             id
             title
         }
     }
     actor(id: $actorId) {
-        roles(count: $actorRolesLimit, page: $actorRolesPage) {
+        roles(first: $actorRolesLimit, page: $actorRolesPage) {
             data {
                 character
             }
@@ -252,7 +252,7 @@ query MyQuery (
     $actorRolesLimit: Int!,
     $actorRolesPage: ID! # A paginator of type "connection" use ID! for page
 ) { 
-    movies(count: $moviesLimit, page: $moviesPage) { # Optional to add attributes
+    movies(first: $moviesLimit, page: $moviesPage) { # Optional to add attributes
         data {
             id
             title
