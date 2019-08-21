@@ -1,16 +1,23 @@
 import { Injectable, Optional } from '@angular/core';
-import { Query } from './wrappers/query';
-import { Mutation } from './wrappers/mutation';
+import { Query } from './operations/query/query';
+import { Mutation } from './operations/mutation/mutation';
 import { Apollo } from 'apollo-angular';
-import { MutationOptions, QueryOptions } from './wrappers/options';
 import { BuoyConfig } from './buoy-config';
 import { LighthouseLink } from './http-link/lighthouse-link';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { WatchQuery } from './wrappers/watch-query';
+import { WatchQuery } from './operations/watch-query/watch-query';
+import { QueryResult } from './operations/query/query-result';
+import { QueryError } from './operations/query/query-error';
+import { QueryOptions } from './operations/query/query-options';
+import { WatchQueryOptions } from './operations/watch-query/watch-query-options';
+import { MutationOptions } from './operations/mutation/mutation-options';
+import { MutationResult } from './operations/mutation/mutation-result';
+import { MutationError } from './operations/mutation/mutation-error';
+import { Subscription } from './operations/subscription/subscription';
+import { SubscriptionOptions } from './operations/subscription/subscription-options';
 
-let uniqueId = 1;
+let operationId = 1;
 
 @Injectable({
     providedIn: 'root'
@@ -50,22 +57,29 @@ export class Buoy {
     /**
      * Run a query.
      */
-    public query(query, variables?: any, options?: QueryOptions): Query {
-        return new Query(this, uniqueId++, query, variables, options);
+    public query(query, variables?: any, options?: QueryOptions): Promise<QueryResult|QueryError> {
+        return new Query(this, operationId++, query, variables, options).execute();
     }
 
     /**
-     * Run a query - with observable data.
+     * Run an asynchronous query, that can be subscribed to.
      */
-    public watchQuery(query, variables?: any, options?: QueryOptions): WatchQuery {
-        return new WatchQuery(this, uniqueId++, query, variables, options);
+    public watchQuery(query, variables?: any, options?: WatchQueryOptions): WatchQuery {
+        return new WatchQuery(this, operationId++, query, variables, options);
     }
 
     /**
      * Run a mutation.
      */
-    public mutate(mutation, variables?: any, options?: MutationOptions): Observable<any> {
-        return new Mutation(this, uniqueId++, mutation, variables, options).execute();
+    public mutate(mutation, variables?: any, options?: MutationOptions): Promise<MutationResult|MutationError> {
+        return new Mutation(this, operationId++, mutation, variables, options).execute();
+    }
+
+    /**
+     * Subscribe to changes server-side.
+     */
+    public subscribe(subscription, variables?: any, options?: SubscriptionOptions): Subscription {
+        return new Subscription(subscription, variables, options);
     }
 
     public get config(): BuoyConfig {
@@ -76,6 +90,9 @@ export class Buoy {
         this._middleware.push(new middleware(...args));
     }
 
+    /**
+     * Reset the Buoy cache.
+     */
     public resetCache(): void {
         this.cache.reset();
     }

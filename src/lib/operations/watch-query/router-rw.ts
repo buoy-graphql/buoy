@@ -1,11 +1,11 @@
 import { Subscription } from 'rxjs';
-import { QueryPagination } from './query-pagination';
+import { Pagination } from './pagination';
 
-export class QueryRoute {
+export class RouterRw {
     private _routeSubscription: Subscription;
     private ignoreRouteChanges = false;
 
-    constructor(private _pagination: QueryPagination) {
+    constructor(private _pagination: Pagination) {
         // Subscribe to the Router if defined.
         this.readRoute();
     }
@@ -67,7 +67,7 @@ export class QueryRoute {
 
                         // Set the values
                         this._pagination.setLimit(limit, paginator);
-                        this._pagination.setPage(page, paginator, false);
+                        this._pagination.setPage(parseInt(page, 10), paginator, false);
                     }
                     // Read the values and add them to paginators desired values
 

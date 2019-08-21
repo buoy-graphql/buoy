@@ -33,7 +33,7 @@ Manipulate queries and mutations before they are executed.
 **Example:**
 ```typescript
 export class MyMiddleware implements QueryManipulator {
-    manipulateQuery(query: Document, variables: any, options: QueryOptions | MutationOptions): Document {
+    manipulateQuery(query: Document, variables: any, options: QueryOptions | WatchQueryOptions | MutationOptions): Document {
         return query;
     }
 }
@@ -59,7 +59,7 @@ Will be called just before the query/ mutation is executed. Allows you to manipu
 **Example:**
 ```typescript
 export class MyMiddleware implements VariableManipulator {
-    manipulateVariables(query: Document, variables: any, options: QueryOptions): any {
+    manipulateVariables(query: Document, variables: any, options: QueryOptions | WatchQueryOptions | MutationOptions): any {
         return variables;
     }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@buoy/client",
-  "version": "0.3.2",
+  "version": "0.4.1",
   "description": "A Lighthouse client for Angular. Build your Angular apps with a Laravel backend!",
   "author": "Albert Haff <ahn@haffdata.com>",
   "license": "MIT",
@@ -41,7 +41,7 @@
     "extract-files": "^5.0.1",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
-    "ngx-plumber": "0.0.0-alpha.5"
+    "ngx-plumber": "0.0.0-alpha.10"
   },
   "devDependencies": {
     "@angular/animations": "~7.1.0",

@@ -22,6 +22,7 @@ module.exports = [
         title: 'API Reference',
         children: [
             'api-reference/query',
+            'api-reference/watch-query',
             'api-reference/mutation',
             'api-reference/events'
         ]
