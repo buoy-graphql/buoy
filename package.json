@@ -1,6 +1,6 @@
 {
   "name": "@buoy/client",
-  "version": "0.2.0",
+  "version": "0.4.1",
   "description": "A Lighthouse client for Angular. Build your Angular apps with a Laravel backend!",
   "author": "Albert Haff <ahn@haffdata.com>",
   "license": "MIT",
@@ -37,12 +37,11 @@
     "apollo-cache-inmemory": "^1.4.2",
     "apollo-client": "^2.4.12",
     "apollo-link": "^1.2.6",
-    "apollo-link-error": "^1.1.10",
     "apollo-utilities": "^1.1.2",
     "extract-files": "^5.0.1",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
-    "ngx-plumber": "0.0.0-alpha.5"
+    "ngx-plumber": "0.0.0-alpha.10"
   },
   "devDependencies": {
     "@angular/animations": "~7.1.0",

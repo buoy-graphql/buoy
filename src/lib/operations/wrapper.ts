@@ -1,6 +1,6 @@
 import { Buoy } from '../buoy';
 
-export interface Wrapper {
+export interface Wrapper { // TODO Remove
 
     /**
      * Contains the Buoy service.

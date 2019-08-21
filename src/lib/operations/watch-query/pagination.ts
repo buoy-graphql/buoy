@@ -1,20 +1,30 @@
 import { dotsToCamelCase, scope, scopeChild, scopeCount, issetElse } from 'ngx-plumber';
-import { QueryOptions } from './options';
-import { QueryRoute } from './query-route';
+import { RouterRw } from './router-rw';
 import { WatchQuery } from './watch-query';
+import { WatchQueryOptions } from './watch-query-options';
+import { BehaviorSubject } from 'rxjs';
 
-export class QueryPagination {
+export class Pagination {
     public _paginators = {};
-    private _queryRoute: QueryRoute;
+    private _queryRoute: RouterRw;
+    private _initialized = new BehaviorSubject(false);
 
-    constructor(public _query: WatchQuery, private _gqlQuery, public _queryOptions: QueryOptions, variables: any) {
+    constructor(
+        public _query: WatchQuery,
+        private _gqlQuery,
+        public _queryOptions: WatchQueryOptions,
+        variables: any
+    ) {
         if (typeof this._queryOptions.pagination !== 'undefined') {
             this.getPaginatorScopes(variables);
 
             this.findPaginatorsInQuery();
 
             // Subscribe to the Router if defined.
-            this._queryRoute = new QueryRoute(this);
+            this._queryRoute = new RouterRw(this);
+
+            // TODO Timeout?
+            this._initialized.next(true);
         }
     }
 
@@ -102,7 +112,7 @@ export class QueryPagination {
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, '-')) {
             this._paginators[paginator].desiredPage--;
-            this._queryRoute.writeRoute();
+            this.writeRoute();
 
             // TODO add support for connection
             return true;
@@ -120,7 +130,7 @@ export class QueryPagination {
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, '+')) {
             this._paginators[paginator].desiredPage++;
-            this._queryRoute.writeRoute();
+            this.writeRoute();
 
             // TODO add support for connection
             return true;
@@ -132,14 +142,18 @@ export class QueryPagination {
     /**
      * Set the page.
      */
-    public setPage(page: number | string, paginator?: string, checkPage = true): boolean {
+    public setPage(page: number, paginator?: string, checkPage = true): boolean {
         paginator = this.checkPaginator(paginator, 'page');
 
         // Only continue if the page actually is available
         if (this.checkIfPageExists(paginator, page) || checkPage === false) {
+            const oldPage = this._paginators[paginator].desiredPage;
             this._paginators[paginator].desiredPage = page;
-            if (this._query._initialized) {
-                this._queryRoute.writeRoute();
+            if (this._query._apolloInitialized) {
+                console.log('SET PAGE', page, oldPage);
+                if (page !== oldPage) {
+                    this.writeRoute();
+                }
             }
             return true;
         }
@@ -156,18 +170,15 @@ export class QueryPagination {
         if (this._paginators[paginator].desiredLimit !== limit) {
             // Jump back to page 1 if the limit was changed.
             this._paginators[paginator].desiredPage = 1;
-            if (this._query._initialized) {
-                this._queryRoute.writeRoute();
-            }
+            this._paginators[paginator].desiredLimit = limit;
+            this.writeRoute();
         }
-
-        this._paginators[paginator].desiredLimit = limit;
     }
 
     /**
      * Check if the paginator exists.
      */
-    private checkPaginator(paginator: string, variable: 'page'|'limit'): string {
+    private checkPaginator(paginator: string, variable: 'page' | 'limit'): string {
         // Check if there are any paginators
         if (Object.keys(this._paginators).length === 0) {
             throw new Error('There are no paginators in this query.');
@@ -191,7 +202,7 @@ export class QueryPagination {
     /**
      * Check if a page exists in the paginator.
      */
-    private checkIfPageExists(paginator: string, page: number|string|'-'|'+'): boolean {
+    private checkIfPageExists(paginator: string, page: number | string | '-' | '+'): boolean {
         try {
             if (typeof paginator !== 'undefined') {
                 if (this._paginators[paginator].type === 'paginator') {
@@ -364,9 +375,15 @@ export class QueryPagination {
 
                 selection.selectionSet.selections[paginationSelectionId].selectionSet.selections.forEach((subSelection, i) => {
                     switch (subSelection.name.value) {
-                        case 'lastPage':    lastPageId = i; break;
-                        case 'currentPage': currentPageId = i; break;
-                        case 'perPage':     perPageId = i; break;
+                        case 'lastPage':
+                            lastPageId = i;
+                            break;
+                        case 'currentPage':
+                            currentPageId = i;
+                            break;
+                        case 'perPage':
+                            perPageId = i;
+                            break;
                     }
                 });
 
@@ -407,8 +424,12 @@ export class QueryPagination {
             // Loop through all variables in the query
             this._gqlQuery.definitions[0].variableDefinitions.forEach((variableDefinition, i) => {
                 switch (variableDefinition.variable.name.value) {
-                    case this._paginators[paginator].page:  pageVariableId = i; break;
-                    case this._paginators[paginator].limit: limitVariableId = i; break;
+                    case this._paginators[paginator].page:
+                        pageVariableId = i;
+                        break;
+                    case this._paginators[paginator].limit:
+                        limitVariableId = i;
+                        break;
                 }
             });
 
@@ -455,9 +476,9 @@ export class QueryPagination {
         };
 
         if (typeof selections !== 'undefined') {
-            field['selectionSet'] =  {
+            field['selectionSet'] = {
                 kind: 'SelectionSet',
-                    selections: selections
+                selections: selections
             };
         }
 
@@ -494,4 +515,17 @@ export class QueryPagination {
     private queryScoped(scopeStr): any {
         return scope(this._gqlQuery, scopeStr);
     }
+
+    private writeRoute(): void {
+        if (this._initialized.value === false) {
+            this._initialized.toPromise().then(initialized => {
+                if (initialized) {
+                    this._queryRoute.writeRoute();
+                }
+            });
+        } else {
+            this._queryRoute.writeRoute();
+        }
+    }
+
 }

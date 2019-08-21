@@ -1,8 +1,9 @@
-import { MutationOptions } from './options';
-import { Wrapper } from './wrapper';
-import { Buoy } from '../buoy';
+import { Wrapper } from '../wrapper';
+import { Buoy } from '../../buoy';
 import { isFunction, scope } from 'ngx-plumber';
-import { Observable } from 'rxjs';
+import { MutationOptions } from './mutation-options';
+import { MutationResult } from './mutation-result';
+import { MutationError } from './mutation-error';
 
 export class Mutation implements Wrapper {
     constructor(
@@ -17,8 +18,8 @@ export class Mutation implements Wrapper {
         return this;
     }
 
-    public execute(): Observable<any> {
-        return new Observable<any>(observer => {
+    public execute(): Promise<MutationResult|MutationError> {
+        return new Promise<MutationResult|MutationError>(((resolve, reject) => {
             // TODO Implement Optimistic UI (#16)
 
             this._buoy.apollo.mutate({
@@ -42,25 +43,22 @@ export class Mutation implements Wrapper {
                     }
 
                     if (response.errors.length === 0) {
-                        observer.next(this.mapResponse(response));
-                        observer.complete();
+                        resolve(new MutationResult(this.mapResponse(response)));
                     } else {
-                        observer.error({
-                            data: response.data ? response.data : null,
-                            extensions: response.extensions
-                        });
+                        reject(new MutationError(
+                            response.data ? response.data : null,
+                            response.extensions
+                        ));
                     }
                 },
                 (error) => {
-                    observer.error({
-                        // graphQl: error.graphQLErrors,
-                        // network: error.networkError,
-                        data: {},
-                        extensions: {}
-                    });
+                    reject(new MutationError(
+                        null,
+                        error
+                    ));
                 }
             );
-        });
+        }));
     }
 
     private mapResponse(data): any {

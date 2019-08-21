@@ -1,8 +1,9 @@
-import { QueryOptions } from './options';
-import { Observable } from 'rxjs';
 import { isFunction, scope } from 'ngx-plumber';
-import { Buoy } from '../buoy';
-import { Wrapper } from './wrapper';
+import { Buoy } from '../../buoy';
+import { Wrapper } from '../wrapper';
+import { QueryResult } from './query-result';
+import { QueryError } from './query-error';
+import { QueryOptions } from './query-options';
 
 export class Query implements Wrapper {
     public data: any;
@@ -30,9 +31,8 @@ export class Query implements Wrapper {
     /**
      * Execute the query and return an observable.
      */
-    public execute(): Observable<any> {
-        return new Observable<any>(observer => {
-            console.log('BUOY Q INIT');
+    public execute(): Promise<QueryResult|QueryError> {
+        return new Promise<QueryResult|QueryError>((resolve, reject) => {
             this._buoy.apollo.query({
                 query: this._query,
                 variables: this._variables,
@@ -40,41 +40,37 @@ export class Query implements Wrapper {
                 fetchResults: true
             }).toPromise().then(
                 (response) => {
-                    console.log('BUOY RESP', response);
+                if (typeof response.errors === 'undefined') {
+                    response.errors = [];
+                }
 
-                    if (typeof response.errors === 'undefined') {
-                        response.errors = [];
+                for (const error of response.errors) {
+                    if (error.extensions.category === 'graphql') {
+                        throw new Error(
+                            '[Buoy :: GraphQL error]: ${error.message}, on line ' +
+                            `${error.locations[0].line}:${error.locations[0].column}.`,
+                        );
                     }
+                }
 
-                    for (const error of response.errors) {
-                        if (error.extensions.category === 'graphql') {
-                            throw new Error(
-                                '[Buoy :: GraphQL error]: ${error.message}, on line ' +
-                                `${error.locations[0].line}:${error.locations[0].column}.`,
-                            );
-                        }
-                    }
-
-                    if (response.errors.length === 0) {
-                        observer.next(this.mapResponse(response));
-                        observer.complete();
-                    } else {
-                        observer.error({
-                            data: response.data ? response.data : null,
-                            // extensions: response.extensions
-                        });
-                    }
-                },
-                (error) => {
-                    throw new Error(error);
-                    observer.error({
+                if (response.errors.length === 0) {
+                    resolve(new QueryResult(this.mapResponse(response)));
+                } else {
+                    reject(new QueryError(response.data ? response.data : null, ''));
+                }
+            },
+            (error) => {
+                throw new Error(error);
+                reject(new QueryError(
+                    null,
+                    {
                         // graphQl: error.graphQLErrors,
                         // network: error.networkError,
                         data: {},
                         extensions: {}
-                    });
-                }
-            );
+                    }
+                ));
+            });
         });
     }
 
