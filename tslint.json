@@ -19,7 +19,8 @@
     "eofline": true,
     "import-blacklist": [
       true,
-      "rxjs/Rx"
+      "rxjs/Rx",
+      "@apollo/client"
     ],
     "import-spacing": true,
     "indent": {

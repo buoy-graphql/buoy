@@ -1,0 +1,29 @@
+{
+  "name": "@buoy/client",
+  "version": "0.5.0",
+  "description": "A Lighthouse client for Angular. Build your Angular apps with a Laravel backend!",
+  "author": "Albert Haff <ahn@haffdata.com>",
+  "license": "MIT",
+  "keywords": [
+    "angular",
+    "graphql",
+    "lighthouse",
+    "laravel",
+    "apollo",
+    "client"
+  ],
+  "homepage": "https://ngx-buoy.com",
+  "repository": {
+    "url": "https://github.com/haffdata/buoy"
+  },
+  "peerDependencies": {
+    "@angular/common": "^10.1.6",
+    "@angular/core": "^10.1.6",
+    "@apollo/client": "^3.3.6",
+    "apollo-angular": "^2.2.0",
+    "graphql": "^15.4.0"
+  },
+  "dependencies": {
+    "tslib": "^2.0.0"
+  }
+}
