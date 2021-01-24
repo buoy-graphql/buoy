@@ -1,0 +1,111 @@
+.superhero {
+    position: relative !important;
+    padding-top: 50px;
+    padding-bottom: 50px;
+
+    color: #333;
+
+    &.dark {
+        background-color: #333;
+        color: #FFF;
+    }
+
+    &.red {
+        background-color: #dc1431;
+        color: #FFF;
+    }
+
+    &.blue {
+        background-color: #1976d2;
+        background: linear-gradient(145deg, #0d47a1, #42a5f5);
+
+        position: absolute;
+        color: #FFF;
+
+        padding-top: 150px;
+        padding-bottom: 100px;
+
+        &::after {
+            z-index: 1;
+            position:absolute;
+            content: " ";
+            display:block;
+            left:0;
+            bottom: 0;
+            width:100%;
+            border-style: solid;
+            border-width: 0 0 10vw 100vw;
+            border-color: transparent transparent #fafafa transparent;
+        }
+
+        .intro {
+
+            h1 {
+                line-height: 6vw;
+                font-size: 6vw;
+            }
+
+            p {
+                font-size: 30px;
+            }
+        }
+    }
+
+    &.headerBg {
+        margin-top: -100px;
+    }
+}
+
+
+.slope-top-ltr::before {
+    z-index: 1;
+    position:absolute;
+    content: " ";
+    display:block;
+    left:0;
+    top:-100px;
+    width:100%;
+    border-style: solid;
+    border-width: 0 0 100px 100vw;
+    border-color: transparent transparent #dc1431 transparent;
+}
+
+.slope-top-rtl::before {
+    z-index: 1;
+    position:absolute;
+    content: " ";
+    display:block;
+    left:0;
+    top:-100px;
+    width:100%;
+    border-style: solid;
+    border-width: 0 100vw 100px 0;
+    border-color: transparent transparent #dc1431 transparent;
+}
+
+.slope-bottom-ltr::after {
+    z-index: 1;
+    position:absolute;
+    content: " ";
+    display:block;
+    left:0;
+    bottom:-100px;
+    width:100%;
+    border-style: solid;
+    border-width: 0 100vw 100px 0;
+    border-color: transparent #dc1431 transparent transparent;
+}
+
+
+.slope-bottom-rtl::after {
+    z-index: 1;
+    position:absolute;
+    content: " ";
+    display:block;
+    left:0;
+    bottom:-100px;
+    width:100%;
+    border-style: solid;
+    border-width: 0 0 100px 100vw;
+    border-color: transparent transparent transparent #dc1431;
+}

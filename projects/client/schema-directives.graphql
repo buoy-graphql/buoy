@@ -1,0 +1,16 @@
+enum EventType {
+    CREATE
+    UPDATE
+    DELETE
+}
+
+directive @subscribe(
+    "Argument to send to the subscription. Will default to 'id'."
+    argument: String
+    "Arguments to send to the subscription. Will default to 'id'."
+    arguments: [String!]
+    "Only subscribe the defined event type."
+    event: EventType
+    "Only subscribe to defined event types."
+    events: [EventType!]]
+) on FIELD
