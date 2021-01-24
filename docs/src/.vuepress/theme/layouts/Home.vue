@@ -1,5 +1,5 @@
 <template>
-    <main class="home" aria-labelledby="main-title">
+    <main class="home-custom" aria-labelledby="main-title">
         <Navbar />
 
         <div class="home-hero">
@@ -25,7 +25,7 @@
             </div>
         </div>
 
-        <section class="feature" style="margin-top: -190px">
+        <section class="home-feature" style="margin-top: -190px">
             <div class="container pb-5">
                 <div class="row">
                     <div class="col-lg-6">
@@ -39,7 +39,7 @@
             </div>
         </section>
 
-        <section class="feature red slope-top-rtl slope-bottom-rtl">
+        <section class="home-feature red slope-top-rtl slope-bottom-rtl">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
@@ -59,7 +59,7 @@
             </div>
         </section>
 
-        <section class="feature" style="margin-top: -130px; margin-bottom: 30px">
+        <section class="home-feature" style="margin-top: -130px; margin-bottom: 30px">
             <div class="container pb-5">
                 <div class="row">
                     <div class="col-lg-6">
@@ -78,7 +78,7 @@
             </div>
         </section>
 
-        <section class="feature red slope-top-rtl">
+        <section class="home-feature red slope-top-rtl">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
@@ -104,9 +104,7 @@
                 <div class="row pt-5">
                     <div class="col-lg-4"></div>
                     <div class="col-md-2 col-sm-4 col-6 p-3" v-for="user of $site.themeConfig.users">
-                        <div style="width: 100%; height: 100%; position:relative; background-color: red">
-                            <img :src="user.image" :title="user.caption" width="100%" style="top: 50%; position: absolute; transform: translateY(-50%);" />
-                        </div>
+                        <img :src="user.image" :title="user.caption" width="100%" height="100%" style="vertical-align: middle; object-fit: contain;" />
                     </div>
                 </div>
 
