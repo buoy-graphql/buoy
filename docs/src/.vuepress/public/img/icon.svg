@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="566.93px" height="566.93px" viewBox="0 0 566.93 566.93" enable-background="new 0 0 566.93 566.93" xml:space="preserve">
+    <style  type="text/css">
+        .st0{fill:#DC1431;stroke:#000000;stroke-miterlimit:10;}
+        .st1{fill:#DC1431;}
+        .st2{fill:#FFFFFF;}
+        .st3{fill:none;stroke:#000000;stroke-miterlimit:10;}
+        .st4{fill:#FFFFFF;stroke:#000000;stroke-miterlimit:10;}
+        .st5{fill:#DC1431;stroke:#000000;stroke-width:1;stroke-miterlimit:9.9997;}
+        .st6{fill:none;}
+        .st7{fill:none;stroke:#000000;stroke-width:2;stroke-miterlimit:10;}
+
+        #buoy {
+            animation: floatAnimation 10s ease-in-out infinite;
+            transform-origin: center bottom;
+            z-index: 1;
+        }
+
+        @keyframes floatAnimation {
+            0% {
+                transform: rotate(-5deg) translate(0px,0px);
+            }
+            50% {
+                transform: rotate(5deg) translate(30px,10px);
+            }
+            100% {
+                transform: rotate(-5deg) translate(0px,0px);
+            }
+        }
+
+        #waves-path {
+            animation: wavesAnimation 6s ease-in-out infinite;
+        }
+        @keyframes wavesAnimation {
+            0% {
+                transform: translate(-600px,0px);
+            }
+            50% {
+                transform: translate(0px);
+            }
+            100% {
+                transform: translate(-600px,0px);
+            }
+        }
+
+        #light {
+            animation: lightAnimation 2s infinite;
+        }
+        @keyframes lightAnimation {
+            0%,50% {
+                opacity: 0;
+            }
+            51%,100% {
+                opacity: 1;
+            }
+        }
+
+        #bulb {
+            animation: bulbAnimation 2s infinite;
+        }
+        @keyframes bulbAnimation {
+            0%,50% {
+                fill: #CCC;
+            }
+            51%,100% {
+                fill: #FFF;
+            }
+        }
+
+    </style>
+    <defs>
+        <clipPath id="waves">
+            <path id="waves-path" class="st0" d="M0,0h1200v555c0,0-198-13-374-6s-344,20-508,19S0,555,0,555V0z"/>
+        </clipPath>
+    </defs>
+    <g clip-path="url(#waves)">
+        <g id="buoy">
+            <polygon class="st0" points="276.04,236.19 267.6,234.95 263.69,240.91 275.11,242.58 	"/>
+                    <polygon class="st0" points="288.82,238.06 297.82,239.38 299.28,246.12 287.88,244.45 	"/>
+                    <polygon class="st0" points="285.54,260.42 299.8,262.51 300.79,269.18 284.61,266.81 	"/>
+                    <polyline class="st0" points="303.16,298.9 280.39,295.56 281.33,289.17 302.2,292.23 	"/>
+                    <polygon class="st0" points="272.76,258.55 258.38,256.44 255.98,262.62 271.83,264.94 	"/>
+                    <polygon class="st0" points="267.61,293.69 268.55,287.29 246.34,284.04 242.54,290.01 	"/>
+                    <polyline class="st0" points="305.59,322.1 277.11,317.92 276.18,324.31 286.4,325.81 290.02,407.91 264.47,404.16 263.54,410.55
+                315.67,418.19 	"/>
+                    <polygon class="st0" points="264.34,316.05 235.77,311.86 198.45,401.01 250.76,408.68 251.7,402.29 226.14,398.55 253.18,320.94
+                263.4,322.44 	"/>
+                    <polyline class="st0" points="318.45,444.7 259.79,436.1 260.73,429.72 317.75,438.08 	"/>
+                    <polygon class="st0" points="247.95,427.85 190.73,419.46 188.16,425.61 247.01,434.23 	"/>
+                    <path class="st0" d="M256.05,461.66"/>
+                    <polyline class="st0" points="321.23,471.21 256.05,461.66 255.11,468.05 321.92,477.84 	"/>
+                    <polygon class="st0" points="243.27,459.79 177.87,450.2 175.29,456.35 242.33,466.18 	"/>
+                    <path id="fill" class="st1" d="M360.73,595.45l9.2-64.89C288.72,464,210.1,452.47,114.4,493.1L98.83,595.45H360.73z"/>
+                    <path class="st2" d="M327.8,595.45l9.73-66.37l-24.06-36.15c0,0-26.32-12.71-46.48-16.85l22.63,45.98l-10.78,73.54L327.8,595.45z"
+                    />
+                    <path class="st2" d="M143.25,563.38l9.48-64.66l26.64-25.94c31.26-4.29,49.31-3,49.31-3l-28.1,36.37l-8.39,57.27L143.25,563.38z"/>
+                    <polyline class="st3" points="313.46,492.92 337.52,529.07 327.8,595.45 278.83,595.59 289.61,522.05 266.98,476.07 	"/>
+                    <path class="st4" d="M228.75,469.79l-28.17,36.36l-13.09,89.29h-48.94l14.18-96.72l26.64-25.94"/>
+                    <polygon class="st1" points="252.3,487.21 291.6,219.12 294.84,219.6 324.08,498.39 339.14,507.9 309.16,219.51 300.77,192.18
+                277.77,188.81 261.88,212.58 150.04,479.97 167.14,475.63 275.71,216.56 278.86,216.99 239.52,485.34 	"/>
+                    <path id="outer_x5F_frame_1_" class="st3" d="M360.73,595.45l9.2-64.89C288.72,464,210.1,452.47,114.4,493.1L98.83,595.45H360.73z"
+                    />
+
+                    <rect id="middle_x5F_leg_x5F_fix" x="244.75" y="465.64" transform="matrix(0.145 -0.9894 0.9894 0.145 -255.0518 649.0444)" class="st1" width="6.55" height="12.91"/>
+                    <polyline class="st3" points="339.14,507.9 309.16,219.51 300.77,192.18 277.77,188.81 261.88,212.58 150.04,479.97 	"/>
+                    <polyline class="st3" points="167.56,475.44 275.66,216.56 278.85,217.02 239.52,485.34 252.3,487.21 291.63,218.9 294.82,219.37
+                324.08,498.39 	"/>
+
+                    <rect x="284.82" y="118.08" transform="matrix(0.145 -0.9894 0.9894 0.145 49.5976 454.9595)" class="st5" width="6.45" height="161.41"/>
+                    <polygon class="st6" points="270.23,235.62 272.86,236.01 271.92,242.4 267.55,241.76 	"/>
+                    <circle class="st0" cx="312.15" cy="34.36" r="30.05"/>
+                    <line class="st7" x1="301.63" y1="106.16" x2="307.8" y2="64.08"/>
+                    <path class="st3" d="M316.47,289.8c0,0,32.65-62.47,36.4-88.03c2.71-18.53,20.75-85.06-51.24-95.61
+                c-72-10.55-73.81,58.35-76.53,76.88c-3.75,25.55,9.5,94.76,9.5,94.76"/>
+            <g id="light">
+                <polygon class="st4" points="291.7,173.88 451.29,207.06 461.8,202.08 453.16,194.28"/>
+                <polygon class="st4" points="291.7,173.88 450.73,157.38 458.53,148.74 447.82,143.9"/>
+                <polygon class="st4" points="291.7,173.88 150.75,100.36 139.11,101.92 144.09,112.44"/>
+                <polygon class="st4" points="291.7,173.88 131.18,147.09 120.66,152.07 129.31,159.87"/>
+            </g>
+            <path id="bulb" class="st4" d="M305.24,192.83c0,0,3.61-56.24-7.82-57.92c-11.44-1.68-24.12,53.24-24.12,53.24L305.24,192.83z"/>
+        </g>
+    </g>
+</svg>

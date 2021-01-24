@@ -1,17 +1,22 @@
 {
   "name": "docs",
+  "main": "index.js",
+  "repository": "/docs",
   "scripts": {
-    "start": "vuepress dev",
-    "build": "vuepress build; npm run urls:pretty",
-    "urls:pretty": "clear; find ./.vuepress/dist ! -path './img*' ! -path './assets*' ! -name '_redirects' ! -name '*.*' -type f -exec bash -c 'mv $1 $1.temp; mkdir $1; mv $1.temp $1/index.html' - {} \\;"
+    "dev": "vuepress dev src",
+    "build": "vuepress build src"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.5.3"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free-brands": "^5.0.13",
-    "@fortawesome/fontawesome-svg-core": "^1.2.15",
-    "@fortawesome/free-solid-svg-icons": "^5.7.2",
-    "@fortawesome/vue-fontawesome": "^0.1.5",
-    "@vuepress/plugin-clean-urls": "^1.0.0-alpha.40",
-    "bootstrap": "^4.3.1",
-    "vuepress": "^1.0.0-alpha.39"
+    "@fortawesome/fontawesome-free-brands": "^5.1.0-3",
+    "@fortawesome/fontawesome-svg-core": "^1.2.34",
+    "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@fortawesome/vue-fontawesome": "^2.0.2",
+    "bootstrap": "^4.5.3",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^10.1.1"
   }
 }
