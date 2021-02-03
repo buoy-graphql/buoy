@@ -13,4 +13,4 @@ If the server conforms to the spec, most features will work of the box.
 ## Links
 [Live Demo](https://ngx-buoy.com/demo)
 &nbsp; &middot; &nbsp;
-[Documentation](https://ngx-buoy.com/master/getting-started/installation)
+[Documentation](https://ngx-buoy.com/master/getting-started/introduction.html)
