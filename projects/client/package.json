@@ -17,8 +17,8 @@
     "url": "https://github.com/haffdata/buoy"
   },
   "peerDependencies": {
-    "@angular/common": "^10.1.6",
-    "@angular/core": "^10.1.6",
+    "@angular/common": "^10.1.6 || ^11.0.0",
+    "@angular/core": "^10.1.6 || ^11.0.0",
     "@apollo/client": "^3.3.6",
     "apollo-angular": "^2.2.0",
     "graphql": "^15.4.0"
