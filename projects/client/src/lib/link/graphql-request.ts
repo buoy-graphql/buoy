@@ -9,7 +9,7 @@ export class GraphqlRequest {
 
     public fromOperation(operation: Operation): Promise<any> {
         return new Promise((resolve) => {
-            this.buoy.http.post(this.buoy.options.uri, this.payload(operation), this.httpOptions).toPromise().then(
+            this.buoy.http.post(this.buoy.options.uri, this.payload(operation), this.getHttpOptions(operation)).toPromise().then(
                 result => {
                     // TODO Check returned data - throw exception if invalid
                     // TODO Handle GraphQL errors properly
@@ -29,12 +29,19 @@ export class GraphqlRequest {
         });
     }
 
-    protected get httpOptions(): any {
+    protected getHttpOptions(operation): any {
         // Add headers
         let headers;
         if (this.buoy.options.headers !== undefined) {
             headers = this.buoy.options.headers();
         }
+
+        // Run Header middleware
+        this.buoy.middleware.forEach((middleware: any) => {
+            if (isFunction(middleware.manipulateHeaders)) {
+                headers = middleware.manipulateHeaders(headers, operation.query, operation.variables);
+            }
+        });
 
         return {
             headers,
