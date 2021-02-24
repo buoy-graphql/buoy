@@ -9,6 +9,16 @@ You can find and compare releases at the [NPM releases page](https://www.npmjs.c
 
 ## Unreleased
 
-## 0.5.0
+## [0.5.2] - 2020-02-24
+
+### Added
+- Add observable values to the WatchQuery (observe.ready and observe.data).
+
+## [0.5.1] - 2020-02-16
+
+### Changed
+- Fix fetch policy being ignored in queries.
+
+## [0.5.0] - 2020-02-03
 
 This is the beginning of the changelog.

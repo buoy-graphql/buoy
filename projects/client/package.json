@@ -1,13 +1,12 @@
 {
   "name": "@buoy/client",
-  "version": "0.5.1",
-  "description": "A Lighthouse client for Angular. Build your Angular apps with a Laravel backend!",
+  "version": "0.5.2",
+  "description": "A GraphQL client for Angular built on top of Apollo.",
   "author": "Albert Haff <ahn@haffdata.com>",
   "license": "MIT",
   "keywords": [
     "angular",
     "graphql",
-    "lighthouse",
     "laravel",
     "apollo",
     "client"

@@ -32,6 +32,11 @@ export class WatchQuery extends Operation {
      */
     public ready = false;
 
+    public observe = {
+        data: new BehaviorSubject<any>(null),
+        ready: new BehaviorSubject<boolean>(false),
+    };
+
     constructor(
         buoy: Buoy,
         id: number,
@@ -223,12 +228,14 @@ export class WatchQuery extends Operation {
 
         // Set data
         this.data = scope(data, this._options.scope);
+        this.observe.data.next(this.data);
 
         this.emitOnLoadingFinish();
         this.emitOnChange();
 
         if (!this.loading) {
             this.ready = true;
+            this.observe.ready.next(true);
         }
     }
 
@@ -299,6 +306,7 @@ export class WatchQuery extends Operation {
      */
     public resetReady(): this {
         this.ready = false;
+        this.observe.ready.next(false);
 
         return this;
     }
