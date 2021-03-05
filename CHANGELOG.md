@@ -9,6 +9,9 @@ You can find and compare releases at the [NPM releases page](https://www.npmjs.c
 
 ## Unreleased
 
+### Changed
+- Fix pagination in WatchQuery.
+
 ## [0.5.2] - 2020-02-24
 
 ### Added

@@ -3,6 +3,7 @@ import { RouterRw } from './router-rw';
 import { WatchQuery } from './watch-query';
 import { WatchQueryOptions } from './watch-query-options';
 import { BehaviorSubject } from 'rxjs';
+import { DocumentNode } from 'graphql';
 
 export class Pagination {
     public _paginators = {};
@@ -83,23 +84,26 @@ export class Pagination {
      * Save lastPage, currentPage, etc. for all paginators.
      */
     public readPaginationFromResponse(data: any): void {
-        for (const paginator in this._paginators) {
-            if (this._paginators[paginator].type === 'paginator') {
-                const paginatorInfo = scope(data, paginator).paginatorInfo;
-                this._paginators[paginator].pagination = {
-                    currentPage: paginatorInfo.currentPage,
-                    lastPage: paginatorInfo.lastPage
-                };
+        Object.keys(this._paginators).forEach(paginatorScope => {
+            const paginator = this._paginators[paginatorScope];
+            if (paginator.type === 'paginator') {
+                const paginatorInfo = scope(data, paginatorScope)?.paginatorInfo;
+                if (paginatorInfo !== undefined) {
+                    this._paginators[paginatorScope].pagination = {
+                        currentPage: paginatorInfo.currentPage,
+                        lastPage: paginatorInfo.lastPage
+                    };
+                }
             } else {
                 // TODO add support for connection
             }
-        }
+        });
     }
 
     /**
      * Returns the manipulated query (graphql-tag).
      */
-    public get query() {
+    public get query(): DocumentNode {
         return this._gqlQuery;
     }
 
