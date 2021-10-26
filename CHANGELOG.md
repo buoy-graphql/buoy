@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You can find and compare releases at the [NPM releases page](https://www.npmjs.com/package/@buoy/client?activeTab=versions).
 
-## Unreleased
+## [0.6.0] - 2021-10-26
 
 ### Changed
+- Added support for Angular 12.
 - Fix pagination in WatchQuery.
 
 ## [0.5.2] - 2020-02-24
