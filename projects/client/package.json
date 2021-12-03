@@ -1,6 +1,6 @@
 {
   "name": "@buoy/client",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A GraphQL client for Angular built on top of Apollo.",
   "author": "Albert Haff <ahn@haffdata.com>",
   "license": "MIT",
@@ -16,8 +16,8 @@
     "url": "https://github.com/buoy-graphql/buoy"
   },
   "peerDependencies": {
-    "@angular/common": "^10.1.6 || ^11.0.0",
-    "@angular/core": "^10.1.6 || ^11.0.0",
+    "@angular/common": "^10.1.6 || ^11.0.0 || ^12.0.0",
+    "@angular/core": "^10.1.6 || ^11.0.0 || ^12.0.0",
     "@apollo/client": "^3.3.6",
     "apollo-angular": "^2.2.0",
     "graphql": "^15.4.0"
