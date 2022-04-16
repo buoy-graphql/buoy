@@ -40,15 +40,18 @@ export class DetectDirectives {
         if (node.selectionSet) {
             if (node.kind === 'OperationDefinition' || node.kind === 'Field') {
                 node.selectionSet.selections.forEach((selection) => {
-                    const name = selection?.alias?.value ?? selection.name.value;
-                    let selectionScope = scope;
-                    if (selectionScope === '') {
-                        selectionScope = name;
-                    } else {
-                        selectionScope = `${scope}.${name}`;
-                    }
+                    // Temporarily ignore fragments
+                    if (selection.kind !== 'InlineFragment') {
+                        const name = selection?.alias?.value ?? selection.name.value;
+                        let selectionScope = scope;
+                        if (selectionScope === '') {
+                            selectionScope = name;
+                        } else {
+                            selectionScope = `${scope}.${name}`;
+                        }
 
-                    this.detectDirectives(selectionScope, selection);
+                        this.detectDirectives(selectionScope, selection);
+                    }
                 });
             }
         }

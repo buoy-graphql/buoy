@@ -2,15 +2,6 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/client",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "apollo-angular": "apollo-angular",
-      "ngx-plumber": "ngx-plumber",
-      "graphql/language/printer": "graphql/language/printer",
-      "@apollo/client/core": "@apollo/client/core",
-      "@apollo/client/utilities": "@apollo/client/utilities",
-      "pusher-js": "pusher-js",
-      "extract-files": "extract-files"
-    }
+    "entryFile": "src/public-api.ts"
   }
 }
