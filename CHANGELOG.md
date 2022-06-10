@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You can find and compare releases at the [NPM releases page](https://www.npmjs.com/package/@buoy/client?activeTab=versions).
 
+## [0.7.0] - 2022-04-16
+
+### Changed
+- Added support for creating new subscriptions when the parent WatchQuery is refeteched.
+
 ## [0.6.2] - 2022-04-16
 
 ### Changed
