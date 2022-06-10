@@ -5,16 +5,17 @@ import { Pagination } from './pagination';
 import { WatchQueryOptions } from './watch-query-options';
 import { Operation } from '../operation';
 import { Subscription as BuoySubscription } from '../subscription/subscription';
-import { DefinitionNode, DocumentNode, OperationDefinitionNode, print } from 'graphql';
+import { DocumentNode } from 'graphql';
 import { DetectDirectives, DirectiveLocation } from './detect-directives';
 import { ConvertQueryToSubscription } from './convert-query-to-subscription';
 import { CleanQuery } from './clean-query';
+import { OptionsService } from '../../internal/options.service';
 
 export class WatchQuery extends Operation {
     protected _apolloSubscription: Subscription;
     private _pagination: Pagination;
 
-    private _subscriptions: BuoySubscription[] = [];
+    private _subscription: BuoySubscription;
 
     public _apolloInitialized = new BehaviorSubject(false);
 
@@ -39,12 +40,13 @@ export class WatchQuery extends Operation {
 
     constructor(
         buoy: Buoy,
+        globalOptions: OptionsService,
         id: number,
         query,
         variables,
         options: WatchQueryOptions
     ) {
-        super(buoy, id, query, variables, options, 'query');
+        super(buoy, globalOptions, id, query, variables, options, 'query');
 
         // Init QueryPagination
         if (this.paginationEnabled) {
@@ -70,10 +72,12 @@ export class WatchQuery extends Operation {
             } else {
                 this._apolloInitialized.toPromise().then(initialized => {
                     this.doRefetch();
+                    this._subscription?.refetch();
                 });
             }
         } else {
             this.doRefetch();
+            this._subscription?.refetch();
         }
 
         return this;
@@ -97,6 +101,10 @@ export class WatchQuery extends Operation {
      */
     public setVariable(variable: string, value: any): this {
         this._variables[variable] = value;
+
+        if (this._subscription) {
+            this._subscription.setVariable(variable, value);
+        }
 
         return this;
     }
@@ -163,9 +171,7 @@ export class WatchQuery extends Operation {
      * Destroy the Query.
      */
     public destroy(): void {
-        this._subscriptions.forEach((subscription) => {
-            subscription.destroy();
-        });
+        this._subscription?.destroy();
 
         if (this._pagination) {
             this._pagination.destroy();
@@ -283,9 +289,9 @@ export class WatchQuery extends Operation {
     }
 
     private subscribe(directive: DirectiveLocation, index: number): void {
-        const subscription = (new ConvertQueryToSubscription(this, directive, index)).convert();
+        const subscription = (new ConvertQueryToSubscription(this, directive, index, this._apolloOperation.obsQuery.queryName)).convert();
 
-        this._subscriptions.push(this._buoy.subscribe(
+        this._subscription = this._buoy.subscribe(
             subscription.query,
             subscription.variables,
             {
@@ -298,7 +304,7 @@ export class WatchQuery extends Operation {
                     // TODO Call various callbacks
                 }
             }
-        ));
+        );
     }
 
     /**

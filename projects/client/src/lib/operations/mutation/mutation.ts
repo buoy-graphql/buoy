@@ -4,16 +4,18 @@ import { MutationOptions } from './mutation-options';
 import { MutationResult } from './mutation-result';
 import { MutationError } from './mutation-error';
 import { Operation } from '../operation';
+import { OptionsService } from '../../internal/options.service';
 
 export class Mutation extends Operation {
     constructor(
         buoy: Buoy,
+        globalOptions: OptionsService,
         id: number,
         query,
         variables,
         options: MutationOptions
     ) {
-        super(buoy, id, query, variables, options, 'mutation');
+        super(buoy, globalOptions, id, query, variables, options, 'mutation');
     }
 
     public execute(): Promise<MutationResult|MutationError> {
