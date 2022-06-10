@@ -274,15 +274,15 @@ export class Pagination {
 
         scopes.forEach((scopeStr) => {
             const prefix = dotsToCamelCase(scopeStr);
-            if (this._query._buoy.options.paginatorType === 'paginator') {
+            if (this._query._globalOptions.values.paginatorType === 'paginator') {
                 paginators[scopeStr] = {
                     type: 'paginator',
                     page: scopes.length === 1 ? 'page' : `${prefix}Page`,
                     limit: scopes.length === 1 ? 'limit' : `${prefix}Limit`,
                     desiredPage: scopes.length === 1 ? issetElse(variables['page'], 1) : issetElse(variables[`${prefix}Page`], 1),
                     desiredLimit: scopes.length === 1 ?
-                        issetElse(variables['limit'], this._query._buoy.options.defaultLimit) :
-                        issetElse(variables[`${prefix}Limit`], this._query._buoy.options.defaultLimit)
+                        issetElse(variables['limit'], this._query._globalOptions.values.defaultLimit) :
+                        issetElse(variables[`${prefix}Limit`], this._query._globalOptions.values.defaultLimit)
                 };
             } else {
                 paginators[scopeStr] = {

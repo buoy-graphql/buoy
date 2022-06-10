@@ -62,7 +62,7 @@ export class RouterRw {
                             page = 1;
                         }
                         if (typeof limit === 'undefined') {
-                            limit = this._pagination._query._buoy.options.defaultLimit;
+                            limit = this._pagination._query._globalOptions.values.defaultLimit;
                         }
 
                         // Set the values

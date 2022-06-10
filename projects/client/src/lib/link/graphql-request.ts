@@ -3,13 +3,17 @@ import { Operation } from '@apollo/client/link/core/types';
 import { print } from 'graphql/language/printer';
 import { extractFiles } from 'extract-files';
 import { isFunction } from 'ngx-plumber';
+import { OptionsService } from '../internal/options.service';
 
 export class GraphqlRequest {
-    constructor(public buoy: Buoy) { }
+    constructor(
+        public buoy: Buoy,
+        public options: OptionsService,
+    ) { }
 
     public fromOperation(operation: Operation): Promise<any> {
         return new Promise((resolve) => {
-            this.buoy.http.post(this.buoy.options.uri, this.payload(operation), this.getHttpOptions(operation)).toPromise().then(
+            this.buoy.http.post(this.options.values.uri, this.payload(operation), this.getHttpOptions(operation)).toPromise().then(
                 result => {
                     // TODO Check returned data - throw exception if invalid
                     // TODO Handle GraphQL errors properly
@@ -32,8 +36,8 @@ export class GraphqlRequest {
     protected getHttpOptions(operation): any {
         // Add headers
         let headers;
-        if (this.buoy.options.headers !== undefined) {
-            headers = this.buoy.options.headers();
+        if (this.options.values.headers !== undefined) {
+            headers = this.options.values.headers();
         }
 
         // Run Header middleware
@@ -45,7 +49,7 @@ export class GraphqlRequest {
 
         return {
             headers,
-            withCredentials: this.buoy.options.withCredentials
+            withCredentials: this.options.values.withCredentials
         };
     }
 

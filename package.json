@@ -6,7 +6,9 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "build:ivy": "ng build client --configuration=ivy",
+    "watch": "ng build client --configuration=ivy --watch"
   },
   "private": true,
   "dependencies": {

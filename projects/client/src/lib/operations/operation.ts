@@ -2,12 +2,14 @@ import { Buoy } from '../buoy';
 import { isFunction } from 'ngx-plumber';
 import { print } from 'graphql/language/printer';
 import { DocumentNode } from 'graphql';
+import { OptionsService } from '../internal/options.service';
 
 export class Operation {
     protected _apolloOperation;
 
     constructor(
         public _buoy: Buoy,
+        public _globalOptions: OptionsService,
         public _id: number,
         public _query: DocumentNode,
         public _variables,

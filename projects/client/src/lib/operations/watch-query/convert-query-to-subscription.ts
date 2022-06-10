@@ -20,7 +20,8 @@ export class ConvertQueryToSubscription {
     constructor(
         private watchQuery: WatchQuery,
         private directive: DirectiveLocation,
-        private watchQuerySubscriptionIndex: number
+        private watchQuerySubscriptionIndex: number,
+        private queryName: string,
     ) {
         // @ts-ignore
         this.definition = gql(print(this.watchQuery.getQuery())).definitions[0] as OperationDefinitionNode;
@@ -60,7 +61,7 @@ export class ConvertQueryToSubscription {
         });
         if (selectedArguments.length === 0) {
             // If no argument has been selected, use the default one
-            selectedArguments.push(this.watchQuery._buoy.options.subscribeDefaultArgument);
+            selectedArguments.push(this.watchQuery._globalOptions.values.subscribeDefaultArgument);
         }
 
         // Loop through attributes on the query and pick the selected ones
@@ -124,7 +125,7 @@ export class ConvertQueryToSubscription {
 
         // Generate the subscription query
         const subscriptionQuery = gql `
-            subscription WatchQuery_${this.watchQuery._id}_Subscription_${this.watchQuerySubscriptionIndex + 1} {
+            subscription ${this.queryName}_Subscription_${this.watchQuerySubscriptionIndex + 1} {
                 subscription {
                     id
                     event
