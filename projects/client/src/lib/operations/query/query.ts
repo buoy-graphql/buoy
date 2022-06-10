@@ -4,6 +4,7 @@ import { QueryResult } from './query-result';
 import { QueryError } from './query-error';
 import { Operation } from '../operation';
 import { QueryOptions } from './query-options';
+import { OptionsService } from '../../internal/options.service';
 
 export class Query extends Operation {
     public data: any;
@@ -12,12 +13,13 @@ export class Query extends Operation {
 
     constructor(
         buoy: Buoy,
+        globalOptions: OptionsService,
         id: number,
         query,
         variables,
         options: QueryOptions
     ) {
-        super(buoy, id, query, variables, options, 'query');
+        super(buoy, globalOptions, id, query, variables, options, 'query');
 
         return this;
     }

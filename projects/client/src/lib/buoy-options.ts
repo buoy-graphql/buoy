@@ -52,4 +52,9 @@ export class BuoyOptions {
      * Default limit to be used in pagination.
      */
     defaultLimit ? = 25;
+
+    /**
+     * Enabling debug will print all query and mutation responses and subscription events in the console.
+     */
+    debug ? = false;
 }
