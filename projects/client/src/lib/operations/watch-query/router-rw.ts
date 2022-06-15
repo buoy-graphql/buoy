@@ -11,7 +11,7 @@ export class RouterRw {
     }
 
     public destroy() {
-        this._routeSubscription.unsubscribe();
+        this._routeSubscription?.unsubscribe();
     }
 
     /**
