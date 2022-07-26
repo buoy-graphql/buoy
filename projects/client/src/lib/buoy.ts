@@ -15,11 +15,13 @@ import { SubscriptionOptions } from './operations/subscription/subscription-opti
 import { Subscription } from './operations/subscription/subscription';
 import { WatchQuery } from './operations/watch-query/watch-query';
 import { WatchQueryOptions } from './operations/watch-query/watch-query-options';
+import { PaginatorOptions } from './operations/paginator/paginator-options';
 import { WsLink } from './link/ws-link';
 import { SubscriptionDriver } from './drivers/subscriptions/subscription-driver';
 import { DebugService } from './internal/debug.service';
 import { ErrorService } from './internal/error.service';
 import { OptionsService } from './internal/options.service';
+import { Paginator } from './operations/paginator/paginator';
 
 let operationId = 1;
 
@@ -86,6 +88,13 @@ export class Buoy {
      */
     public watchQuery(query, variables?: any, options?: WatchQueryOptions): WatchQuery {
         return new WatchQuery(this, this.options, operationId++, query, variables, options);
+    }
+
+    /**
+     * Create a paginated, asynchronous query, that can be subscribed to.
+     */
+    public paginator(query, variables?: any, options?: PaginatorOptions): Paginator {
+        return new Paginator(this, this.options, operationId++, query, variables, options);
     }
 
     /**

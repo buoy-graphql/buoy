@@ -140,11 +140,11 @@ export class WatchQuery extends Operation {
     /**
      * Set the page.
      */
-    public setPage(page: number, refetch = true, paginator?: string): this {
+    public setPage(page: number, refetch = true, paginator?: string, checkPageAvailability = true): this {
         if (!this.paginationEnabled) {
             throw new Error('Pagination must be enabled before the page can be changed.');
         }
-        if (refetch === true && this._pagination.setPage(page, paginator)) {
+        if (refetch === true && this._pagination.setPage(page, paginator, checkPageAvailability)) {
             this.refetch();
         }
 
