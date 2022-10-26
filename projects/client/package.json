@@ -1,6 +1,6 @@
 {
   "name": "@buoy/client",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "A GraphQL client for Angular built on top of Apollo.",
   "author": "Albert Haff <ahn@haffdata.com>",
   "license": "MIT",

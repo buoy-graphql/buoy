@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You can find and compare releases at the [NPM releases page](https://www.npmjs.com/package/@buoy/client?activeTab=versions).
 
+## [0.9.0] - 2022-10-26
+
+### Added
+- Added new clearCache method to the Buoy-service.
+
 ## [0.8.0] - 2022-07-26
 
 ### Added
