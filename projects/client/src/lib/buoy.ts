@@ -114,4 +114,11 @@ export class Buoy {
     public registerMiddleware(middleware: any, args: any[]): void {
         this.middleware.push(new middleware(...args));
     }
+
+    /**
+     * Clear the underlying Apollo cache completely.
+     */
+    public clearCache(): void {
+        this.apollo.use('buoy').client.clearStore();
+    }
 }
