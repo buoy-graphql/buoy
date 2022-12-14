@@ -75,13 +75,6 @@ export class Operation {
     }
 
     /**
-     * Get the fetch policy for the operation.
-     */
-    protected getFetchPolicy() {
-        return typeof this._options.fetchPolicy !== 'undefined' ? this._options.fetchPolicy : 'cache-first';
-    }
-
-    /**
      * Check if the query has a
      */
     protected handleOperationName() {

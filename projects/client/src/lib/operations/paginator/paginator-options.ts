@@ -1,7 +1,9 @@
-import { QueryOptions } from '../query/query-options';
+import { WatchQueryFetchPolicy } from '@apollo/client/core';
 
-export interface PaginatorOptions extends QueryOptions {
+export interface PaginatorOptions {
+    scope: string;
     fetch?: boolean;
+    fetchPolicy?: WatchQueryFetchPolicy;
 
     // Callbacks
     onInitialized?: (id: number) => void;

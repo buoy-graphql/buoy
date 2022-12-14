@@ -34,7 +34,7 @@ export class Subscription extends Operation {
         this._apolloOperation = this._buoy.apollo.use('buoy').subscribe({
             query: this.getQuery(),
             variables: this.getVariables(),
-            fetchPolicy: this.getFetchPolicy(),
+            fetchPolicy: this._options.fetchPolicy,
         });
 
         this._apolloSubscription = this._apolloOperation.subscribe((data) => this.handleEvent(data));

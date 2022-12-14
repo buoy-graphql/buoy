@@ -1,4 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
+import { FetchPolicy, WatchQueryFetchPolicy } from '@apollo/client/core';
+import { MutationFetchPolicy } from '@apollo/client/core/watchQueryOptions';
 
 export class BuoyOptions {
     /**
@@ -57,4 +59,10 @@ export class BuoyOptions {
      * Enabling debug will print all query and mutation responses and subscription events in the console.
      */
     debug ? = false;
+
+    defaultFetchPolicy?: FetchPolicy;
+
+    defaultWatchQueryFetchPolicy?: WatchQueryFetchPolicy;
+
+    defaultMutationFetchPolicy?: MutationFetchPolicy;
 }

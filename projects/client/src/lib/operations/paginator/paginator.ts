@@ -143,7 +143,7 @@ export class Paginator extends Operation {
         this._apolloOperation = this._buoy.apollo.use('buoy').watchQuery({
             query: this._query,
             variables: this.getVariables(),
-            fetchPolicy: this.getFetchPolicy(),
+            fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultWatchQueryFetchPolicy,
             notifyOnNetworkStatusChange: true,
         });
 

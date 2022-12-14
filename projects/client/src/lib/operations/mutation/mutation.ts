@@ -30,7 +30,8 @@ export class Mutation extends Operation {
                     if (typeof this._options.update !== 'undefined') {
                         this._options.update(cache, mutationResult, this.getQuery());
                     }
-                }
+                },
+                fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultMutationFetchPolicy
             }).toPromise().then(
                 (response) => {
 

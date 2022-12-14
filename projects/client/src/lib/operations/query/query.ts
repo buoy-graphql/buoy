@@ -32,7 +32,7 @@ export class Query extends Operation {
             this._buoy.apollo.use('buoy').query({
                 query: this.getQuery(),
                 variables: this.getVariables(),
-                fetchPolicy: this._options.fetchPolicy,
+                fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultFetchPolicy,
                 errorPolicy: 'all',
             }).toPromise().then(
                 (response) => {

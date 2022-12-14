@@ -1,14 +1,16 @@
-import { QueryOptions } from '../query/query-options';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentNode } from 'graphql';
+import { WatchQueryFetchPolicy } from '@apollo/client/core';
 
-export interface WatchQueryOptions extends QueryOptions {
+export interface WatchQueryOptions {
+    scope: string;
     pagination?: false | string | any;    // TODO
     router?: {
         router: Router,
         route: ActivatedRoute;
     };
     fetch?: boolean;
+    fetchPolicy?: WatchQueryFetchPolicy;
     subscribe?: boolean;
     refetchOnCreate?: boolean;
     refetchOnDelete?: boolean;

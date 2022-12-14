@@ -203,7 +203,7 @@ export class WatchQuery extends Operation {
         this._apolloOperation = this._buoy.apollo.use('buoy').watchQuery({
             query: (new CleanQuery(this)).get(),
             variables: this.getVariables(),
-            fetchPolicy: this.getFetchPolicy(),
+            fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultWatchQueryFetchPolicy,
             notifyOnNetworkStatusChange: true,
         });
 
