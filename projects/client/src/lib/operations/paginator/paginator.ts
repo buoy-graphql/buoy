@@ -126,7 +126,7 @@ export class Paginator extends Operation {
      * Destroy the Query.
      */
     public destroy(): void {
-        this._apolloSubscription.unsubscribe();
+        this._apolloSubscription?.unsubscribe();
     }
 
     /**

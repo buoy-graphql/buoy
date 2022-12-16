@@ -177,7 +177,7 @@ export class WatchQuery extends Operation {
             this._pagination.destroy();
         }
 
-        this._apolloSubscription.unsubscribe();
+        this._apolloSubscription?.unsubscribe();
     }
 
     /**

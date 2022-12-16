@@ -43,7 +43,7 @@ export class Subscription extends Operation {
     }
 
     public destroy(): void {
-        this._apolloSubscription.unsubscribe();
+        this._apolloSubscription?.unsubscribe();
     }
 
     /**
@@ -56,7 +56,7 @@ export class Subscription extends Operation {
     }
 
     public refetch(): this {
-        this._apolloSubscription.unsubscribe();
+        this._apolloSubscription?.unsubscribe();
         this.initSubscription();
 
         return this;
