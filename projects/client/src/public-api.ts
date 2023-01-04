@@ -33,3 +33,8 @@ export * from './lib/middleware/variable-manipulator';
 // Drivers
 export * from './lib/drivers/subscriptions/lighthouse/lighthouse';
 export * from './lib/drivers/subscriptions/lighthouse/lighthouse-options';
+
+// Errors
+export * from './lib/errors/buoy-error';
+export * from './lib/errors/graphql-error';
+export * from './lib/errors/network-error';

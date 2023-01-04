@@ -22,6 +22,9 @@ import { DebugService } from './internal/debug.service';
 import { ErrorService } from './internal/error.service';
 import { OptionsService } from './internal/options.service';
 import { Paginator } from './operations/paginator/paginator';
+import { onError } from '@apollo/client/link/error';
+import { GraphQLError } from './errors/graphql-error';
+import { NetworkError } from './errors/network-error';
 
 let operationId = 1;
 
@@ -54,12 +57,24 @@ export class Buoy {
         // Create links
         const httpLink = new HttpLink(this, this.options);
         const wsLink = new WsLink(this);
+        const errorLink = onError(({ graphQLErrors, networkError }) => {
+            if (graphQLErrors) {
+                graphQLErrors.map(({message, locations, path}) => {
+                    throw new GraphQLError(message, locations, path);
+                });
+            }
+
+            if (networkError) {
+                throw new NetworkError(networkError.message);
+            }
+        });
 
         // Switch between links based on operation type
-        const link = ApolloLink.from([
+        let link = ApolloLink.from([
             wsLink,
             httpLink,
         ]);
+        link = errorLink.concat(link);
 
         // Initialize cache
         this.cache = new InMemoryCache();

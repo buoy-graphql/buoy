@@ -145,6 +145,7 @@ export class Paginator extends Operation {
             variables: this.getVariables(),
             fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultWatchQueryFetchPolicy,
             notifyOnNetworkStatusChange: true,
+            errorPolicy: 'all',
         });
 
         // Subscribe to changes
