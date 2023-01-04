@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You can find and compare releases at the [NPM releases page](https://www.npmjs.com/package/@buoy/client?activeTab=versions).
 
+## [0.11.0] - 2023-01-04
+
+### Added
+- Added custom errors: GraphQLError and NetworkError.
+
 ## [0.10.1] - 2022-12-16
 
 ### Fixed
