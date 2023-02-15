@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You can find and compare releases at the [NPM releases page](https://www.npmjs.com/package/@buoy/client?activeTab=versions).
 
+
+## [0.11.1] - 2023-02-15
+
+### Fixed
+- Only throw GraphQLError when the error has category "graphql".
+
 ## [0.11.0] - 2023-01-04
 
 ### Added
