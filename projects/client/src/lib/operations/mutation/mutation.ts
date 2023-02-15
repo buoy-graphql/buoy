@@ -34,7 +34,6 @@ export class Mutation extends Operation {
                 fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultMutationFetchPolicy
             }).toPromise().then(
                 (response) => {
-
                     if (typeof response.errors === 'undefined') {
                         response['errors'] = [];
                     }

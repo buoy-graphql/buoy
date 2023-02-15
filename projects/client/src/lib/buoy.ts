@@ -59,8 +59,11 @@ export class Buoy {
         const wsLink = new WsLink(this);
         const errorLink = onError(({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
-                graphQLErrors.map(({message, locations, path}) => {
-                    throw new GraphQLError(message, locations, path);
+                graphQLErrors.map(({message, locations, path, extensions}) => {
+                    if (extensions.category === 'graphql') {
+                        // The query was invalid, throw an error.
+                        throw new GraphQLError(message, locations, path);
+                    }
                 });
             }
 
