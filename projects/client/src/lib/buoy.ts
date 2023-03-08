@@ -57,27 +57,12 @@ export class Buoy {
         // Create links
         const httpLink = new HttpLink(this, this.options);
         const wsLink = new WsLink(this);
-        const errorLink = onError(({ graphQLErrors, networkError }) => {
-            if (graphQLErrors) {
-                graphQLErrors.map(({message, locations, path, extensions}) => {
-                    if (extensions.category === 'graphql') {
-                        // The query was invalid, throw an error.
-                        throw new GraphQLError(message, locations, path);
-                    }
-                });
-            }
-
-            if (networkError) {
-                throw new NetworkError(networkError.message);
-            }
-        });
 
         // Switch between links based on operation type
-        let link = ApolloLink.from([
+        const link = ApolloLink.from([
             wsLink,
             httpLink,
         ]);
-        link = errorLink.concat(link);
 
         // Initialize cache
         this.cache = new InMemoryCache();

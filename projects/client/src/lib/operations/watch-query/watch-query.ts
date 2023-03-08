@@ -205,7 +205,7 @@ export class WatchQuery extends Operation {
             variables: this.getVariables(),
             fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultWatchQueryFetchPolicy,
             notifyOnNetworkStatusChange: true,
-            errorPolicy: 'all',
+            errorPolicy: this._options.errorPolicy ?? 'all',
         });
 
         // Subscribe to changes

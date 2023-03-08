@@ -26,6 +26,7 @@ export interface WatchQueryOptions {
     onCreateEvent?: (id: number, data: any) => void; // TODO
     onUpdateEvent?: (id: number, data: any) => void; // TODO
     onDeleteEvent?: (id: number, data: any) => void; // TODO
+    errorPolicy?: 'none' | 'ignore' | 'all';
 
     test?: (query) => DocumentNode;
 }
