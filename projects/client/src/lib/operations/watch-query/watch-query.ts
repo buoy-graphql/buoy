@@ -11,7 +11,7 @@ import { ConvertQueryToSubscription } from './convert-query-to-subscription';
 import { CleanQuery } from './clean-query';
 import { OptionsService } from '../../internal/options.service';
 
-export class WatchQuery extends Operation {
+export class WatchQuery<T = any> extends Operation {
     protected _apolloSubscription: Subscription;
     private _pagination: Pagination;
 
@@ -19,7 +19,7 @@ export class WatchQuery extends Operation {
 
     public _apolloInitialized = new BehaviorSubject(false);
 
-    public data: any;
+    public data: T;
 
     /**
      * Whether or not the WatchQuery is currently loading.
@@ -34,7 +34,7 @@ export class WatchQuery extends Operation {
     public ready = false;
 
     public observe = {
-        data: new BehaviorSubject<any>(null),
+        data: new BehaviorSubject<T>(null),
         ready: new BehaviorSubject<boolean>(false),
     };
 

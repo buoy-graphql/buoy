@@ -1,9 +1,9 @@
-export class QueryError {
+export class QueryError<T = any> {
 
     /**
      * Contains the result of the query.
      */
-    public data: any;
+    public data: T;
 
     public errors: any; // TODO
 

@@ -6,7 +6,7 @@ import { MutationError } from './mutation-error';
 import { Operation } from '../operation';
 import { OptionsService } from '../../internal/options.service';
 
-export class Mutation extends Operation {
+export class Mutation<T = any> extends Operation {
     constructor(
         buoy: Buoy,
         globalOptions: OptionsService,
@@ -45,16 +45,16 @@ export class Mutation extends Operation {
                     }
 
                     if (response.errors.length === 0) {
-                        resolve(new MutationResult(this.mapResponse(response)));
+                        resolve(new MutationResult<T>(this.mapResponse(response)));
                     } else {
-                        reject(new MutationError(
+                        reject(new MutationError<T>(
                             response.data ? response.data : null,
                             response.extensions
                         ));
                     }
                 },
                 (error) => {
-                    reject(new MutationError(
+                    reject(new MutationError<null>(
                         null,
                         error
                     ));

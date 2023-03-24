@@ -6,7 +6,7 @@ import { Operation } from '../operation';
 import { QueryOptions } from './query-options';
 import { OptionsService } from '../../internal/options.service';
 
-export class Query extends Operation {
+export class Query<T = any> extends Operation {
     public data: any;
 
     public loading = true;
@@ -47,14 +47,14 @@ export class Query extends Operation {
                     }
 
                     if (response.errors.length === 0) {
-                        resolve(new QueryResult(this.mapResponse(response)));
+                        resolve(new QueryResult<T>(this.mapResponse(response)));
                     } else {
-                        reject(new QueryError(response.data ? response.data : null, ''));
+                        reject(new QueryError<T>(response.data ? response.data : null, ''));
                     }
                 },
                 (error) => {
                     throw new Error(error);
-                    reject(new QueryError(
+                    reject(new QueryError<null>(
                         null,
                         {
                             // graphQl: error.graphQLErrors,
