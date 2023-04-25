@@ -65,33 +65,26 @@ export class WatchQuery<T = any> extends Operation {
     }
 
     public refetch(): Promise<null> {
-        return new Promise<null>((resolve, reject) => {
+        return new Promise<null>((resolve) => {
             this.loading = true;
             if (this._apolloInitialized.value === false) {
                 if (this._options.fetch === false) {
                     this.initQuery();
-                    reject(null);
                 } else {
                     this._apolloInitialized.toPromise().then(initialized => {
-                        this.doRefetch().then(
-                            success => resolve(null),
-                            error => reject(null)
-                        );
+                        this.doRefetch().then(() => resolve(null));
                         this._subscription?.refetch();
                     });
                 }
             } else {
-                this.doRefetch().then(
-                    success => resolve(null),
-                    error => reject(null)
-                );
+                this.doRefetch().then(() => resolve(null));
                 this._subscription?.refetch();
             }
         });
     }
 
     private doRefetch(): Promise<null> {
-        return new Promise<null>((resolve, reject) => {
+        return new Promise<null>((resolve) => {
             this.emitOnLoadingStart();
             this.loading = true;
             this._apolloOperation.refetch(this.getVariables()).then(
@@ -101,7 +94,6 @@ export class WatchQuery<T = any> extends Operation {
                 },
                 (error) => {
                     this.loading = false;
-                    reject(null);
                 }
             );
         });
