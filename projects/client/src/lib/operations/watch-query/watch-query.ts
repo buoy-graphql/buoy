@@ -64,36 +64,47 @@ export class WatchQuery<T = any> extends Operation {
         return this._pagination.pagination;
     }
 
-    public refetch(): this {
-        this.loading = true;
-        if (this._apolloInitialized.value === false) {
-            if (this._options.fetch === false) {
-                this.initQuery();
+    public refetch(): Promise<null> {
+        return new Promise<null>((resolve, reject) => {
+            this.loading = true;
+            if (this._apolloInitialized.value === false) {
+                if (this._options.fetch === false) {
+                    this.initQuery();
+                    reject(null);
+                } else {
+                    this._apolloInitialized.toPromise().then(initialized => {
+                        this.doRefetch().then(
+                            success => resolve(null),
+                            error => reject(null)
+                        );
+                        this._subscription?.refetch();
+                    });
+                }
             } else {
-                this._apolloInitialized.toPromise().then(initialized => {
-                    this.doRefetch();
-                    this._subscription?.refetch();
-                });
+                this.doRefetch().then(
+                    success => resolve(null),
+                    error => reject(null)
+                );
+                this._subscription?.refetch();
             }
-        } else {
-            this.doRefetch();
-            this._subscription?.refetch();
-        }
-
-        return this;
+        });
     }
 
-    private doRefetch() {
-        this.emitOnLoadingStart();
-        this.loading = true;
-        this._apolloOperation.refetch(this.getVariables()).then(
-            (success) => {
-                this.loading = false;
-            },
-            (error) => {
-                this.loading = false;
-            }
-        );
+    private doRefetch(): Promise<null> {
+        return new Promise<null>((resolve, reject) => {
+            this.emitOnLoadingStart();
+            this.loading = true;
+            this._apolloOperation.refetch(this.getVariables()).then(
+                (success) => {
+                    this.loading = false;
+                    resolve(null);
+                },
+                (error) => {
+                    this.loading = false;
+                    reject(null);
+                }
+            );
+        });
     }
 
     /**
