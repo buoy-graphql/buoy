@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You can find and compare releases at the [NPM releases page](https://www.npmjs.com/package/@buoy/client?activeTab=versions).
 
+## [0.15.0] - 2023-06-13
+
+### Added
+- Add generic type to Paginator operation.
+
 ## [0.14.1] - 2023-04-25
 
 ### Fixed

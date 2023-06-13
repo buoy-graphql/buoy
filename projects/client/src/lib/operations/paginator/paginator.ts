@@ -8,10 +8,10 @@ import { OptionsService } from '../../internal/options.service';
 import { PaginatorInfo } from './paginator-info';
 import { generateField } from '../../util/generate-field';
 
-export class Paginator extends Operation {
+export class Paginator<T = any> extends Operation {
     public _apolloInitialized = new BehaviorSubject(false);
 
-    public data: any;
+    public data: T;
     public paginatorInfo: PaginatorInfo;
 
     protected desiredPage = 1;
@@ -32,7 +32,7 @@ export class Paginator extends Operation {
     public ready = false;
 
     public observe = {
-        data: new BehaviorSubject<any>(null),
+        data: new BehaviorSubject<T>(null),
         ready: new BehaviorSubject<boolean>(false),
     };
 
