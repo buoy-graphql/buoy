@@ -17,16 +17,13 @@ export class Lighthouse implements SubscriptionDriver {
     }
 
     createSubscription(observer, response: FetchResult): string|null {
-        const channels = response?.extensions?.lighthouse_subscriptions?.channels ?? {};
-        const channelKeys = Object.keys(channels);
-        if (channelKeys.length !== 0) {
-            const subscriptionId = channels[channelKeys[0]];
-
+        const channel = response.extensions?.lighthouse_subscriptions?.channel;
+        if (channel) {
             this.pusher
-                .subscribe(subscriptionId)
+                .subscribe(channel)
                 .bind('lighthouse-subscription', payload => {
                     if (!payload.more) {
-                        this.pusher.unsubscribe(subscriptionId);
+                        this.pusher.unsubscribe(channel);
                         observer.complete();
                     }
                     const result = payload.result;
@@ -36,7 +33,7 @@ export class Lighthouse implements SubscriptionDriver {
                     }
                 });
 
-            return subscriptionId;
+            return channel;
         }
 
         return null;
