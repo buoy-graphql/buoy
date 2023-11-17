@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 You can find and compare releases at the [NPM releases page](https://www.npmjs.com/package/@buoy/client?activeTab=versions).
 
+## [0.16.1] - 2023-11-17
+
+### Fixed
+- Support Lighthouse not returning a category in the extensions for errors.
+
 ## [0.16.0] - 2023-11-15
 
 ### Added
