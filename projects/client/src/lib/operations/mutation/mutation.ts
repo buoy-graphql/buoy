@@ -39,7 +39,8 @@ export class Mutation<T = any> extends Operation {
                     }
 
                     for (const error of response.errors) {
-                        if (error.extensions.category === 'graphql') {
+                        // If no category nor validation is set, we assume that the error should be thrown.
+                        if (!error.extensions.category && !error.extensions.validation) {
                             this.operationError(error);
                         }
                     }
