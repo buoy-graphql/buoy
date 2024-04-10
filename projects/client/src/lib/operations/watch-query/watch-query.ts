@@ -5,7 +5,7 @@ import { Pagination } from './pagination';
 import { WatchQueryOptions } from './watch-query-options';
 import { Operation } from '../operation';
 import { Subscription as BuoySubscription } from '../subscription/subscription';
-import { DocumentNode } from 'graphql';
+import { DocumentNode, print, parse } from 'graphql';
 import { DetectDirectives, DirectiveLocation } from './detect-directives';
 import { ConvertQueryToSubscription } from './convert-query-to-subscription';
 import { CleanQuery } from './clean-query';
@@ -48,9 +48,10 @@ export class WatchQuery<T = any> extends Operation {
     ) {
         super(buoy, globalOptions, id, query, variables, options, 'query');
 
+        query = parse(print(super.getQuery()).replace(/@skipSubscription/g, ''));
         // Init QueryPagination
         if (this.paginationEnabled) {
-            this._pagination = new Pagination(this, super.getQuery(), this._options, this._variables);
+            this._pagination = new Pagination(this, query, this._options, this._variables);
         }
 
         if (this._options.fetch !== false) {
@@ -203,8 +204,9 @@ export class WatchQuery<T = any> extends Operation {
     }
 
     protected initQuery(): void {
+        const query = parse(print((new CleanQuery(this)).get()).replace(/@skipSubscription/g, ''));
         this._apolloOperation = this._buoy.apollo.use('buoy').watchQuery({
-            query: (new CleanQuery(this)).get(),
+            query,
             variables: this.getVariables(),
             fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultWatchQueryFetchPolicy,
             notifyOnNetworkStatusChange: true,

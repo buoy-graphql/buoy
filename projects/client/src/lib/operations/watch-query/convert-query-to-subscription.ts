@@ -121,17 +121,17 @@ export class ConvertQueryToSubscription {
             }
         }
 
-        const test = Math.floor((Math.random() * 10) + 1);
-
         // Generate the subscription query
         const subscriptionQuery = gql `
-            subscription ${this.queryName}_Subscription_${this.watchQuerySubscriptionIndex + 1} {
+            subscription ${this.queryName}_Subscription_${this.watchQuerySubscriptionIndex + 1} ($isSubscription: Boolean! = true) {
                 subscription {
                     id
                     event
                     model
                 }
             }`;
+
+        console.log('SUB QUERY', print(subscriptionQuery));
 
         // Subscribe to the model's subscription
         this.manipulateDocument(
