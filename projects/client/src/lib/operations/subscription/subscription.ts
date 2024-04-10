@@ -5,6 +5,7 @@ import { Subscription as rxjsSubscription } from 'rxjs';
 import { scope } from 'ngx-plumber';
 import { OptionsService } from '../../internal/options.service';
 import { DebugService } from '../../internal/debug.service';
+import { print, parse } from 'graphql';
 
 export class Subscription extends Operation {
     protected _apolloOperation;
@@ -19,6 +20,7 @@ export class Subscription extends Operation {
         variables,
         options: SubscriptionOptions
     ) {
+        query = parse(print(query).replace(/@skipSubscription/g, '@skip(if: true)'));
         super(buoy, globalOptions, id, query, variables, options, 'subscription');
 
         this.initSubscription();
@@ -32,7 +34,7 @@ export class Subscription extends Operation {
         }
 
         this._apolloOperation = this._buoy.apollo.use('buoy').subscribe({
-            query: this.getQuery(),
+            query: this.getSubscriptionQuery(),
             variables: this.getVariables(),
             fetchPolicy: this._options.fetchPolicy,
         });
@@ -77,5 +79,15 @@ export class Subscription extends Operation {
         if (this._options.onEvent !== undefined) {
             this._options.onEvent(this._id, data);
         }
+    }
+
+    /**
+     * Replace all @skipSubscription with @skip(true).
+     */
+    private getSubscriptionQuery(): any {
+        const query = print(this.getQuery())
+            .replace(/@skipSubscription/g, '@skip(if: true)');
+
+        return parse(query);
     }
 }
