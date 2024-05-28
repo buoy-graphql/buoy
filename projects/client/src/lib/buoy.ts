@@ -22,9 +22,6 @@ import { DebugService } from './internal/debug.service';
 import { ErrorService } from './internal/error.service';
 import { OptionsService } from './internal/options.service';
 import { Paginator } from './operations/paginator/paginator';
-import { onError } from '@apollo/client/link/error';
-import { GraphQLError } from './errors/graphql-error';
-import { NetworkError } from './errors/network-error';
 
 let operationId = 1;
 

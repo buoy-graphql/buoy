@@ -4,6 +4,7 @@ import { print } from 'graphql/language/printer';
 import { extractFiles } from 'extract-files';
 import { isFunction } from 'ngx-plumber';
 import { OptionsService } from '../internal/options.service';
+import { NetworkError } from '../errors/network-error';
 
 export class GraphqlRequest {
     constructor(
@@ -27,8 +28,8 @@ export class GraphqlRequest {
                     resolve(result);
                 },
                 error => {
-                    // TODO Throw a proper error if HTTP request failed
-                }
+                    throw new NetworkError(error, this.options.values.uri);
+                },
             );
         });
     }
