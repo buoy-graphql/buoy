@@ -1,12 +1,10 @@
-import { Buoy } from '../buoy';
-import { ApolloLink, RequestHandler } from '@apollo/client/core';
+import { ApolloLink } from '@apollo/client/core';
 import { FetchResult, NextLink, Operation } from '@apollo/client/link/core/types';
 import { Observable } from '@apollo/client/utilities';
+import { BuoyConfigRepository } from '../config/buoy-config-repository';
 
 export class WsLink extends ApolloLink {
-    public requester: RequestHandler;
-
-    constructor(private buoy: Buoy) {
+    constructor(private config: BuoyConfigRepository) {
         super();
     }
 
@@ -20,8 +18,8 @@ export class WsLink extends ApolloLink {
 
             forward(operation).subscribe({
                 next: (response) => {
-                    if (this.buoy.subscriptionDriver !== undefined) {
-                        subscriptionId = this.buoy.subscriptionDriver.createSubscription(observer, response);
+                    if (this.config.subscriptionDriver) {
+                        subscriptionId = this.config.subscriptionDriver.createSubscription(observer, response);
                     }
 
                     // No subscription - return the response
@@ -37,7 +35,7 @@ export class WsLink extends ApolloLink {
                 closed: false,
                 unsubscribe: () => {
                     if (subscriptionId) {
-                        this.buoy.subscriptionDriver.destroySubscription(subscriptionId);
+                        this.config.subscriptionDriver.destroySubscription(subscriptionId);
                     }
                 },
             };

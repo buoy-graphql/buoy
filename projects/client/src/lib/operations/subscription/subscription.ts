@@ -3,25 +3,24 @@ import { Buoy } from '../../buoy';
 import { SubscriptionOptions } from './subscription-options';
 import { Subscription as rxjsSubscription } from 'rxjs';
 import { scope } from 'ngx-plumber';
-import { OptionsService } from '../../internal/options.service';
 import { DebugService } from '../../internal/debug.service';
 import { print, parse } from 'graphql';
 
 export class Subscription extends Operation {
-    protected _apolloOperation;
+    declare public readonly _options: SubscriptionOptions;
+
     protected _apolloSubscription: rxjsSubscription;
 
     constructor(
         buoy: Buoy,
         private debug: DebugService,
-        globalOptions: OptionsService,
         id: number,
         query,
         variables,
         options: SubscriptionOptions
     ) {
         query = parse(print(query).replace(/@skipSubscription/g, '@skip(if: true)'));
-        super(buoy, globalOptions, id, query, variables, options, 'subscription');
+        super(buoy, id, query, variables, options, 'subscription');
 
         this.initSubscription();
 
@@ -29,14 +28,14 @@ export class Subscription extends Operation {
     }
 
     protected initSubscription(): void {
-        if (this._globalOptions.values.subscriptionDriver === undefined) {
+        if (this._buoy.config.subscriptionDriver === undefined) {
             throw new Error('You must select a subscription-driver before subscribing.');
         }
 
         this._apolloOperation = this._buoy.apollo.use('buoy').subscribe({
             query: this.getSubscriptionQuery(),
             variables: this.getVariables(),
-            fetchPolicy: this._options.fetchPolicy,
+            fetchPolicy: this._options.fetchPolicy ?? this._buoy.config.defaultSubscriptionFetchPolicy,
         });
 
         this._apolloSubscription = this._apolloOperation.subscribe((data) => this.handleEvent(data));

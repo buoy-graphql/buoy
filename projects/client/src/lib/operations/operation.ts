@@ -2,18 +2,21 @@ import { Buoy } from '../buoy';
 import { isFunction } from 'ngx-plumber';
 import { print } from 'graphql/language/printer';
 import { DocumentNode } from 'graphql';
-import { OptionsService } from '../internal/options.service';
+import { QueryOptions } from './query/query-options';
+import { MutationOptions } from './mutation/mutation-options';
+import { WatchQueryOptions } from './watch-query/watch-query-options';
+import { PaginatorOptions } from './paginator/paginator-options';
+import { SubscriptionOptions } from './subscription/subscription-options';
 
 export class Operation {
     protected _apolloOperation;
 
     constructor(
         public _buoy: Buoy,
-        public _globalOptions: OptionsService,
         public _id: number,
         public _query: DocumentNode,
         public _variables,
-        public _options,
+        public readonly _options: QueryOptions|MutationOptions|WatchQueryOptions|PaginatorOptions|SubscriptionOptions,
         public _operationType: 'query' | 'mutation' | 'subscription'
     ) {
         // Handle operation name
@@ -59,7 +62,6 @@ export class Operation {
         // Run VariableManipulator middleware
         this._buoy.middleware.forEach((middleware: any) => {
             if (isFunction(middleware.manipulateVariables)) {
-                // TODO Check response from middleware
                 variables = middleware.manipulateVariables(this._query, variables, this._options);
             }
         });

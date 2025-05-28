@@ -8,7 +8,6 @@ export class Lighthouse implements SubscriptionDriver {
     private pusher;
 
     constructor(
-        public buoy: Buoy,
         options: LighthouseOptions
     ) {
         // TODO Add an option to not initialize the pusher client until the user is authenticated.

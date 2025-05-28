@@ -2,6 +2,11 @@
  * Public API Surface of @buoy/client
  */
 
+// Config
+export * from './lib/config/buoy-config';
+export * from './lib/config/buoy-config-repository';
+export * from './lib/config/provide-buoy-config';
+
 // Core elements
 export * from './lib/buoy';
 export * from './lib/buoy-options';
@@ -25,6 +30,7 @@ export * from './lib/operations/watch-query/watch-query';
 export * from './lib/operations/watch-query/watch-query-options';
 
 // Middleware
+export * from './lib/middleware/buoy-middleware-repository';
 export * from './lib/middleware/header-manipulator';
 export * from './lib/middleware/query-manipulator';
 export * from './lib/middleware/response-manipulator';
@@ -38,3 +44,6 @@ export * from './lib/drivers/subscriptions/lighthouse/lighthouse-options';
 export * from './lib/errors/buoy-error';
 export * from './lib/errors/graphql-error';
 export * from './lib/errors/network-error';
+
+// Types
+export * from './lib/types/scoped-value';

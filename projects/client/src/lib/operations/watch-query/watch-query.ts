@@ -9,9 +9,11 @@ import { DocumentNode, print, parse } from 'graphql';
 import { DetectDirectives, DirectiveLocation } from './detect-directives';
 import { ConvertQueryToSubscription } from './convert-query-to-subscription';
 import { CleanQuery } from './clean-query';
-import { OptionsService } from '../../internal/options.service';
+import { take } from 'rxjs/operators';
 
 export class WatchQuery<T = any> extends Operation {
+    declare public readonly _options: WatchQueryOptions;
+
     protected _apolloSubscription: Subscription;
     private _pagination: Pagination;
 
@@ -22,7 +24,7 @@ export class WatchQuery<T = any> extends Operation {
     public data: T;
 
     /**
-     * Whether or not the WatchQuery is currently loading.
+     * Whether the WatchQuery is currently loading.
      */
     public loading = true;
 
@@ -40,13 +42,12 @@ export class WatchQuery<T = any> extends Operation {
 
     constructor(
         buoy: Buoy,
-        globalOptions: OptionsService,
         id: number,
         query,
         variables,
         options: WatchQueryOptions
     ) {
-        super(buoy, globalOptions, id, query, variables, options, 'query');
+        super(buoy, id, query, variables, options, 'query');
 
         query = parse(print(super.getQuery()).replace(/@skipSubscription/g, ''));
         // Init QueryPagination
@@ -65,39 +66,27 @@ export class WatchQuery<T = any> extends Operation {
         return this._pagination.pagination;
     }
 
-    public refetch(): Promise<null> {
-        return new Promise<null>((resolve) => {
-            this.loading = true;
-            if (this._apolloInitialized.value === false) {
-                if (this._options.fetch === false) {
-                    this.initQuery();
-                } else {
-                    this._apolloInitialized.toPromise().then(initialized => {
-                        this.doRefetch().then(() => resolve(null));
-                        this._subscription?.refetch();
-                    });
-                }
+    public async refetch(): Promise<void> {
+        this.loading = true;
+        if (this._apolloInitialized.value === false) {
+            if (this._options.fetch === false) {
+                await this.initQuery();
             } else {
-                this.doRefetch().then(() => resolve(null));
+                await this._apolloInitialized.toPromise();
+                await this.doRefetch();
                 this._subscription?.refetch();
             }
-        });
+        } else {
+            await this.doRefetch();
+            this._subscription?.refetch();
+        }
     }
 
-    private doRefetch(): Promise<null> {
-        return new Promise<null>((resolve) => {
-            this.emitOnLoadingStart();
-            this.loading = true;
-            this._apolloOperation.refetch(this.getVariables()).then(
-                (success) => {
-                    this.loading = false;
-                    resolve(null);
-                },
-                (error) => {
-                    this.loading = false;
-                }
-            );
-        });
+    private async doRefetch(): Promise<void> {
+        this.emitOnLoadingStart();
+        this.loading = true;
+        await this._apolloOperation.refetch(this.getVariables());
+        this.loading = false;
     }
 
     /**
@@ -203,15 +192,17 @@ export class WatchQuery<T = any> extends Operation {
         return super.getVariables();
     }
 
-    protected initQuery(): void {
+    protected async initQuery(): Promise<void> {
         const query = parse(print((new CleanQuery(this)).get()).replace(/@skipSubscription/g, ''));
         this._apolloOperation = this._buoy.apollo.use('buoy').watchQuery({
             query,
             variables: this.getVariables(),
-            fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultWatchQueryFetchPolicy,
+            fetchPolicy: this._options.fetchPolicy ?? this._buoy.config.defaultWatchQueryFetchPolicy,
             notifyOnNetworkStatusChange: true,
             errorPolicy: this._options.errorPolicy ?? 'all',
         });
+        // Wait for the first response to be received.
+        await this._apolloOperation.valueChanges.pipe(take(1)).toPromise();
 
         // Subscribe to changes
         this._apolloSubscription = this._apolloOperation.valueChanges.subscribe(({data, loading}) => this.mapResponse(data, loading));

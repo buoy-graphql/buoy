@@ -61,7 +61,7 @@ export class ConvertQueryToSubscription {
         });
         if (selectedArguments.length === 0) {
             // If no argument has been selected, use the default one
-            selectedArguments.push(this.watchQuery._globalOptions.values.subscribeDefaultArgument);
+            selectedArguments.push(this.watchQuery._buoy.config.subscribeDefaultArgument);
         }
 
         // Loop through attributes on the query and pick the selected ones
@@ -130,8 +130,6 @@ export class ConvertQueryToSubscription {
                     model
                 }
             }`;
-
-        console.log('SUB QUERY', print(subscriptionQuery));
 
         // Subscribe to the model's subscription
         this.manipulateDocument(

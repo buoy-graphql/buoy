@@ -1,6 +1,8 @@
+import { FetchPolicy } from '@apollo/client/core';
+
 export interface SubscriptionOptions {
     scope?: string;
-    fetchPolicy?: 'cache-first' | 'cache-and-network' | 'network-only' | 'cache-only' | 'no-cache' | 'standby';
+    fetchPolicy?: FetchPolicy;
 
     // Callbacks
     onInitialized?: (id: number) => void;

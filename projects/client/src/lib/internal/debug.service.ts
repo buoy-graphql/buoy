@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { OptionsService } from '../internal/options.service';
+import { BuoyConfigRepository } from '../config/buoy-config-repository';
 
 @Injectable()
 export class DebugService {
 
-    constructor(private options: OptionsService) {
-        if (this.options.values.debug === true) {
+    constructor(private config: BuoyConfigRepository) {
+        if (this.config.debug) {
             this.print('Buoy debugging is enabled globally.');
         }
     }
@@ -18,7 +18,7 @@ export class DebugService {
     }
 
     private print(message: string, payload: any = null): void {
-        if (!this.options.values.debug) {
+        if (!this.config.debug) {
             return;
         }
 
