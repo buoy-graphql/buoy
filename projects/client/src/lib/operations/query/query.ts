@@ -4,22 +4,19 @@ import { QueryResult } from './query-result';
 import { QueryError } from './query-error';
 import { Operation } from '../operation';
 import { QueryOptions } from './query-options';
-import { OptionsService } from '../../internal/options.service';
+import { firstValueFrom } from 'rxjs';
 
 export class Query<T = any> extends Operation {
-    public data: any;
-
-    public loading = true;
+    declare public readonly _options: QueryOptions;
 
     constructor(
         buoy: Buoy,
-        globalOptions: OptionsService,
         id: number,
         query,
         variables,
         options: QueryOptions
     ) {
-        super(buoy, globalOptions, id, query, variables, options, 'query');
+        super(buoy, id, query, variables, options, 'query');
 
         return this;
     }
@@ -27,46 +24,26 @@ export class Query<T = any> extends Operation {
     /**
      * Execute the query and return an observable.
      */
-    public execute(): Promise<QueryResult|QueryError> {
-        return new Promise<QueryResult|QueryError>((resolve, reject) => {
-            this._buoy.apollo.use('buoy').query({
-                query: this.getQuery(),
-                variables: this.getVariables(),
-                fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultFetchPolicy,
-                errorPolicy: 'all',
-            }).toPromise().then(
-                (response) => {
-                    if (typeof response.errors === 'undefined') {
-                        response.errors = [];
-                    }
+    public async execute(): Promise<QueryResult|QueryError> {
+        const response = await firstValueFrom(this._buoy.apollo.use('buoy').query({
+            query: this.getQuery(),
+            variables: this.getVariables(),
+            fetchPolicy: this._options.fetchPolicy ?? this._buoy.config.defaultQueryFetchPolicy,
+            errorPolicy: 'all',
+        }));
 
-                    for (const error of response.errors) {
-                        // If no category nor validation is set, we assume that the error should be thrown.
-                        if (!error.extensions.category && !error.extensions.validation) {
-                            this.operationError(error);
-                        }
-                    }
-
-                    if (response.errors.length === 0) {
-                        resolve(new QueryResult<T>(this.mapResponse(response)));
-                    } else {
-                        reject(new QueryError<T>(response.data ? response.data : null, ''));
-                    }
-                },
-                (error) => {
-                    throw new Error(error);
-                    reject(new QueryError<null>(
-                        null,
-                        {
-                            // graphQl: error.graphQLErrors,
-                            // network: error.networkError,
-                            data: {},
-                            extensions: {}
-                        }
-                    ));
+        if (response.errors && response.errors.length > 0) {
+            for (const error of response.errors) {
+                // If no category nor validation is set, we assume that the error should be thrown.
+                if (!error.extensions.category && !error.extensions.validation) {
+                    this.operationError(error);
                 }
-            );
-        });
+            }
+
+            return new QueryError<T>(this.mapResponse(response.data), response.errors);
+        }
+
+        return new QueryResult<T>(this.mapResponse(response));
     }
 
     private mapResponse(data): any {

@@ -1,69 +1,69 @@
-import { Buoy } from '../buoy';
 import { Operation } from '@apollo/client/link/core/types';
 import { print } from 'graphql/language/printer';
 import { extractFiles } from 'extract-files';
-import { isFunction } from 'ngx-plumber';
-import { OptionsService } from '../internal/options.service';
 import { NetworkError } from '../errors/network-error';
+import { BuoyConfigRepository } from '../config/buoy-config-repository';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 export class GraphqlRequest {
     constructor(
-        public buoy: Buoy,
-        public options: OptionsService,
+        private config: BuoyConfigRepository,
+        private http: HttpClient,
+        private operation: Operation,
     ) { }
 
-    public fromOperation(operation: Operation): Promise<any> {
-        return new Promise((resolve) => {
-            this.buoy.http.post(this.options.values.uri, this.payload(operation), this.getHttpOptions(operation)).toPromise().then(
-                result => {
-                    // TODO Check returned data - throw exception if invalid
-                    // TODO Handle GraphQL errors properly
+    public async execute(): Promise<any> {
+        try {
+            let response = await firstValueFrom(this.http.post(
+                this.config.uri,
+                this.payload(),
+                this.getHttpOptions(),
+            ));
 
-                    // Run ResponseManipulator middleware
-                    this.buoy.middleware.forEach((middleware: any) => {
-                        if (isFunction(middleware.manipulateResponse)) {
-                            result = middleware.manipulateResponse(result, operation.query, operation.variables);
-                        }
-                    });
-                    resolve(result);
-                },
-                error => {
-                    throw new NetworkError(error, this.options.values.uri);
-                },
-            );
-        });
+            this.config.middleware.forEach((middleware: any) => {
+                if (typeof middleware.manipulateResponse === 'function') {
+                    response = middleware.manipulateResponse(
+                        response,
+                        this.operation.query,
+                        this.operation.variables
+                    );
+                }
+            });
+
+            return response;
+        } catch (error) {
+            throw new NetworkError(error, this.config.uri);
+        }
     }
 
-    protected getHttpOptions(operation): any {
+    protected getHttpOptions(): any {
         // Add headers
-        let headers;
-        if (this.options.values.headers !== undefined) {
-            headers = this.options.values.headers();
-        }
+        let headers = this.config.headers();
 
         // Run Header middleware
-        this.buoy.middleware.forEach((middleware: any) => {
-            if (isFunction(middleware.manipulateHeaders)) {
-                headers = middleware.manipulateHeaders(headers, operation.query, operation.variables);
+        this.config.middleware.forEach((middleware: any) => {
+            if (typeof middleware.manipulateHeaders === 'function') {
+                headers = middleware.manipulateHeaders(headers, this.operation.query, this.operation.variables);
             }
         });
 
         return {
             headers,
-            withCredentials: this.options.values.withCredentials
+            withCredentials: this.config.withCredentials
         };
     }
 
-    private payload(operation: Operation): any {
+    private payload(): any {
         // Extract files from variables
-        const files = extractFiles(operation.variables);
+        const files = extractFiles(this.operation.variables);
 
         // Define operations
         const operations = {
-            operationName: operation.operationName,
-            query: print(operation.query),
-            variables: operation.variables,
-            extensions: operation.extensions
+            operationName: this.operation.operationName,
+            query: print(this.operation.query),
+            variables: this.operation.variables,
+            extensions: this.operation.extensions
         };
 
         if (files.files.size === 0) {

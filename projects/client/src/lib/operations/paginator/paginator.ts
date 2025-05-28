@@ -4,7 +4,6 @@ import { Buoy } from '../../buoy';
 import { PaginatorOptions } from './paginator-options';
 import { Operation } from '../operation';
 import { DocumentNode } from 'graphql';
-import { OptionsService } from '../../internal/options.service';
 import { PaginatorInfo } from './paginator-info';
 import { generateField } from '../../util/generate-field';
 
@@ -13,6 +12,8 @@ export class Paginator<T = any> extends Operation {
 
     public data: T;
     public paginatorInfo: PaginatorInfo;
+
+    declare public readonly _options: PaginatorOptions;
 
     protected desiredPage = 1;
     protected desiredLimit = 25;
@@ -38,13 +39,12 @@ export class Paginator<T = any> extends Operation {
 
     constructor(
         buoy: Buoy,
-        globalOptions: OptionsService,
         id: number,
         query: DocumentNode,
         variables: object,
         options: PaginatorOptions
     ) {
-        super(buoy, globalOptions, id, query, variables, options, 'query');
+        super(buoy, id, query, variables, options, 'query');
         this.injectPaginatorInfoInQuery();
 
         if (this._options.fetch !== false) {
@@ -143,7 +143,7 @@ export class Paginator<T = any> extends Operation {
         this._apolloOperation = this._buoy.apollo.use('buoy').watchQuery({
             query: this._query,
             variables: this.getVariables(),
-            fetchPolicy: this._options.fetchPolicy ?? this._globalOptions.values.defaultWatchQueryFetchPolicy,
+            fetchPolicy: this._options.fetchPolicy ?? this._buoy.config.defaultPaginatorFetchPolicy,
             notifyOnNetworkStatusChange: true,
             errorPolicy: 'all',
         });
