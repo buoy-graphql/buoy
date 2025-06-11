@@ -1,4 +1,4 @@
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subscription } from 'rxjs';
 import { scope } from 'ngx-plumber';
 import { Buoy } from '../../buoy';
 import { Pagination } from './pagination';
@@ -9,7 +9,6 @@ import { DocumentNode, print, parse } from 'graphql';
 import { DetectDirectives, DirectiveLocation } from './detect-directives';
 import { ConvertQueryToSubscription } from './convert-query-to-subscription';
 import { CleanQuery } from './clean-query';
-import { take } from 'rxjs/operators';
 
 export class WatchQuery<T = any> extends Operation {
     declare public readonly _options: WatchQueryOptions;
@@ -48,7 +47,6 @@ export class WatchQuery<T = any> extends Operation {
         options: WatchQueryOptions
     ) {
         super(buoy, id, query, variables, options, 'query');
-
         query = parse(print(super.getQuery()).replace(/@skipSubscription/g, ''));
         // Init QueryPagination
         if (this.paginationEnabled) {
@@ -72,7 +70,7 @@ export class WatchQuery<T = any> extends Operation {
             if (this._options.fetch === false) {
                 await this.initQuery();
             } else {
-                await this._apolloInitialized.toPromise();
+                await firstValueFrom(this._apolloInitialized);
                 await this.doRefetch();
                 this._subscription?.refetch();
             }
@@ -194,6 +192,8 @@ export class WatchQuery<T = any> extends Operation {
 
     protected async initQuery(): Promise<void> {
         const query = parse(print((new CleanQuery(this)).get()).replace(/@skipSubscription/g, ''));
+
+        // Set up the Apollo observable
         this._apolloOperation = this._buoy.apollo.use('buoy').watchQuery({
             query,
             variables: this.getVariables(),
@@ -201,24 +201,31 @@ export class WatchQuery<T = any> extends Operation {
             notifyOnNetworkStatusChange: true,
             errorPolicy: this._options.errorPolicy ?? 'all',
         });
-        // Wait for the first response to be received.
-        await this._apolloOperation.valueChanges.pipe(take(1)).toPromise();
 
-        // Subscribe to changes
-        this._apolloSubscription = this._apolloOperation.valueChanges.subscribe(({data, loading}) => this.mapResponse(data, loading));
-
+        // Emit loading start event
         this.emitOnLoadingStart();
 
-        // Handle subscriptions
+        // Track whether we’ve already initialized to prevent multiple inits
+        let initialized = false;
+
+        // Single Apollo subscription
+        this._apolloSubscription = this._apolloOperation.valueChanges.subscribe(({ data, loading }) => {
+            this.mapResponse(data, loading);
+
+            // Emit initialization only once
+            if (!initialized) {
+                initialized = true;
+                this.emitOnInitialized();
+            }
+        });
+
+        // Handle directive-based subscriptions
         const detected = (new DetectDirectives(this)).detect();
         detected.directives.forEach((directive, index) => {
             if (directive.directive === 'subscribe') {
                 this.subscribe(directive, index);
             }
         });
-
-        this._apolloInitialized.next(true);
-        this.emitOnInitialized();
     }
 
     protected mapResponse(data, loading): void {
