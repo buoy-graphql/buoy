@@ -226,6 +226,9 @@ export class WatchQuery<T = any> extends Operation {
                 this.subscribe(directive, index);
             }
         });
+
+        // Wait for first response before proceeding
+        await firstValueFrom(this._apolloOperation.valueChanges);
     }
 
     protected mapResponse(data, loading): void {
